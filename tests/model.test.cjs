@@ -485,3 +485,39 @@ test('all 30 languages include color modes, scope and preset actions', () => {
     }
   }
 });
+
+test('restore saved color restores custom, exact or adapted behavior, not just a frozen HEX', () => {
+  const original={colorMode:'adaptive',colorScope:'theme',themeColors:{'hackerman':{mode:'custom',color:'#112233'}}};
+  for (const [saved,mode,scope,expected] of [
+    [original,'adaptive','theme','#EF98F5'],
+    [{accentColor:'#ff8800'},'custom','all','#FF8800'],
+    [{accentColor:''},'theme','all','#7AA2F7'],
+    [appearance.setRule(original,'tokyo-night','theme','custom','#123456'),'custom','theme','#123456']
+  ]) {
+    let draft=appearance.setRule(saved,'tokyo-night','all','custom','#ff0000');
+    draft=appearance.setRule(draft,'hackerman','theme','custom','#99bb99');
+    draft=appearance.setRule(draft,'tokyo-night','theme','custom','#00ffff');
+    const restored=appearance.restoreColor(draft,saved,'tokyo-night');
+    assert.equal(appearance.ruleFor(restored,'tokyo-night').mode,mode);
+    assert.equal(restored.colorScope,scope);
+    assert.equal(appearance.resolve(restored,'tokyo-night','#7AA2F7'),expected);
+    assert.equal(restored.themeColors.hackerman.color,'#99BB99');
+    if(mode==='theme') assert.equal(appearance.resolve(restored,'tokyo-night','#334455'),'#334455');
+  }
+});
+
+test('restore color keeps preset edits, tooltip and scaling drafts, without mutating saved settings', () => {
+  const saved=appearance.normalize({accentColor:'#EF98F5'});
+  const before=JSON.stringify(saved);
+  let draft=appearance.upsertPreset(saved,'','My amber','#ff8800');
+  draft=appearance.merge(draft,{tooltipStyle:'compact',uiScale:1.5,barScale:1.25});
+  draft=appearance.setRule(draft,'tokyo-night','theme','custom','#123456');
+  const restored=appearance.restoreColor(draft,saved,'tokyo-night');
+  assert.equal(appearance.resolve(restored,'tokyo-night','#7AA2F7'),'#EF98F5');
+  assert.equal(restored.colorPresets[0].name,'My amber');
+  assert.equal(restored.tooltipStyle,'compact');
+  assert.equal(restored.uiScale,1.5);
+  assert.equal(restored.barScale,1.25);
+  assert.equal(JSON.stringify(saved),before);
+  assert.equal(appearance.resolve(draft,'tokyo-night','#7AA2F7'),'#123456');
+});

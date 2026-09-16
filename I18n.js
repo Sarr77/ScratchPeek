@@ -70,7 +70,7 @@ function words(code) {
 
 // Compact table for appearance controls; keys are shared by every locale.
 // Kept separate so UI color terminology can be reviewed as one unit.
-var appearanceKeys = ["appearance", "highlight", "themeColor", "apply", "cancel", "invalidHex", "tooltipStyle", "spacious", "compactTip", "preview", "saveStyleError"];
+var appearanceKeys = ["appearance", "highlight", "restoreSavedColor", "apply", "cancel", "invalidHex", "tooltipStyle", "spacious", "compactTip", "preview", "saveStyleError"];
 
 function options(code, detected) {
   var w = words(code);
@@ -412,36 +412,36 @@ var catalogs = {
 };
 
 var appearanceCatalogs = {
-  en: ["Appearance", "Highlight color", "Use theme color", "Apply", "Cancel", "Enter a color as #RGB or #RRGGBB.", "Tooltip style", "Spacious", "Compact", "Live preview", "Could not save appearance. Try again."],
-  pl: ["Wygląd", "Kolor podświetlenia", "Użyj koloru motywu", "Zastosuj", "Anuluj", "Wpisz kolor jako #RGB lub #RRGGBB.", "Styl podpowiedzi", "Przestronny", "Kompaktowy", "Podgląd na żywo", "Nie udało się zapisać wyglądu. Spróbuj ponownie."],
-  de: ["Aussehen", "Hervorhebungsfarbe", "Designfarbe verwenden", "Anwenden", "Abbrechen", "Farbe als #RGB oder #RRGGBB eingeben.", "Tooltip-Stil", "Geräumig", "Kompakt", "Live-Vorschau", "Das Aussehen konnte nicht gespeichert werden. Erneut versuchen."],
-  fr: ["Apparence", "Couleur de surbrillance", "Utiliser la couleur du thème", "Appliquer", "Annuler", "Saisissez une couleur au format #RGB ou #RRGGBB.", "Style de l’infobulle", "Aéré", "Compact", "Aperçu en direct", "Impossible d’enregistrer l’apparence. Réessayez."],
-  es: ["Apariencia", "Color de resaltado", "Usar el color del tema", "Aplicar", "Cancelar", "Introduce un color como #RGB o #RRGGBB.", "Estilo de la ayuda emergente", "Amplio", "Compacto", "Vista previa en vivo", "No se pudo guardar la apariencia. Inténtalo de nuevo."],
-  "pt-BR": ["Aparência", "Cor de destaque", "Usar a cor do tema", "Aplicar", "Cancelar", "Digite uma cor como #RGB ou #RRGGBB.", "Estilo da dica", "Espaçoso", "Compacto", "Prévia ao vivo", "Não foi possível salvar a aparência. Tente novamente."],
-  "pt-PT": ["Aparência", "Cor de destaque", "Usar a cor do tema", "Aplicar", "Cancelar", "Introduza uma cor como #RGB ou #RRGGBB.", "Estilo da dica", "Espaçoso", "Compacto", "Pré-visualização em direto", "Não foi possível guardar a aparência. Tente novamente."],
-  it: ["Aspetto", "Colore di evidenziazione", "Usa il colore del tema", "Applica", "Annulla", "Inserisci un colore come #RGB o #RRGGBB.", "Stile del suggerimento", "Spazioso", "Compatto", "Anteprima in tempo reale", "Impossibile salvare l’aspetto. Riprova."],
-  nl: ["Uiterlijk", "Markeringskleur", "Themakleur gebruiken", "Toepassen", "Annuleren", "Voer een kleur in als #RGB of #RRGGBB.", "Stijl van de tooltip", "Ruim", "Compact", "Livevoorbeeld", "Het uiterlijk kon niet worden opgeslagen. Probeer opnieuw."],
-  sv: ["Utseende", "Markeringsfärg", "Använd temafärgen", "Verkställ", "Avbryt", "Ange en färg som #RGB eller #RRGGBB.", "Verktygstipsens stil", "Rymlig", "Kompakt", "Direktförhandsvisning", "Utseendet kunde inte sparas. Försök igen."],
-  da: ["Udseende", "Fremhævningsfarve", "Brug temafarven", "Anvend", "Annuller", "Angiv en farve som #RGB eller #RRGGBB.", "Værktøjstippets stil", "Rummelig", "Kompakt", "Livevisning", "Udseendet kunne ikke gemmes. Prøv igen."],
-  nb: ["Utseende", "Uthevingsfarge", "Bruk temafargen", "Bruk", "Avbryt", "Skriv inn en farge som #RGB eller #RRGGBB.", "Stil for verktøytips", "Romslig", "Kompakt", "Direkte forhåndsvisning", "Utseendet kunne ikke lagres. Prøv igjen."],
-  fi: ["Ulkoasu", "Korostusväri", "Käytä teeman väriä", "Käytä", "Peruuta", "Anna väri muodossa #RGB tai #RRGGBB.", "Työkaluvihjeen tyyli", "Väljä", "Tiivis", "Reaaliaikainen esikatselu", "Ulkoasun tallennus epäonnistui. Yritä uudelleen."],
-  cs: ["Vzhled", "Barva zvýraznění", "Použít barvu motivu", "Použít", "Zrušit", "Zadejte barvu jako #RGB nebo #RRGGBB.", "Styl nápovědy", "Vzdušný", "Kompaktní", "Živý náhled", "Vzhled se nepodařilo uložit. Zkuste to znovu."],
-  sk: ["Vzhľad", "Farba zvýraznenia", "Použiť farbu motívu", "Použiť", "Zrušiť", "Zadajte farbu ako #RGB alebo #RRGGBB.", "Štýl pomocníka", "Vzdušný", "Kompaktný", "Živý náhľad", "Vzhľad sa nepodarilo uložiť. Skúste to znova."],
-  uk: ["Вигляд", "Колір підсвічування", "Використовувати колір теми", "Застосувати", "Скасувати", "Введіть колір у форматі #RGB або #RRGGBB.", "Стиль підказки", "Просторий", "Компактний", "Попередній перегляд наживо", "Не вдалося зберегти вигляд. Спробуйте ще раз."],
-  ru: ["Внешний вид", "Цвет подсветки", "Использовать цвет темы", "Применить", "Отмена", "Введите цвет в формате #RGB или #RRGGBB.", "Стиль подсказки", "Просторный", "Компактный", "Предпросмотр в реальном времени", "Не удалось сохранить внешний вид. Попробуйте ещё раз."],
-  tr: ["Görünüm", "Vurgu rengi", "Tema rengini kullan", "Uygula", "İptal", "Rengi #RGB veya #RRGGBB olarak girin.", "İpucu stili", "Geniş", "Kompakt", "Canlı önizleme", "Görünüm kaydedilemedi. Tekrar deneyin."],
-  ro: ["Aspect", "Culoare de evidențiere", "Folosește culoarea temei", "Aplică", "Anulează", "Introdu o culoare ca #RGB sau #RRGGBB.", "Stilul indiciului", "Spațios", "Compact", "Previzualizare în timp real", "Aspectul nu a putut fi salvat. Încearcă din nou."],
-  hu: ["Megjelenés", "Kiemelés színe", "Téma színének használata", "Alkalmaz", "Mégse", "A szín formátuma #RGB vagy #RRGGBB legyen.", "Buboréksúgó stílusa", "Szellős", "Tömör", "Élő előnézet", "A megjelenést nem sikerült menteni. Próbáld újra."],
-  el: ["Εμφάνιση", "Χρώμα επισήμανσης", "Χρήση χρώματος θέματος", "Εφαρμογή", "Ακύρωση", "Εισαγάγετε χρώμα ως #RGB ή #RRGGBB.", "Στυλ επεξήγησης", "Ευρύχωρο", "Συμπαγές", "Ζωντανή προεπισκόπηση", "Η εμφάνιση δεν αποθηκεύτηκε. Δοκιμάστε ξανά."],
-  ar: ["المظهر", "لون التمييز", "استخدام لون السمة", "تطبيق", "إلغاء", "أدخل لونًا بصيغة ⁦#RGB⁩ أو ⁦#RRGGBB⁩.", "نمط التلميح", "واسع", "مضغوط", "معاينة مباشرة", "تعذر حفظ المظهر. حاول مجددًا."],
-  hi: ["दिखावट", "हाइलाइट का रंग", "थीम का रंग इस्तेमाल करें", "लागू करें", "रद्द करें", "रंग #RGB या #RRGGBB के रूप में दर्ज करें।", "टूलटिप शैली", "खुला", "संक्षिप्त", "लाइव पूर्वावलोकन", "दिखावट सहेजी नहीं जा सकी। फिर कोशिश करें।"],
-  id: ["Tampilan", "Warna sorotan", "Gunakan warna tema", "Terapkan", "Batal", "Masukkan warna sebagai #RGB atau #RRGGBB.", "Gaya tooltip", "Lapang", "Ringkas", "Pratinjau langsung", "Tampilan tidak dapat disimpan. Coba lagi."],
-  vi: ["Giao diện", "Màu tô sáng", "Dùng màu chủ đề", "Áp dụng", "Hủy", "Nhập màu theo dạng #RGB hoặc #RRGGBB.", "Kiểu chú giải", "Thoáng", "Gọn", "Xem trước trực tiếp", "Không thể lưu giao diện. Hãy thử lại."],
-  th: ["รูปลักษณ์", "สีเน้น", "ใช้สีของธีม", "ใช้", "ยกเลิก", "ใส่สีในรูปแบบ #RGB หรือ #RRGGBB", "รูปแบบคำแนะนำ", "โปร่ง", "กะทัดรัด", "ตัวอย่างแบบทันที", "ไม่สามารถบันทึกรูปลักษณ์ได้ โปรดลองอีกครั้ง"],
-  ja: ["外観", "強調色", "テーマの色を使う", "適用", "キャンセル", "#RGB または #RRGGBB 形式で色を入力してください。", "ツールチップのスタイル", "ゆったり", "コンパクト", "ライブプレビュー", "外観を保存できませんでした。再試行してください。"],
-  ko: ["모양", "강조 색상", "테마 색상 사용", "적용", "취소", "색상을 #RGB 또는 #RRGGBB 형식으로 입력하세요.", "도구 설명 스타일", "여유롭게", "간결하게", "실시간 미리보기", "모양을 저장할 수 없습니다. 다시 시도하세요."],
-  "zh-CN": ["外观", "高亮颜色", "使用主题颜色", "应用", "取消", "请输入 #RGB 或 #RRGGBB 格式的颜色。", "提示框样式", "宽松", "紧凑", "实时预览", "无法保存外观，请重试。"],
-  "zh-TW": ["外觀", "醒目提示顏色", "使用佈景主題顏色", "套用", "取消", "請輸入 #RGB 或 #RRGGBB 格式的顏色。", "提示框樣式", "寬鬆", "緊湊", "即時預覽", "無法儲存外觀，請重試。"]
+  en: ["Appearance", "Highlight color", "Restore saved color", "Apply", "Cancel", "Enter a color as #RGB or #RRGGBB.", "Tooltip style", "Spacious", "Compact", "Live preview", "Could not save appearance. Try again."],
+  pl: ["Wygląd", "Kolor podświetlenia", "Przywróć zapisany kolor", "Zastosuj", "Anuluj", "Wpisz kolor jako #RGB lub #RRGGBB.", "Styl podpowiedzi", "Przestronny", "Kompaktowy", "Podgląd na żywo", "Nie udało się zapisać wyglądu. Spróbuj ponownie."],
+  de: ["Aussehen", "Hervorhebungsfarbe", "Gespeicherte Farbe wiederherstellen", "Anwenden", "Abbrechen", "Farbe als #RGB oder #RRGGBB eingeben.", "Tooltip-Stil", "Geräumig", "Kompakt", "Live-Vorschau", "Das Aussehen konnte nicht gespeichert werden. Erneut versuchen."],
+  fr: ["Apparence", "Couleur de surbrillance", "Rétablir la couleur enregistrée", "Appliquer", "Annuler", "Saisissez une couleur au format #RGB ou #RRGGBB.", "Style de l’infobulle", "Aéré", "Compact", "Aperçu en direct", "Impossible d’enregistrer l’apparence. Réessayez."],
+  es: ["Apariencia", "Color de resaltado", "Restaurar color guardado", "Aplicar", "Cancelar", "Introduce un color como #RGB o #RRGGBB.", "Estilo de la ayuda emergente", "Amplio", "Compacto", "Vista previa en vivo", "No se pudo guardar la apariencia. Inténtalo de nuevo."],
+  "pt-BR": ["Aparência", "Cor de destaque", "Restaurar cor salva", "Aplicar", "Cancelar", "Digite uma cor como #RGB ou #RRGGBB.", "Estilo da dica", "Espaçoso", "Compacto", "Prévia ao vivo", "Não foi possível salvar a aparência. Tente novamente."],
+  "pt-PT": ["Aparência", "Cor de destaque", "Restaurar cor guardada", "Aplicar", "Cancelar", "Introduza uma cor como #RGB ou #RRGGBB.", "Estilo da dica", "Espaçoso", "Compacto", "Pré-visualização em direto", "Não foi possível guardar a aparência. Tente novamente."],
+  it: ["Aspetto", "Colore di evidenziazione", "Ripristina colore salvato", "Applica", "Annulla", "Inserisci un colore come #RGB o #RRGGBB.", "Stile del suggerimento", "Spazioso", "Compatto", "Anteprima in tempo reale", "Impossibile salvare l’aspetto. Riprova."],
+  nl: ["Uiterlijk", "Markeringskleur", "Opgeslagen kleur herstellen", "Toepassen", "Annuleren", "Voer een kleur in als #RGB of #RRGGBB.", "Stijl van de tooltip", "Ruim", "Compact", "Livevoorbeeld", "Het uiterlijk kon niet worden opgeslagen. Probeer opnieuw."],
+  sv: ["Utseende", "Markeringsfärg", "Återställ sparad färg", "Verkställ", "Avbryt", "Ange en färg som #RGB eller #RRGGBB.", "Verktygstipsens stil", "Rymlig", "Kompakt", "Direktförhandsvisning", "Utseendet kunde inte sparas. Försök igen."],
+  da: ["Udseende", "Fremhævningsfarve", "Gendan gemt farve", "Anvend", "Annuller", "Angiv en farve som #RGB eller #RRGGBB.", "Værktøjstippets stil", "Rummelig", "Kompakt", "Livevisning", "Udseendet kunne ikke gemmes. Prøv igen."],
+  nb: ["Utseende", "Uthevingsfarge", "Gjenopprett lagret farge", "Bruk", "Avbryt", "Skriv inn en farge som #RGB eller #RRGGBB.", "Stil for verktøytips", "Romslig", "Kompakt", "Direkte forhåndsvisning", "Utseendet kunne ikke lagres. Prøv igjen."],
+  fi: ["Ulkoasu", "Korostusväri", "Palauta tallennettu väri", "Käytä", "Peruuta", "Anna väri muodossa #RGB tai #RRGGBB.", "Työkaluvihjeen tyyli", "Väljä", "Tiivis", "Reaaliaikainen esikatselu", "Ulkoasun tallennus epäonnistui. Yritä uudelleen."],
+  cs: ["Vzhled", "Barva zvýraznění", "Obnovit uloženou barvu", "Použít", "Zrušit", "Zadejte barvu jako #RGB nebo #RRGGBB.", "Styl nápovědy", "Vzdušný", "Kompaktní", "Živý náhled", "Vzhled se nepodařilo uložit. Zkuste to znovu."],
+  sk: ["Vzhľad", "Farba zvýraznenia", "Obnoviť uloženú farbu", "Použiť", "Zrušiť", "Zadajte farbu ako #RGB alebo #RRGGBB.", "Štýl pomocníka", "Vzdušný", "Kompaktný", "Živý náhľad", "Vzhľad sa nepodarilo uložiť. Skúste to znova."],
+  uk: ["Вигляд", "Колір підсвічування", "Відновити збережений колір", "Застосувати", "Скасувати", "Введіть колір у форматі #RGB або #RRGGBB.", "Стиль підказки", "Просторий", "Компактний", "Попередній перегляд наживо", "Не вдалося зберегти вигляд. Спробуйте ще раз."],
+  ru: ["Внешний вид", "Цвет подсветки", "Восстановить сохранённый цвет", "Применить", "Отмена", "Введите цвет в формате #RGB или #RRGGBB.", "Стиль подсказки", "Просторный", "Компактный", "Предпросмотр в реальном времени", "Не удалось сохранить внешний вид. Попробуйте ещё раз."],
+  tr: ["Görünüm", "Vurgu rengi", "Kayıtlı rengi geri yükle", "Uygula", "İptal", "Rengi #RGB veya #RRGGBB olarak girin.", "İpucu stili", "Geniş", "Kompakt", "Canlı önizleme", "Görünüm kaydedilemedi. Tekrar deneyin."],
+  ro: ["Aspect", "Culoare de evidențiere", "Restabilește culoarea salvată", "Aplică", "Anulează", "Introdu o culoare ca #RGB sau #RRGGBB.", "Stilul indiciului", "Spațios", "Compact", "Previzualizare în timp real", "Aspectul nu a putut fi salvat. Încearcă din nou."],
+  hu: ["Megjelenés", "Kiemelés színe", "Mentett szín visszaállítása", "Alkalmaz", "Mégse", "A szín formátuma #RGB vagy #RRGGBB legyen.", "Buboréksúgó stílusa", "Szellős", "Tömör", "Élő előnézet", "A megjelenést nem sikerült menteni. Próbáld újra."],
+  el: ["Εμφάνιση", "Χρώμα επισήμανσης", "Επαναφορά αποθηκευμένου χρώματος", "Εφαρμογή", "Ακύρωση", "Εισαγάγετε χρώμα ως #RGB ή #RRGGBB.", "Στυλ επεξήγησης", "Ευρύχωρο", "Συμπαγές", "Ζωντανή προεπισκόπηση", "Η εμφάνιση δεν αποθηκεύτηκε. Δοκιμάστε ξανά."],
+  ar: ["المظهر", "لون التمييز", "استعادة اللون المحفوظ", "تطبيق", "إلغاء", "أدخل لونًا بصيغة ⁦#RGB⁩ أو ⁦#RRGGBB⁩.", "نمط التلميح", "واسع", "مضغوط", "معاينة مباشرة", "تعذر حفظ المظهر. حاول مجددًا."],
+  hi: ["दिखावट", "हाइलाइट का रंग", "सहेजा गया रंग वापस लाएँ", "लागू करें", "रद्द करें", "रंग #RGB या #RRGGBB के रूप में दर्ज करें।", "टूलटिप शैली", "खुला", "संक्षिप्त", "लाइव पूर्वावलोकन", "दिखावट सहेजी नहीं जा सकी। फिर कोशिश करें।"],
+  id: ["Tampilan", "Warna sorotan", "Pulihkan warna tersimpan", "Terapkan", "Batal", "Masukkan warna sebagai #RGB atau #RRGGBB.", "Gaya tooltip", "Lapang", "Ringkas", "Pratinjau langsung", "Tampilan tidak dapat disimpan. Coba lagi."],
+  vi: ["Giao diện", "Màu tô sáng", "Khôi phục màu đã lưu", "Áp dụng", "Hủy", "Nhập màu theo dạng #RGB hoặc #RRGGBB.", "Kiểu chú giải", "Thoáng", "Gọn", "Xem trước trực tiếp", "Không thể lưu giao diện. Hãy thử lại."],
+  th: ["รูปลักษณ์", "สีเน้น", "คืนค่าสีที่บันทึกไว้", "ใช้", "ยกเลิก", "ใส่สีในรูปแบบ #RGB หรือ #RRGGBB", "รูปแบบคำแนะนำ", "โปร่ง", "กะทัดรัด", "ตัวอย่างแบบทันที", "ไม่สามารถบันทึกรูปลักษณ์ได้ โปรดลองอีกครั้ง"],
+  ja: ["外観", "強調色", "保存した色に戻す", "適用", "キャンセル", "#RGB または #RRGGBB 形式で色を入力してください。", "ツールチップのスタイル", "ゆったり", "コンパクト", "ライブプレビュー", "外観を保存できませんでした。再試行してください。"],
+  ko: ["모양", "강조 색상", "저장된 색상 복원", "적용", "취소", "색상을 #RGB 또는 #RRGGBB 형식으로 입력하세요.", "도구 설명 스타일", "여유롭게", "간결하게", "실시간 미리보기", "모양을 저장할 수 없습니다. 다시 시도하세요."],
+  "zh-CN": ["外观", "高亮颜色", "恢复已保存的颜色", "应用", "取消", "请输入 #RGB 或 #RRGGBB 格式的颜色。", "提示框样式", "宽松", "紧凑", "实时预览", "无法保存外观，请重试。"],
+  "zh-TW": ["外觀", "醒目提示顏色", "還原已儲存的色彩", "套用", "取消", "請輸入 #RGB 或 #RRGGBB 格式的顏色。", "提示框樣式", "寬鬆", "緊湊", "即時預覽", "無法儲存外觀，請重試。"]
 };
 Object.keys(appearanceCatalogs).forEach(function(code) {
   appearanceKeys.forEach(function(key, index) { catalogs[code][key] = appearanceCatalogs[code][index]; });

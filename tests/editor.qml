@@ -58,6 +58,14 @@ ShellRoot {
         testRoot.check(testRoot.find(editor,"colorPlane").y < testRoot.find(editor,"hexInput").parent.y, "palette must stay first");
         editor.changeRule("theme", "theme", "");
         testRoot.check(String(host.accent) === "#7aa2f7", "exact theme preview");
+        editor.tipStyle = "compact";
+        testRoot.find(editor,"hexInput").text = "#zz";
+        editor.validHex = false;
+        var restore = testRoot.find(editor,"restoreSavedColorButton");
+        testRoot.check(restore.text === "Restore saved color · #EF98F5", "button shows saved color, not theme accent");
+        restore.clicked();
+        testRoot.check(editor.validHex && editor.mode === "adaptive", "restore repairs invalid input and restores mode");
+        testRoot.check(String(host.accent) === "#ef98f5" && editor.tipStyle === "compact", "restore changes color without resetting tooltip draft");
         editor.cancel();
         testRoot.check(String(host.accent) === "#ef98f5", "cancel restores saved default");
         editor.begin();
@@ -69,6 +77,9 @@ ShellRoot {
         testRoot.check(editor.draft.colorPresets.length === 1, "preset draft added");
         testRoot.check(host.savedAppearance.colorPresets.length === 0, "preset not saved before Apply");
         var id = editor.selectedPresetId;
+        testRoot.find(editor,"restoreSavedColorButton").clicked();
+        testRoot.check(editor.draft.colorPresets.length === 1 && String(host.accent) === "#ef98f5", "restore preserves unsaved preset");
+        editor.choosePreset(editor.draft.colorPresets[0]);
         editor.editPreset(id);
         testRoot.find(editor,"presetNameInput").text = "Warm amber";
         editor.savePreset();
@@ -85,6 +96,7 @@ ShellRoot {
         testRoot.check(editor.mode === "adaptive" && String(host.accent) === "#82fb9c", "theme change updates open editor");
         host.themeId = "tokyo-night"; host.themeAccent = "#7AA2F7";
         testRoot.check(editor.mode === "custom" && String(host.accent) === "#ff8800", "return restores theme choice");
+        testRoot.check(editor.savedColor === "#FF8800", "restore target follows last Apply");
         host.rejectSave = true;
         editor.choosePreset({color:"#123456"}); editor.apply();
         testRoot.check(editor.saveFailed, "failed save remains editable");

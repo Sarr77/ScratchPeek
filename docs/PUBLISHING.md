@@ -11,7 +11,7 @@ checkout automatically makes it public or submits a listing.
 4. Review the README, MIT license (author: Sarr), preview, and repository contents.
 5. Push the reviewed source and make the repository public. Remove the private
    repository notice from both READMEs; their installation URL is already set.
-6. Tag the release `v0.6.0` and attach the source archive if desired.
+6. Tag the release `v0.6.1` and attach the source archive if desired.
 7. Submit the repository URL to the directory. Directory review is separate
    from publishing the source and is controlled by its maintainers.
 

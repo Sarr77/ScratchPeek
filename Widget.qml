@@ -215,7 +215,7 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.6.0",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.6.1",
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,
           themeAccent: String(widget.themeAccent), themeId: widget.themeId, effectiveBarScale: widget.effectiveBarScale,
           underlineColor: String(widget.underlineColor), opened: widget.opened,

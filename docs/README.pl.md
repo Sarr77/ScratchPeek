@@ -51,8 +51,13 @@ zwinięta sekcja **Presety kolorów / Color presets** z dodatkowymi opcjami:
 - **Dopasowany (domyślny)**: różowy `#EF98F5` w Tokyo Night, akcent motywu
   w pozostałych. Wyjątek dotyczy identyfikatora `tokyo-night`.
 - **Akcent Omarchy**: zawsze dokładny akcent motywu, np. niebieski `#7AA2F7`
-  w Tokyo Night. **Użyj koloru motywu** jest skrótem do tej opcji.
+  w Tokyo Night.
 - **Własny**: wybrany kolor z palety, HEX-a lub presetu.
+
+**Przywróć zapisany kolor** pod polem HEX przywraca podgląd ostatnio zapisanego
+koloru dla bieżącego motywu. Przycisk pokazuje jego HEX i odtwarza także tryb
+oraz zakres koloru. Zachowuje edycję presetów, styl dymka i skalę. Działa też
+po wpisaniu niepoprawnego HEX-a; nie zapisuje ani nie zamyka edytora.
 
 **Tylko [motyw]** zapamiętuje kolor osobno dla tego motywu. Pozostałe motywy
 bez własnego ustawienia używają trybu Dopasowany. **Wszystkie motywy** stosuje

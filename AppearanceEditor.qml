@@ -35,6 +35,8 @@ Column {
   signal ensureVisible(var item)
   spacing: Style.space(12)
   readonly property string chosenHex: Appearance.fromHsv(hue, saturation, value)
+  readonly property string savedColor: hostWidget
+    ? Appearance.resolve(hostWidget.savedAppearance, targetTheme, String(hostWidget.themeAccent)) : String(Color.accent).toUpperCase()
 
   function syncHex(text) {
     var hsv = Appearance.toHsv(text);
@@ -87,6 +89,13 @@ Column {
     selectedPresetId = preset.id || "";
     editingPreset = false; presetError = false;
     changeRule("custom", targetTheme ? colorScope : "all", preset.color);
+  }
+  function restoreSavedColor() {
+    draft = Appearance.restoreColor(draft, hostWidget.savedAppearance, targetTheme);
+    colorScope = draft.colorScope;
+    selectedPresetId = "";
+    syncFromDraft();
+    publishPreview();
   }
   function editPreset(id) {
     editingPresetId = id;
@@ -260,13 +269,12 @@ Column {
     font.pixelSize: Style.font.body
   }
   Ui.Button {
-    objectName: "themeColorButton"
+    objectName: "restoreSavedColorButton"
     width: parent.width
-    text: root.words.themeColor + " · " + String(root.hostWidget ? root.hostWidget.themeAccent : Color.accent).toUpperCase()
-    selected: root.mode === "theme"
+    text: root.words.restoreSavedColor + " · " + root.savedColor
     accent: root.accent
     focusable: true
-    onClicked: root.changeRule("theme", root.targetTheme ? root.colorScope : "all", String(Color.accent))
+    onClicked: root.restoreSavedColor()
   }
   Ui.Button {
     objectName: "colorPresetsDisclosure"

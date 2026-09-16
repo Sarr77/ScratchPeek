@@ -97,6 +97,12 @@ The panel starts with the saturation/value palette, hue slider and HEX field.
 These update the preview on every monitor immediately. HEX accepts `#RGB` or
 `#RRGGBB` (the `#` is optional). Invalid values cannot be applied.
 
+**Restore saved color**, below the HEX field, previews the last applied color
+for the current theme and displays its HEX. It restores the saved color mode
+and scope, so an automatic choice continues to follow themes. Preset edits,
+tooltip style and scaling are preserved. It also recovers from invalid HEX input.
+The button does not save or close the editor.
+
 **Color presets**, below the picker, is collapsed every time the editor opens.
 Expand it for three modes:
 
@@ -104,7 +110,7 @@ Expand it for three modes:
   theme ID; every other theme uses its own accent. Wallpaper and color similarity
   do not determine this exception. Unknown theme IDs use the Omarchy accent.
 - **Omarchy accent:** the exact accent supplied by the current theme, including
-  Tokyo Night's blue `#7AA2F7`. **Use theme color** is a shortcut to this mode.
+  Tokyo Night's blue `#7AA2F7`.
 - **Custom:** a HEX color chosen using the picker or a saved preset.
 
 **Use for → Only [theme]** stores an independent choice for this theme. Themes

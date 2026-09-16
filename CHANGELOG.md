@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.1 — 2026-09-16
+
+- Replaced the theme-color shortcut with Restore saved color and its saved HEX.
+  Restores the saved mode/scope for the current theme, including automatic
+  behavior, while preserving preset edits, tooltip style and scaling.
+- Updated the button label in all 30 languages.
+
 ## 0.6.0 — 2026-09-16
 
 - Adapted color mode: ScratchPeek pink for Tokyo Night, theme accents elsewhere.

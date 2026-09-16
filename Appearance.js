@@ -85,6 +85,17 @@ function setRule(settings, theme, scope, mode, color) {
   else result.themeColors[id] = {mode: mode, color: value};
   return result;
 }
+function restoreColor(settings, savedSettings, theme) {
+  var result = normalize(settings), saved = normalize(savedSettings), id = themeId(theme);
+  result.colorMode = saved.colorMode;
+  result.colorScope = saved.colorScope;
+  result.accentColor = saved.accentColor;
+  if (id) {
+    if (Object.prototype.hasOwnProperty.call(saved.themeColors, id)) result.themeColors[id] = saved.themeColors[id];
+    else delete result.themeColors[id];
+  }
+  return result;
+}
 function upsertPreset(settings, id, name, color) {
   var result = normalize(settings), label = presetName(name), value = hex(color);
   if (!label || !value || result.colorPresets.some(function(p) { return p.id !== id && p.name.toLowerCase() === label.toLowerCase(); })) return null;

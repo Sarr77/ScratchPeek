@@ -183,3 +183,14 @@ The theme-switch scenario is exercised through the editor's real property
 bindings with a test host. It does not switch the entire desktop theme.
 Native-speaker review and exhaustive keyboard/pointer checks remain part of
 public-release review.
+
+## 0.6.1 validation — 2026-09-16
+
+- 45 portable checks pass. Saved-color restoration covers custom, exact-theme
+  and adapted choices, scope restoration, preservation of other theme drafts,
+  preset edits, tooltip style and scaling, and immutable saved input.
+- The real offscreen QML editor test clicks Restore saved color, checks its
+  saved HEX label, restores after invalid input, preserves an unsaved preset,
+  and confirms the target changes after Apply. All 30 catalogs remain complete.
+- Inspected the Polish button in the rendered editor; the compact layout and
+  collapsed color settings remain unchanged.
