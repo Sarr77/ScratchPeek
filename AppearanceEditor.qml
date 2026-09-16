@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Window
 import "vendor/omarchy" as Choice
 import QtQuick.Controls as QQC
 import qs.Ui as Ui
@@ -15,12 +16,23 @@ Column {
   property real hue: 0
   property real saturation: 0
   property real value: 1
-  property bool themeColor: true
+  property var draft: ({})
+  property string mode: "adaptive"
+  property string colorScope: "theme"
+  property string targetTheme: ""
+  property bool started: false
+  property string selectedPresetId: ""
+  property bool colorsExpanded: false
+  property bool editingPreset: false
+  property string editingPresetId: ""
+  property bool presetError: false
+  readonly property string themeName: targetTheme.replace(/(^|-)([a-z])/g, function(_, dash, c) { return (dash ? " " : "") + c.toUpperCase(); })
   property bool validHex: true
   property bool saveFailed: false
   property string tipStyle: "panel"
   property bool syncing: false
   signal finished()
+  signal ensureVisible(var item)
   spacing: Style.space(12)
   readonly property string chosenHex: Appearance.fromHsv(hue, saturation, value)
 
@@ -35,32 +47,96 @@ Column {
     return true;
   }
   function begin() {
-    var saved = hostWidget.savedAppearance;
-    themeColor = !saved.accentColor;
-    tipStyle = saved.tooltipStyle;
+    draft = Appearance.normalize(hostWidget.savedAppearance);
+    targetTheme = hostWidget.themeId;
+    colorScope = draft.colorScope;
+    tipStyle = draft.tooltipStyle;
     saveFailed = false;
-    syncHex(saved.accentColor || String(Color.accent));
+    selectedPresetId = ""; colorsExpanded = false; editingPreset = false; presetError = false;
+    started = true;
+    syncFromDraft();
     publishPreview();
     hexInput.forceActiveFocus();
   }
+  function syncFromDraft() {
+    mode = Appearance.ruleFor(draft, targetTheme).mode;
+    syncHex(Appearance.resolve(draft, targetTheme, String(hostWidget.themeAccent)));
+  }
+  function closePickers() { modePicker.close(); scopePicker.close(); tipStylePicker.close(); started = false; }
   function publishPreview() {
     if (!validHex) return;
-    hostWidget.previewAppearance({accentColor: themeColor ? "" : chosenHex, tooltipStyle: tipStyle});
+    hostWidget.previewAppearance(Appearance.merge(draft, {tooltipStyle: tipStyle}));
+  }
+  function changeRule(nextMode, scope, color) {
+    mode = nextMode; colorScope = scope;
+    draft = Appearance.setRule(draft, targetTheme, scope, mode, color);
+    syncFromDraft();
+    publishPreview();
   }
   function pick(h, s, v) {
     hue = Math.max(0, Math.min(1, h));
     saturation = Math.max(0, Math.min(1, s));
     value = Math.max(0, Math.min(1, v));
-    themeColor = false;
+    mode = "custom";
     syncing = true; hexInput.text = chosenHex; syncing = false;
     validHex = true;
+    draft = Appearance.setRule(draft, targetTheme, targetTheme ? colorScope : "all", mode, chosenHex);
     publishPreview();
   }
-  function cancel() { hostWidget.cancelAppearance(); finished(); }
+  function choosePreset(preset) {
+    selectedPresetId = preset.id || "";
+    editingPreset = false; presetError = false;
+    changeRule("custom", targetTheme ? colorScope : "all", preset.color);
+  }
+  function editPreset(id) {
+    editingPresetId = id;
+    var preset = draft.colorPresets.find(function(p) { return p.id === id; });
+    presetNameInput.text = preset ? preset.name : "";
+    editingPreset = true; presetError = false;
+    presetNameInput.forceActiveFocus();
+  }
+  function savePreset() {
+    var next = Appearance.upsertPreset(draft, editingPresetId, presetNameInput.text, chosenHex);
+    presetError = next === null;
+    if (!next) return;
+    draft = next;
+    selectedPresetId = editingPresetId || next.colorPresets[next.colorPresets.length-1].id;
+    editingPreset = false;
+    publishPreview();
+  }
+  function deletePreset() {
+    draft = Appearance.removePreset(draft, editingPresetId);
+    selectedPresetId = ""; editingPreset = false; presetError = false;
+    publishPreview();
+  }
+  function cancel() { closePickers(); hostWidget.cancelAppearance(); finished(); }
   function apply() {
     if (!validHex) return;
-    if (hostWidget.saveAppearance({accentColor: themeColor ? "" : chosenHex, tooltipStyle: tipStyle})) finished();
+    if (hostWidget.saveAppearance(Appearance.merge(draft, {tooltipStyle: tipStyle}))) { closePickers(); finished(); }
     else saveFailed = true;
+  }
+  Connections {
+    target: root.hostWidget
+    function onThemeIdChanged() {
+      if (!root.started) return;
+      root.targetTheme = root.hostWidget.themeId;
+      root.selectedPresetId = "";
+      root.editingPreset = false;
+      root.syncFromDraft();
+      root.publishPreview();
+    }
+    function onThemeAccentChanged() {
+      if (root.started && root.mode !== "custom") root.syncFromDraft();
+    }
+  }
+  Connections {
+    target: root.Window.window
+    function onActiveFocusItemChanged() {
+      var focused = root.Window.window ? root.Window.window.activeFocusItem : null;
+      for (var item = focused; item; item = item.parent) {
+        if (item === root) { root.ensureVisible(focused); return; }
+      }
+    }
   }
   Keys.onEscapePressed: function(event) { root.cancel(); event.accepted = true; }
 
@@ -167,7 +243,8 @@ Column {
         if (root.validHex) {
           var hsv = Appearance.toHsv(normalized);
           root.hue = hsv.h; root.saturation = hsv.s; root.value = hsv.v;
-          root.themeColor = false;
+          root.mode = "custom";
+          root.draft = Appearance.setRule(root.draft, root.targetTheme, root.targetTheme ? root.colorScope : "all", "custom", normalized);
           root.publishPreview();
         }
       }
@@ -186,10 +263,150 @@ Column {
     objectName: "themeColorButton"
     width: parent.width
     text: root.words.themeColor + " · " + String(root.hostWidget ? root.hostWidget.themeAccent : Color.accent).toUpperCase()
-    selected: root.themeColor
+    selected: root.mode === "theme"
     accent: root.accent
     focusable: true
-    onClicked: { root.themeColor = true; root.syncHex(String(Color.accent)); root.publishPreview(); }
+    onClicked: root.changeRule("theme", root.targetTheme ? root.colorScope : "all", String(Color.accent))
+  }
+  Ui.Button {
+    objectName: "colorPresetsDisclosure"
+    width: parent.width
+    text: (root.colorsExpanded ? "▾ " : "▸ ") + root.words.colorPresets
+    leftAlign: true
+    focusable: true
+    accent: root.accent
+    onClicked: {
+      modePicker.close(); scopePicker.close();
+      root.colorsExpanded = !root.colorsExpanded;
+    }
+  }
+  Column {
+    visible: root.colorsExpanded
+    width: parent.width
+    spacing: Style.space(10)
+    Choice.Dropdown {
+      id: modePicker
+      objectName: "colorModePicker"
+      width: parent.width
+      uiScale: root.hostWidget ? root.hostWidget.uiScale : 1
+      label: root.words.colorMode
+      value: root.mode
+      options: [{value:"adaptive", label:root.words.colorAdaptive},
+        {value:"theme", label:root.words.colorTheme}, {value:"custom", label:root.words.customLabels}]
+      accent: root.accent
+      onChanged: function(value) {
+        root.changeRule(value, root.targetTheme ? root.colorScope : "all", root.chosenHex);
+        modePicker.value = Qt.binding(function() { return root.mode; });
+      }
+    }
+    Choice.Dropdown {
+      id: scopePicker
+      objectName: "colorScopePicker"
+      width: parent.width
+      uiScale: root.hostWidget ? root.hostWidget.uiScale : 1
+      label: root.words.colorScope
+      value: root.targetTheme ? root.colorScope : "all"
+      options: (root.targetTheme ? [{value:"theme", label:I18n.format(root.words.colorThisTheme, {theme:root.themeName})}] : [])
+        .concat([{value:"all", label:root.words.colorAllThemes}])
+      accent: root.accent
+      onChanged: function(value) {
+        root.changeRule(root.mode, value, root.chosenHex);
+        scopePicker.value = Qt.binding(function() { return root.targetTheme ? root.colorScope : "all"; });
+      }
+    }
+    Text {
+      width: parent.width
+      text: root.words.colorAdaptiveHelp
+      color: root.foreground; opacity: 0.7
+      font.pixelSize: Style.font.caption
+      wrapMode: Text.Wrap
+      textFormat: Text.PlainText
+    }
+    Row {
+      width: parent.width
+      Text { width: parent.width; text: root.words.colorPresets; color: root.foreground; font.pixelSize: Style.font.body }
+    }
+    Flow {
+      width: parent.width; spacing: Style.space(6)
+      PresetChip {
+        maximumWidth: parent.width
+        label: root.words.scratchPink; swatch: "#EF98F5"; accent: root.accent
+        selected: root.mode === "custom" && root.chosenHex === "#EF98F5" && !root.selectedPresetId
+        onClicked: root.choosePreset({color:"#EF98F5"})
+      }
+      Repeater {
+        model: root.draft.colorPresets || []
+        PresetChip {
+          required property var modelData
+          maximumWidth: parent.width
+          label: modelData.name; swatch: modelData.color; accent: root.accent
+          selected: root.selectedPresetId === modelData.id
+          onClicked: root.choosePreset(modelData)
+        }
+      }
+    }
+    Row {
+      width: parent.width; spacing: Style.space(8)
+      Ui.Button {
+        width: (parent.width-parent.spacing)/2
+        text: "+ " + root.words.saveColor
+        fontSize: Style.font.caption
+        focusable: true; bordered: true; accent: root.accent
+        enabled: root.validHex && (root.draft.colorPresets || []).length < 24
+        onClicked: root.editPreset("")
+      }
+      Ui.Button {
+        width: (parent.width-parent.spacing)/2
+        text: root.words.editPreset
+        fontSize: Style.font.caption
+        visible: root.selectedPresetId !== ""
+        focusable: true; accent: root.accent
+        onClicked: root.editPreset(root.selectedPresetId)
+      }
+    }
+    Column {
+      visible: root.editingPreset
+      width: parent.width; spacing: Style.space(8)
+      Ui.TextField {
+        id: presetNameInput
+        objectName: "presetNameInput"
+        width: parent.width
+        maximumLength: 40
+        placeholderText: root.words.presetName
+        Accessible.name: root.words.presetName
+        accent: root.accent
+        onAccepted: root.savePreset()
+      }
+      Text {
+        visible: root.presetError
+        width: parent.width; wrapMode: Text.Wrap
+        text: root.words.presetNameError
+        font.pixelSize: Style.font.caption; color: Color.urgent
+      }
+      Row {
+        width: parent.width; spacing: Style.space(6)
+        Ui.Button {
+          width: (parent.width-parent.spacing)/2
+          text: root.editingPresetId ? root.words.updatePreset : root.words.saveColor
+          fontSize: Style.font.caption
+          focusable: true; bordered: true; accent: root.accent
+          enabled: root.validHex && Appearance.presetName(presetNameInput.text) !== ""
+          onClicked: root.savePreset()
+        }
+        Ui.Button {
+          width: (parent.width-parent.spacing)/2
+          text: root.editingPresetId ? root.words.deletePreset : root.words.cancel
+          fontSize: Style.font.caption
+          focusable: true; accent: root.accent
+          onClicked: { if (root.editingPresetId) root.deletePreset(); else root.editingPreset = false; }
+        }
+      }
+    }
+    Text {
+      width: parent.width; text: root.words.presetDraftHelp
+      color: root.foreground; opacity: 0.7; font.pixelSize: Style.font.caption
+      wrapMode: Text.Wrap
+    }
   }
   Choice.Dropdown {
     uiScale: root.hostWidget ? root.hostWidget.uiScale : 1

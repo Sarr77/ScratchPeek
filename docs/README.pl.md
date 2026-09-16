@@ -44,13 +44,31 @@ opisy pozostają zapisane niezależnie od skali.
 
 ## Wygląd
 
-Prawy przycisk na wskaźniku → **Wygląd / Appearance**. Kolor podświetlenia
-wybierzesz z palety, suwakiem odcienia lub polem HEX (`#RGB` / `#RRGGBB`).
-Podgląd obejmuje wszystkie monitory i nie zapisuje zmian na dysku.
-**Zastosuj** zapisuje wybór; **Anuluj**, Escape albo zamknięcie panelu cofają
-niezatwierdzony podgląd. **Użyj koloru motywu** przywraca powiązanie z motywem
-po zatwierdzeniu. Przy przycisku widoczny jest kod HEX tego akcentu. To
-konkretna rola `accent` w motywie, a nie dominujący kolor tapety. Niepoprawny lub niepełny HEX blokuje zapis.
+Prawy przycisk na wskaźniku → **Wygląd / Appearance**. Panel zaczyna się od
+palety, suwaka odcienia i pola HEX (`#RGB` / `#RRGGBB`). Pod nimi jest domyślnie
+zwinięta sekcja **Presety kolorów / Color presets** z dodatkowymi opcjami:
+
+- **Dopasowany (domyślny)**: różowy `#EF98F5` w Tokyo Night, akcent motywu
+  w pozostałych. Wyjątek dotyczy identyfikatora `tokyo-night`.
+- **Akcent Omarchy**: zawsze dokładny akcent motywu, np. niebieski `#7AA2F7`
+  w Tokyo Night. **Użyj koloru motywu** jest skrótem do tej opcji.
+- **Własny**: wybrany kolor z palety, HEX-a lub presetu.
+
+**Tylko [motyw]** zapamiętuje kolor osobno dla tego motywu. Pozostałe motywy
+bez własnego ustawienia używają trybu Dopasowany. **Wszystkie motywy** stosuje
+wybrany tryb wszędzie, zachowując osobne ustawienia na później. Powrót do
+**Tylko [motyw]** ponownie je uaktywnia. To domyślny zakres nowej instalacji.
+
+**Zapisz kolor** dodaje własny preset (maksymalnie 24). Po wybraniu próbki
+**Edytuj preset** pozwala zmienić nazwę, zapisać aktualny kolor palety lub
+usunąć preset. Nazwy są unikalne i mają do 40 znaków. Usunięcie presetu nie
+zmienia wybranego koloru. Wbudowany **Róż ScratchPeek** jest zawsze dostępny.
+
+Podgląd działa na wszystkich monitorach. **Zastosuj** zapisuje również edycję
+presetów; **Anuluj**, Escape lub zamknięcie panelu cofają całość podglądu.
+Podczas aktualizacji dotychczasowy ręczny kolor zachowuje zakres globalny,
+a wcześniejszy wybór koloru motywu nadal używa jego dokładnego akcentu.
+Tryb Dopasowany można wybrać w rozwiniętej sekcji presetów.
 
 Dymek po najechaniu ma wariant **Przestronny** z ikonami i zaokrąglonymi rogami
 oraz **Kompaktowy**. Tło pochodzi z motywu, a ramka i status z wybranego akcentu.

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "sarr.scratchpeek",
   "name": "ScratchPeek",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "author": "Sarr",
   "license": "MIT",
   "description": "Know what is in your scratchpad and where it is open. A monitor-aware indicator and window list for Omarchy.",
@@ -27,7 +27,11 @@
       "labelStyle": "short",
       "customLabels": {},
       "uiScale": 1,
-      "barScale": 1
+      "barScale": 1,
+      "colorMode": "adaptive",
+      "colorScope": "theme",
+      "themeColors": {},
+      "colorPresets": []
     },
     "schema": [
       {
@@ -48,7 +52,7 @@
       {
         "key": "accentColor",
         "type": "string",
-        "label": "Highlight HEX (empty follows theme; use Appearance for the color picker)"
+        "label": "Global custom highlight HEX (use Appearance for theme colors and presets)"
       },
       {
         "key": "tooltipStyle",

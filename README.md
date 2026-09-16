@@ -93,13 +93,37 @@ Changes preview across monitors. **Apply** saves, while **Cancel**, Escape or
 closing the panel restores the saved sizes. Scaling preserves colors and labels.
 
 Right-click the indicator and choose **Appearance** to edit the highlight color.
-The saturation/value palette, hue slider and HEX field update the preview on
-every monitor immediately. HEX accepts `#RGB` or `#RRGGBB` (the `#` is optional).
-Invalid or incomplete values cannot be applied. **Apply** saves; **Cancel**,
-Escape, or closing the panel restores the saved appearance. **Use theme color**
-previews a return to the current theme accent; its button shows the actual HEX
-value. Apply saves that choice. This is the theme's `accent` role, which need
-not be the wallpaper's most prominent color. A custom HEX remains your override.
+The panel starts with the saturation/value palette, hue slider and HEX field.
+These update the preview on every monitor immediately. HEX accepts `#RGB` or
+`#RRGGBB` (the `#` is optional). Invalid values cannot be applied.
+
+**Color presets**, below the picker, is collapsed every time the editor opens.
+Expand it for three modes:
+
+- **Adapted (default):** ScratchPeek pink `#EF98F5` for the exact `tokyo-night`
+  theme ID; every other theme uses its own accent. Wallpaper and color similarity
+  do not determine this exception. Unknown theme IDs use the Omarchy accent.
+- **Omarchy accent:** the exact accent supplied by the current theme, including
+  Tokyo Night's blue `#7AA2F7`. **Use theme color** is a shortcut to this mode.
+- **Custom:** a HEX color chosen using the picker or a saved preset.
+
+**Use for → Only [theme]** stores an independent choice for this theme. Themes
+without a saved choice use Adapted. **All themes** applies the selected mode
+across themes and temporarily overrides individual choices without deleting
+them. Return to Only [theme] to reactivate them. The default scope is Only [theme].
+If the theme ID is unavailable, only All themes can be selected.
+
+The built-in **ScratchPeek pink** swatch is always available. **Save color** adds
+one of up to 24 named presets. Select a swatch to preview it; **Edit preset** can
+rename it, update it to the picker's current color, or delete it. Names are plain
+text, unique without regard to case and limited to 40 characters. Deleting a
+preset keeps the currently selected color. Presets are reusable across themes;
+applying one honors the selected scope.
+
+**Apply** saves colors, scope and preset edits together. **Cancel**, Escape or
+closing the panel discards all these edits. Existing manual HEX colors remain
+global during upgrades; existing explicit theme-color settings keep following
+the exact Omarchy accent. Choose Adapted to opt into the new behavior.
 
 The same editor previews two hover-tooltip styles: **Spacious** (icons, rounded
 corners, more spacing) and **Compact** (shorter rows, fewer decorations).
@@ -143,6 +167,10 @@ Change the existing entry in `~/.config/omarchy/shell.json`:
   "language": "auto",
   "compact": false,
   "accentColor": "",
+  "colorMode": "adaptive",
+  "colorScope": "theme",
+  "themeColors": {},
+  "colorPresets": [],
   "tooltipStyle": "panel",
   "labelStyle": "short",
   "customLabels": {},
@@ -156,7 +184,14 @@ Change the existing entry in `~/.config/omarchy/shell.json`:
   A missing setting on first start behaves exactly like `auto`.
 - `compact`: a state symbol and count instead of a sentence. Vertical bars use
   two lines automatically. The tooltip always explains the full state.
-- `accentColor`: HEX RGB; an empty string follows the active Omarchy theme.
+- `colorMode`: `adaptive`, `theme` or `custom`; used when `colorScope` is `all`.
+- `colorScope`: `theme` (default) or `all`. Theme scope uses the matching
+  `themeColors` entry, falling back to Adapted for themes without an entry.
+- `accentColor`: global custom HEX, used by `colorMode: custom` with scope `all`.
+- `themeColors`: map from stable theme IDs to `{ "mode": "custom", "color": "#EF98F5" }`
+  (or `mode: adaptive` / `theme`). Manage these in the editor.
+- `colorPresets`: saved `{ "id": "preset-1", "name": "My pink", "color": "#EF98F5" }`
+  swatches. The editor manages IDs and validates unique names.
 - `tooltipStyle`: `panel` (spacious) or `compact`.
 - `uiScale`: panel and tooltip multiplier from `0.8` to `2`, default `1`.
 - `barScale`: requested bar text multiplier from `0.8` to `2`, default `1`.
@@ -189,6 +224,7 @@ titles are displayed as plain text. No window is closed or moved to an ordinary
 workspace by this plugin.
 
 There is no telemetry, external network access, or storage of window titles.
+The plugin watches Omarchy’s local `theme.name` file to identify theme changes.
 The plugin reads application names/icons through Quickshell's desktop-entry
 index. Explicit language, appearance and label changes persist through Omarchy's own settings API;
 the plugin never reads or rewrites the whole shell configuration itself.
@@ -201,6 +237,9 @@ Like other Omarchy plugins, its QML runs inside the shell and is not sandboxed.
 node --test tests/model.test.cjs
 omarchy plugin validate .
 ```
+
+Run `python3 tools/test_editor.py` on an Omarchy machine for an offscreen test of
+the real QML editor with an in-memory settings host. It never edits desktop settings.
 
 Node is needed only for tests. If a recent Node release reports only the test
 file, `node tests/model.test.cjs` prints all individual checks.

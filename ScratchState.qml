@@ -1,11 +1,24 @@
 pragma Singleton
 import QtQuick
+import Quickshell
+import Quickshell.Io
 import Quickshell.Hyprland
+import "Appearance.js" as Appearance
 
 // One shared event-driven reader for all monitors. No polling shell commands,
-// background processes, files, or external network access.
+// background processes or external network access.
 QtObject {
   id: root
+  // Omarchy's stable theme slug, independent of the theme's accent or wallpaper.
+  property string themeId: ""
+  property FileView themeFile: FileView {
+    path: Quickshell.env("HOME") + "/.local/state/omarchy/current/theme.name"
+    watchChanges: true
+    printErrors: false
+    onLoaded: root.themeId = Appearance.themeId(text())
+    onFileChanged: reload()
+    onLoadFailed: root.themeId = ""
+  }
   // Transient editor state shared across bar instances; never saved until Apply.
   property string previewOwner: ""
   property var previewAppearance: ({})

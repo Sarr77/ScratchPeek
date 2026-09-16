@@ -66,6 +66,17 @@ To zakres produktu, nie ranking liczby użytkowników Omarchy.
 - [x] Rozwijane listy dopasowane do miejsca nad/pod polem przy dużej skali.
 - [x] Tłumaczenia nowych kontrolek w 30 językach.
 
+## Uzupełnienie 0.6 — kolory motywów i presety
+
+- [x] Dopasowany różowy dla Tokyo Night i akcenty pozostałych motywów.
+- [x] Tryby Dopasowany, Akcent Omarchy i Własny.
+- [x] Ustawienia dla jednego motywu lub wszystkich, z zachowaniem osobnych wyborów.
+- [x] Własne presety: nazwa, kolor, edycja, usunięcie i wspólny podgląd.
+- [x] Zachowanie wcześniejszych ręcznych wyborów podczas aktualizacji.
+- [x] Paleta na początku; nowe opcje w domyślnie zwiniętej sekcji pod nią.
+- [x] Tłumaczenia wszystkich nowych kontrolek na 30 języków.
+- [x] Testy logiki i prawdziwego edytora QML z ustawieniami w pamięci.
+
 ## Dalsza weryfikacja przed publikacją
 
 Przegląd tłumaczeń przez rodzimych użytkowników języków. Testy automatyczne

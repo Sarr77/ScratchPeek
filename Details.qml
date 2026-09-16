@@ -37,6 +37,7 @@ Panel {
     if (opened) { selectedIndex = 0; scroll.contentY = 0; }
     else {
       languagePicker.close();
+      appearanceEditor.closePickers();
       if (root.hostWidget) { root.hostWidget.cancelAppearance(); root.hostWidget.cancelLabels(); }
       labelsEditor.closePicker();
       editingAppearance = false;
@@ -82,6 +83,7 @@ Panel {
   function openLabels() {
     if (!hostWidget) return;
     hostWidget.cancelAppearance();
+    appearanceEditor.closePickers();
     editingAppearance = false;
     editingScaling = false;
     editingLabels = true;
@@ -93,6 +95,7 @@ Panel {
     if (!hostWidget) return;
     hostWidget.cancelLabels();
     hostWidget.cancelAppearance();
+    appearanceEditor.closePickers();
     editingAppearance = false;
     editingLabels = false;
     editingScaling = true;
@@ -162,6 +165,7 @@ Panel {
           visible: root.editingAppearance
           LayoutMirroring.enabled: root.rtl
           LayoutMirroring.childrenInherit: true
+          onEnsureVisible: function(item) { root.ensureVisible(item); }
           onFinished: {
             root.editingAppearance = false;
             root.selectedIndex = root.appearanceIndex;

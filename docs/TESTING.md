@@ -162,3 +162,24 @@ copies add explicit scaled bounds and preserve the upstream MIT attribution.
   real shell: equal content insets on both sides, with the existing scrollbar
   remaining in the outer padding. Closing the preview restores saved sizes.
 - Manifest validation passes; QML lint reports no syntax errors.
+
+## 0.6 validation — 2026-09-16
+
+- 43 portable checks pass, including adapted/exact/custom modes, stable theme
+  identity, legacy preferences, per-theme and global scope, dormant overrides,
+  named preset CRUD, validation, draft isolation and all 30 expanded catalogs.
+- `python3 tools/test_editor.py` loads the real editor in Quickshell offscreen.
+  It exercises preset creation/rename, Apply, Cancel after deletion, rejected
+  saves, a theme change while editing, restoration on return and Polish labels.
+  It also asserts that the new section starts collapsed and the palette stays
+  before the HEX row. The host is in memory; desktop settings are not changed.
+- Inspected the native panel with the picker first and additional controls
+  behind Color presets. Confirmed 0.6.0 loads on both bar monitors, reads
+  `tokyo-night`, preserves the previous custom pink and shares color previews.
+- Manifest validation passes. QML lint reports no syntax/import errors;
+  existing dynamic host-property type warnings remain.
+
+The theme-switch scenario is exercised through the editor's real property
+bindings with a test host. It does not switch the entire desktop theme.
+Native-speaker review and exhaustive keyboard/pointer checks remain part of
+public-release review.

@@ -10,6 +10,8 @@ vm.runInContext(fs.readFileSync(path.join(__dirname, '../Model.js'), 'utf8').rep
 const plain = value => JSON.parse(JSON.stringify(value));
 const appearance = vm.createContext({});
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../Appearance.js'), 'utf8'), appearance);
+const colorDefaults = {colorMode:'adaptive',colorScope:'theme',themeColors:{},colorPresets:[]};
+const legacyColor = {colorMode:'custom',colorScope:'all',themeColors:{},colorPresets:[]};
 const monitor = (name, id, special = '') => ({ name, id, specialWorkspace: { name: special } });
 const window = (address, extra = {}) => ({ address, class: 'test', title: 'Test window', mapped: true,
   workspace: { name: 'special:scratchpad' }, ...extra });
@@ -45,11 +47,11 @@ test('picker HSV matches RGB endpoints and round-trips representative colors', (
 });
 
 test('appearance defaults follow theme and settings updates preserve language', () => {
-  assert.deepEqual(plain(appearance.normalize({})),{accentColor:'',tooltipStyle:'panel',uiScale:1,barScale:1});
-  assert.deepEqual(plain(appearance.normalize({accentColor:'#f80',tooltipStyle:'compact'})),{accentColor:'#FF8800',tooltipStyle:'compact',uiScale:1,barScale:1});
+  assert.deepEqual(plain(appearance.normalize({})),{...colorDefaults,accentColor:'',tooltipStyle:'panel',uiScale:1,barScale:1});
+  assert.deepEqual(plain(appearance.normalize({accentColor:'#f80',tooltipStyle:'compact'})),{...legacyColor,accentColor:'#FF8800',tooltipStyle:'compact',uiScale:1,barScale:1});
   const existing={id:'sarr.scratchpeek',language:'pl',workspace:'music',compact:true};
   assert.deepEqual(plain(model.mergeSettings(existing,appearance.normalize({accentColor:'#f80'}),existing.id)),
-    {...existing,accentColor:'#FF8800',tooltipStyle:'panel',uiScale:1,barScale:1});
+    {...existing,...legacyColor,accentColor:'#FF8800',tooltipStyle:'panel',uiScale:1,barScale:1});
 });
 
 test('window membership, not client.visible, determines occupancy', () => {
@@ -334,13 +336,13 @@ test('scale defaults, valid fractional values and bounds are safe for layout', (
   assert.equal(appearance.scale(0),0.8);
   assert.equal(appearance.scale(999),2);
   const result=plain(appearance.normalize({accentColor:'#f80',uiScale:1.5,barScale:1.25}));
-  assert.deepEqual(result,{accentColor:'#FF8800',tooltipStyle:'panel',uiScale:1.5,barScale:1.25});
+  assert.deepEqual(result,{...legacyColor,accentColor:'#FF8800',tooltipStyle:'panel',uiScale:1.5,barScale:1.25});
 });
 
 test('color-only and scale-only changes preserve each other and leave saved input alone', () => {
-  const saved={accentColor:'#EF98F5',tooltipStyle:'compact',uiScale:1.5,barScale:1.25};
+  const saved={...legacyColor,accentColor:'#EF98F5',tooltipStyle:'compact',uiScale:1.5,barScale:1.25};
   assert.deepEqual(plain(appearance.merge(saved,{accentColor:'#2299dd'})),{...saved,accentColor:'#2299DD'});
-  assert.deepEqual(plain(appearance.merge(saved,{accentColor:''})),{...saved,accentColor:''});
+  assert.deepEqual(plain(appearance.merge(saved,{accentColor:''})),{...saved,accentColor:'',colorMode:'theme'});
   assert.deepEqual(plain(appearance.merge(saved,{uiScale:2,barScale:0.8})),{...saved,uiScale:2,barScale:0.8});
   assert.equal(saved.accentColor,'#EF98F5');
   assert.equal(saved.uiScale,1.5);
@@ -375,4 +377,111 @@ test('a menu near the bottom opens above and caps its scrollable height', () => 
   const fallback=placement.fit(0,0,388,30,0,0,1,360,2,8);
   assert.equal(fallback.width,388);
   assert.equal(fallback.height,360);
+});
+
+test('adapted defaults follow theme identity, including returning from a green theme', () => {
+  const prefs = appearance.normalize({});
+  for (const [theme, accent, expected] of [
+    ['tokyo-night','#7AA2F7','#EF98F5'], ['hackerman','#82FB9C','#82FB9C'],
+    ['tokyo-night','#7AA2F7','#EF98F5'], ['other-blue-theme','#7AA2F7','#7AA2F7'],
+    ['tokyo-night-custom','#00FF00','#00FF00'], ['', '#123456','#123456']
+  ]) assert.equal(appearance.resolve(prefs,theme,accent),expected);
+  assert.equal(appearance.themeId('tokyo-night\n'),'tokyo-night');
+  for (const bad of ['../tokyo-night','__proto__','constructor','a/b','']) assert.equal(appearance.themeId(bad),'');
+});
+
+test('upgrades preserve both legacy custom HEX and explicit exact-theme choices', () => {
+  const custom={accentColor:'#eF98f5',tooltipStyle:'compact',uiScale:1.2};
+  const theme={accentColor:''};
+  for (const [id,accent] of [['tokyo-night','#7AA2F7'],['hackerman','#82FB9C']]) {
+    assert.equal(appearance.resolve(custom,id,accent),'#EF98F5');
+    assert.equal(appearance.resolve(theme,id,accent),accent);
+  }
+  assert.equal(appearance.normalize(custom).colorScope,'all');
+  assert.equal(appearance.normalize(theme).colorMode,'theme');
+  assert.equal(appearance.normalize(custom).uiScale,1.2);
+  const oldIpc = appearance.merge(appearance.normalize(custom),{accentColor:''});
+  assert.equal(appearance.resolve(oldIpc,'tokyo-night','#7AA2F7'),'#7AA2F7');
+});
+
+test('theme-scoped rules return after switching themes and preview never mutates saved data', () => {
+  const saved=appearance.normalize({});
+  const before=JSON.stringify(saved);
+  let draft=appearance.setRule(saved,'tokyo-night','theme','custom','#f80');
+  draft=appearance.setRule(draft,'hackerman','theme','custom','#4f4');
+  assert.equal(appearance.resolve(draft,'tokyo-night','#7AA2F7'),'#FF8800');
+  assert.equal(appearance.resolve(draft,'hackerman','#82FB9C'),'#44FF44');
+  assert.equal(appearance.resolve(draft,'new-theme','#ABCDEF'),'#ABCDEF');
+  assert.equal(JSON.stringify(saved),before);
+  assert.equal(appearance.resolve(saved,'tokyo-night','#7AA2F7'),'#EF98F5');
+  draft=appearance.setRule(draft,'tokyo-night','theme','adaptive','');
+  assert.equal(appearance.resolve(draft,'tokyo-night','#7AA2F7'),'#EF98F5');
+  draft=appearance.setRule(draft,'tokyo-night','theme','theme','');
+  assert.equal(appearance.resolve(draft,'tokyo-night','#7AA2F7'),'#7AA2F7');
+});
+
+test('all-theme selection wins everywhere while preserving dormant individual choices', () => {
+  let prefs=appearance.setRule({},'tokyo-night','theme','custom','#ff8800');
+  prefs=appearance.setRule(prefs,'hackerman','theme','custom','#44ff44');
+  prefs=appearance.setRule(prefs,'tokyo-night','all','custom','#112233');
+  for (const theme of ['tokyo-night','hackerman','new-theme']) assert.equal(appearance.resolve(prefs,theme,'#778899'),'#112233');
+  prefs=appearance.setRule(prefs,'tokyo-night','theme','adaptive','');
+  assert.equal(appearance.resolve(prefs,'hackerman','#82FB9C'),'#44FF44');
+  assert.equal(appearance.resolve(prefs,'new-theme','#778899'),'#778899');
+  assert.equal(appearance.resolve(prefs,'tokyo-night','#7AA2F7'),'#EF98F5');
+});
+
+test('saving, renaming, recoloring and deleting a preset preserve theme choices', () => {
+  const saved=appearance.setRule({},'tokyo-night','theme','custom','#123456');
+  const before=JSON.stringify(saved);
+  let draft=appearance.upsertPreset(saved,'',' My pink ','#ef98f5');
+  assert.equal(draft.colorPresets[0].name,'My pink');
+  assert.equal(draft.colorPresets[0].color,'#EF98F5');
+  const id=draft.colorPresets[0].id;
+  draft=appearance.upsertPreset(draft,id,'Warm orange','#f80');
+  assert.equal(draft.colorPresets.length,1);
+  assert.equal(draft.colorPresets[0].name,'Warm orange');
+  assert.equal(draft.colorPresets[0].color,'#FF8800');
+  draft=appearance.setRule(draft,'tokyo-night','theme','custom',draft.colorPresets[0].color);
+  draft=appearance.removePreset(draft,id);
+  assert.equal(draft.colorPresets.length,0);
+  assert.equal(appearance.resolve(draft,'tokyo-night','#7AA2F7'),'#FF8800');
+  assert.equal(JSON.stringify(saved),before);
+});
+
+test('presets reject invalid, duplicate and excess entries without overwriting other colors', () => {
+  let prefs=appearance.upsertPreset({},'','Blue','#123456');
+  for (const [id,name,color] of [['','blue','#abcdef'],['','','#123456'],['','Bad','red'],['missing','New','#123456']])
+    assert.equal(appearance.upsertPreset(prefs,id,name,color),null);
+  for (let i=1;i<24;i++) prefs=appearance.upsertPreset(prefs,'','Color '+i,'#abcdef');
+  assert.equal(prefs.colorPresets.length,24);
+  assert.equal(appearance.upsertPreset(prefs,'','Extra','#111111'),null);
+  assert.ok(appearance.upsertPreset(prefs,prefs.colorPresets[0].id,'Renamed','#222222'));
+  const malicious=JSON.parse('{"themeColors":{"__proto__":{"mode":"custom","color":"#ffffff"},"tokyo-night":{"mode":"custom","color":"nope"}},"colorPresets":[{"id":"preset-1","name":"<b>literal</b>","color":"#f80"}]}');
+  const clean=appearance.normalize(malicious);
+  assert.equal(Object.keys(clean.themeColors).length,0);
+  assert.equal(clean.colorPresets[0].name,'<b>literal</b>');
+  assert.equal(appearance.presetName('a\nb\t c'),'a b c');
+  assert.equal(appearance.presetName('x'.repeat(100)).length,40);
+  assert.deepEqual(plain(appearance.setRule({},'','theme','custom','#123456')),plain(appearance.normalize({})));
+});
+
+test('scale-only edits preserve saved palettes, modes, theme overrides and unrelated settings', () => {
+  let appearancePrefs=appearance.setRule({},'tokyo-night','theme','custom','#fedcba');
+  appearancePrefs=appearance.upsertPreset(appearancePrefs,'','Pink','#ef98f5');
+  const saved={id:'sarr.scratchpeek',language:'pl',labelStyle:'custom',customLabels:{active:'My shelf'},...plain(appearancePrefs)};
+  const next=plain(model.mergeSettings(saved,appearance.merge(saved,{uiScale:1.5,barScale:1.25}),saved.id));
+  assert.deepEqual(next,{...saved,uiScale:1.5,barScale:1.25});
+  assert.deepEqual(plain(appearance.normalize(next)),plain(appearance.normalize(JSON.parse(JSON.stringify(next)))));
+});
+
+test('all 30 languages include color modes, scope and preset actions', () => {
+  const placeholders=text=>[...text.matchAll(/\{[a-zA-Z]+\}/g)].map(m=>m[0]).sort();
+  for (const {code} of i18n.languages) {
+    assert.equal(i18n.colorCatalogs[code].length,i18n.colorKeys.length,code);
+    for (const key of i18n.colorKeys) {
+      assert.ok(i18n.catalogs[code][key],code+':'+key);
+      assert.deepEqual(placeholders(i18n.catalogs[code][key]),placeholders(i18n.catalogs.en[key]));
+    }
+  }
 });

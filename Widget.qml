@@ -21,7 +21,8 @@ BarWidget {
   property bool languageSaveFailed: false
   readonly property var savedAppearance: Appearance.normalize(settings)
   readonly property var appearance: Local.ScratchState.previewOwner !== "" ? Local.ScratchState.previewAppearance : savedAppearance
-  readonly property color accent: appearance.accentColor || Color.accent
+  readonly property string themeId: Local.ScratchState.themeId
+  readonly property color accent: Appearance.resolve(appearance, themeId, String(Color.accent))
   readonly property color themeAccent: Color.accent
   readonly property real uiScale: appearance.uiScale
   readonly property real requestedBarFont: Style.font.body * appearance.barScale
@@ -214,9 +215,9 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.5.1",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.6.0",
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,
-          themeAccent: String(widget.themeAccent), effectiveBarScale: widget.effectiveBarScale,
+          themeAccent: String(widget.themeAccent), themeId: widget.themeId, effectiveBarScale: widget.effectiveBarScale,
           underlineColor: String(widget.underlineColor), opened: widget.opened,
           description: widget.statusDescription, labels: widget.labels, savedLabels: widget.savedLabels,
           labelWidth: widget.openPanelIndicatorWidth };

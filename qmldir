@@ -1,1 +1,11 @@
 singleton ScratchState 1.0 ScratchState.qml
+AppearanceEditor 1.0 AppearanceEditor.qml
+Details 1.0 Details.qml
+HoverTip 1.0 HoverTip.qml
+LabelsEditor 1.0 LabelsEditor.qml
+PresetChip 1.0 PresetChip.qml
+ScaleControl 1.0 ScaleControl.qml
+ScalingEditor 1.0 ScalingEditor.qml
+ScrollHandle 1.0 ScrollHandle.qml
+TooltipContent 1.0 TooltipContent.qml
+Widget 1.0 Widget.qml

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 — 2026-09-16
+
+- Adapted color mode: ScratchPeek pink for Tokyo Night, theme accents elsewhere.
+- Exact Omarchy accent and custom colors, scoped to one theme or all themes.
+- Named color presets with preview, rename, recolor and deletion; Apply/Cancel
+  includes preset edits. Previous manual color choices survive upgrades.
+- Picker remains first; additional color settings live in a collapsed section
+  below it. Keyboard focus scrolls controls into view when expanded.
+- New controls translated into all 30 supported languages.
+- Added an offscreen test of the real QML editor with an in-memory settings host.
+
 ## 0.5.1 — 2026-09-16
 
 - Equal left/right content margins in scrolling panels; the scrollbar remains

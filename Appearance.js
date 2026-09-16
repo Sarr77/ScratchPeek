@@ -14,13 +14,94 @@ function merge(current, values) {
   var result = {};
   Object.keys(current || {}).forEach(function(key) { result[key] = current[key]; });
   Object.keys(values || {}).forEach(function(key) { result[key] = values[key]; });
+  // Keep the original color-only IPC compatible with 0.5: a HEX applies
+  // globally and an empty value selects the exact Omarchy accent.
+  if (values && Object.prototype.hasOwnProperty.call(values, "accentColor")
+      && !Object.prototype.hasOwnProperty.call(values, "colorMode")) {
+    result.colorMode = hex(values.accentColor) ? "custom" : "theme";
+    result.colorScope = "all";
+  }
   return normalize(result);
 }
 
 function normalize(settings) {
-  return { accentColor: hex(settings && settings.accentColor),
+  settings = settings || {};
+  var legacy = !validMode(settings.colorMode);
+  var accent = hex(settings.accentColor);
+  var mode = legacy ? (accent ? "custom" : (Object.prototype.hasOwnProperty.call(settings, "accentColor") ? "theme" : "adaptive")) : settings.colorMode;
+  var rules = {};
+  var source = settings.themeColors;
+  if (source && typeof source === "object" && !Array.isArray(source)) {
+    Object.keys(source).slice(0, 100).forEach(function(key) {
+      if (themeId(key) !== key || !key) return;
+      var rule = source[key];
+      if (!rule || !validMode(rule.mode)) return;
+      var color = hex(rule.color);
+      if (rule.mode !== "custom" || color) rules[key] = {mode: rule.mode, color: color};
+    });
+  }
+  var presets = [], ids = Object.create(null), names = Object.create(null);
+  if (Array.isArray(settings.colorPresets)) settings.colorPresets.slice(0, 24).forEach(function(p) {
+    if (!p || typeof p.id !== "string" || !/^preset-[a-zA-Z0-9-]{1,64}$/.test(p.id)) return;
+    var name = presetName(p.name), color = hex(p.color);
+    if (!name || !color || ids[p.id] || names[name.toLowerCase()]) return;
+    ids[p.id] = true; names[name.toLowerCase()] = true;
+    presets.push({id: p.id, name: name, color: color});
+  });
+  return { accentColor: accent,
+    colorMode: mode === "custom" && !accent ? "adaptive" : mode,
+    colorScope: legacy ? (mode === "adaptive" ? "theme" : "all") : (settings.colorScope === "all" ? "all" : "theme"),
+    themeColors: rules, colorPresets: presets,
     tooltipStyle: settings && settings.tooltipStyle === "compact" ? "compact" : "panel",
     uiScale: scale(settings && settings.uiScale), barScale: scale(settings && settings.barScale) };
+}
+
+function validMode(mode) { return mode === "adaptive" || mode === "theme" || mode === "custom"; }
+function themeId(value) {
+  var id = String(value || "").trim().toLowerCase();
+  return /^[a-z0-9][a-z0-9._-]{0,99}$/.test(id) && id !== "constructor" && id !== "prototype" ? id : "";
+}
+function presetName(value) {
+  return typeof value === "string" ? value.replace(/[\x00-\x1f\x7f]/g, " ").replace(/\s+/g, " ").trim().slice(0, 40) : "";
+}
+function ruleFor(settings, theme) {
+  var prefs = normalize(settings), id = themeId(theme);
+  if (prefs.colorScope === "all") return {mode: prefs.colorMode, color: prefs.accentColor};
+  return id && Object.prototype.hasOwnProperty.call(prefs.themeColors, id)
+    ? prefs.themeColors[id] : {mode: "adaptive", color: ""};
+}
+function resolve(settings, theme, themeAccent) {
+  var rule = ruleFor(settings, theme);
+  if (rule.mode === "custom" && rule.color) return rule.color;
+  if (rule.mode === "adaptive" && themeId(theme) === "tokyo-night") return "#EF98F5";
+  return hex(themeAccent) || "#7AA2F7";
+}
+function setRule(settings, theme, scope, mode, color) {
+  var result = normalize(settings), id = themeId(theme), value = hex(color);
+  if (!validMode(mode) || (mode === "custom" && !value)) return result;
+  if (scope === "theme" && !id) return result;
+  result.colorScope = scope === "all" ? "all" : "theme";
+  if (result.colorScope === "all") { result.colorMode = mode; result.accentColor = value; }
+  else result.themeColors[id] = {mode: mode, color: value};
+  return result;
+}
+function upsertPreset(settings, id, name, color) {
+  var result = normalize(settings), label = presetName(name), value = hex(color);
+  if (!label || !value || result.colorPresets.some(function(p) { return p.id !== id && p.name.toLowerCase() === label.toLowerCase(); })) return null;
+  var index = result.colorPresets.findIndex(function(p) { return p.id === id; });
+  if (id && index < 0) return null;
+  if (index < 0) {
+    if (result.colorPresets.length >= 24) return null;
+    var n = 1;
+    while (result.colorPresets.some(function(p) { return p.id === "preset-" + n; })) n++;
+    result.colorPresets.push({id: "preset-" + n, name: label, color: value});
+  } else result.colorPresets[index] = {id: id, name: label, color: value};
+  return result;
+}
+function removePreset(settings, id) {
+  var result = normalize(settings);
+  result.colorPresets = result.colorPresets.filter(function(p) { return p.id !== id; });
+  return result;
 }
 
 function fromHsv(h, s, v) {

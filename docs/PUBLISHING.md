@@ -11,7 +11,7 @@ checkout automatically makes it public or submits a listing.
 4. Review the README, MIT license (author: Sarr), preview, and repository contents.
 5. Push the reviewed source and make the repository public. Remove the private
    repository notice from both READMEs; their installation URL is already set.
-6. Tag the release `v0.5.1` and attach the source archive if desired.
+6. Tag the release `v0.6.0` and attach the source archive if desired.
 7. Submit the repository URL to the directory. Directory review is separate
    from publishing the source and is controlled by its maintainers.
 
@@ -39,7 +39,7 @@ preview with example data, not a screenshot of a user's desktop.
 - **Tags:** scratchpad, hyprland, workspaces, multi-monitor, bar-widget
 - **Summary:** Know what is in your scratchpad and where it is open. Live window
   count, per-monitor state, and a window picker for Omarchy.
-- **Permissions/behavior:** Reads local compositor window metadata and desktop
+- **Permissions/behavior:** Reads local compositor window metadata, the local theme identity and desktop
   application icons/names. Only sends focus/toggle requests on explicit user
   actions. Saves language, appearance and label preferences through the scoped Omarchy settings API.
   No network, telemetry, storage of window titles, additional processes or privileges.
