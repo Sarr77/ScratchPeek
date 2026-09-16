@@ -1,15 +1,16 @@
 # Publishing checklist
 
-ScratchPeek is prepared as an Omarchy plugin repository. Nothing in this
-checkout automatically publishes it or submits a listing.
+ScratchPeek is backed up in the private repository
+[Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek). Nothing in this
+checkout automatically makes it public or submits a listing.
 
 1. The chosen name is **ScratchPeek**, ID **sarr.scratchpeek**, author **Sarr**.
-   Choose the public GitHub repository owner.
+   The GitHub repository owner is **Sarr77**.
 2. Run `node --test tests/model.test.cjs` and `omarchy plugin validate .`.
 3. Complete the live checks in [TESTING.md](TESTING.md).
 4. Review the README, MIT license (author: Sarr), preview, and repository contents.
-5. Create the public repository and push the reviewed source. Replace the
-   installation placeholder in both READMEs with its actual URL.
+5. Push the reviewed source and make the repository public. Remove the private
+   repository notice from both READMEs; their installation URL is already set.
 6. Tag the release `v0.5.1` and attach the source archive if desired.
 7. Submit the repository URL to the directory. Directory review is separate
    from publishing the source and is controlled by its maintainers.

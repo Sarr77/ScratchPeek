@@ -21,10 +21,11 @@ To scratchpad **okien**, a nie historia kopiowanych tekstów i obrazów.
 
 Wymagane jest Omarchy Quattro z paskiem `omarchy-shell`. Nie są potrzebne
 dodatkowe pakiety. Instrukcja lokalnej instalacji i wymagania są w
-[README](../README.md#install). Po publikacji wystarczy:
+[README](../README.md#install). Kod jest zapisany w obecnie prywatnym repozytorium
+[Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek). Po jego upublicznieniu wystarczy:
 
 ```bash
-omarchy plugin add <publiczny-adres-repozytorium> --enable
+omarchy plugin add https://github.com/Sarr77/ScratchPeek --enable
 ```
 
 ## Skala

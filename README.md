@@ -40,10 +40,11 @@ the legacy path needs a Quickshell build exposing that property.
 
 ## Install
 
-After the source is published, use the repository's public URL:
+The source is backed up in [Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek).
+The repository is currently private. After the public release, install with:
 
 ```bash
-omarchy plugin add <public-repository-url> --enable
+omarchy plugin add https://github.com/Sarr77/ScratchPeek --enable
 ```
 
 For a local checkout, link it into your plugin directory and enable it:
