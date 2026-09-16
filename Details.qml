@@ -1,0 +1,483 @@
+pragma ComponentBehavior: Bound
+import QtQuick
+import "vendor/omarchy" as Choice
+import QtQuick.Controls as QQC
+import Quickshell
+import qs.Ui
+import qs.Ui as Ui
+import qs.Commons
+import "Model.js" as Model
+import "I18n.js" as I18n
+
+Panel {
+  id: root
+  moduleName: "sarr.scratchpeek"
+  manageIpc: false
+  property var anchorItem: null
+  property var hostWidget: null
+  readonly property var scratchpadState: hostWidget ? hostWidget.scratchpadState : { status: "unknown", count: 0, windows: [] }
+  readonly property string language: hostWidget ? hostWidget.language : "en"
+  readonly property var words: I18n.words(language)
+  readonly property bool rtl: I18n.isRtl(language)
+  readonly property bool canToggle: scratchpadState.status !== "unknown" && (scratchpadState.count > 0 || scratchpadState.status === "here")
+  readonly property int languageIndex: scratchpadState.count + (canToggle ? 1 : 0)
+  property int selectedIndex: 0
+  property bool editingAppearance: false
+  property bool editingLabels: false
+  property bool editingScaling: false
+  readonly property real uiScale: hostWidget ? hostWidget.uiScale : 1
+  readonly property bool editing: editingAppearance || editingLabels || editingScaling
+  readonly property int scalingIndex: appearanceIndex + 1
+  readonly property int labelsIndex: scalingIndex + 1
+  readonly property real logicalContentHeight: editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight))
+  readonly property int appearanceIndex: languageIndex + 1
+  readonly property color accent: hostWidget ? hostWidget.accent : Color.accent
+
+  onOpenedChanged: {
+    if (opened) { selectedIndex = 0; scroll.contentY = 0; }
+    else {
+      languagePicker.close();
+      if (root.hostWidget) { root.hostWidget.cancelAppearance(); root.hostWidget.cancelLabels(); }
+      labelsEditor.closePicker();
+      editingAppearance = false;
+      editingLabels = false;
+      editingScaling = false;
+    }
+  }
+  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, labelsIndex)
+
+  function moveSelection(delta) {
+    selectedIndex = Math.max(0, Math.min(labelsIndex, selectedIndex + delta));
+    if (selectedIndex < scratchpadState.count) {
+      list.positionViewAtIndex(selectedIndex, ListView.Contain);
+      scroll.contentY = 0;
+    } else scroll.contentY = Math.max(0, scroll.contentHeight - scroll.height);
+  }
+  function activateSelection() {
+    if (!hostWidget) return;
+    if (selectedIndex === labelsIndex) openLabels();
+    else if (selectedIndex === scalingIndex) openScaling();
+    else if (selectedIndex === appearanceIndex) openAppearance();
+    else if (selectedIndex === languageIndex) openLanguages();
+    else if (selectedIndex === scratchpadState.count) hostWidget.toggleScratchpad();
+    else if (scratchpadState.windows[selectedIndex]) hostWidget.focusWindow(scratchpadState.windows[selectedIndex].address);
+  }
+  function openLanguages() {
+    selectedIndex = languageIndex;
+    scroll.contentY = Math.max(0, scroll.contentHeight - scroll.height);
+    languagePicker.open();
+  }
+
+  function openAppearance() {
+    if (!hostWidget) return;
+    hostWidget.cancelLabels();
+    editingLabels = false;
+    hostWidget.cancelAppearance();
+    editingScaling = false;
+    editingAppearance = true;
+    scroll.contentY = 0;
+    appearanceEditor.begin();
+  }
+
+  function openLabels() {
+    if (!hostWidget) return;
+    hostWidget.cancelAppearance();
+    editingAppearance = false;
+    editingScaling = false;
+    editingLabels = true;
+    scroll.contentY = 0;
+    labelsEditor.begin();
+  }
+
+  function openScaling() {
+    if (!hostWidget) return;
+    hostWidget.cancelLabels();
+    hostWidget.cancelAppearance();
+    editingAppearance = false;
+    editingLabels = false;
+    editingScaling = true;
+    scroll.contentY = 0;
+    scalingEditor.begin();
+  }
+
+  function ensureVisible(item) {
+    var position = item.mapToItem(scroll.contentItem, 0, 0);
+    if (position.y < scroll.contentY) scroll.contentY = position.y;
+    else if (position.y + item.height > scroll.contentY + scroll.height)
+      scroll.contentY = position.y + item.height - scroll.height;
+  }
+
+  KeyboardPanel {
+    id: panel
+    anchorItem: root.anchorItem
+    owner: root
+    bar: root.bar
+    open: root.opened
+    focusTarget: catcher
+    padding: Style.spacing.popupPadding * root.uiScale
+    contentWidth: panel.fittedContentWidth(Style.space(420) * root.uiScale)
+    contentHeight: panel.fittedContentHeight(root.logicalContentHeight * root.uiScale)
+    // Qt Controls reparents dropdown popups to the overlay, outside the scaled
+    // content tree. Give this panel window's overlay the same transform.
+    borderSpec: Border.flat(root.accent, Math.max(1, Style.space(2)))
+
+    PanelKeyCatcher {
+      id: catcher
+      // Quickshell creates the backing QQuickWindow lazily; bind only once
+      // the attached Qt Controls overlay exists.
+      Binding { target: catcher.QQC.Overlay.overlay; property: "transformOrigin"; value: Item.TopLeft; when: catcher.QQC.Overlay.overlay !== null }
+      Binding { target: catcher.QQC.Overlay.overlay; property: "scale"; value: root.uiScale; when: catcher.QQC.Overlay.overlay !== null }
+      anchors.fill: parent
+      blocked: languagePicker.popupOpen || root.editing
+      onCloseRequested: root.close()
+      onMoveRequested: function(dx, dy) { root.moveSelection(dy) }
+      onActivateRequested: root.activateSelection()
+      onTabRequested: function(direction) { root.moveSelection(direction) }
+
+      Flickable {
+        id: scroll
+        // The scrollbar lives in the panel padding, so both content margins
+        // stay equal whether scrolling is needed or not.
+        width: parent.width / root.uiScale
+        height: parent.height / root.uiScale
+        scale: root.uiScale
+        transformOrigin: Item.TopLeft
+        contentHeight: root.logicalContentHeight
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
+        QQC.ScrollBar.vertical: ScrollHandle {
+          id: outerScrollbar
+          parent: catcher
+          x: root.rtl ? -panel.padding : catcher.width - width + panel.padding
+          y: 0
+          height: catcher.height
+          uiScale: root.uiScale
+          accent: root.accent
+        }
+
+        AppearanceEditor {
+          id: appearanceEditor
+          width: scroll.width
+          hostWidget: root.hostWidget
+          visible: root.editingAppearance
+          LayoutMirroring.enabled: root.rtl
+          LayoutMirroring.childrenInherit: true
+          onFinished: {
+            root.editingAppearance = false;
+            root.selectedIndex = root.appearanceIndex;
+            scroll.contentY = Math.max(0, content.implicitHeight - scroll.height);
+            catcher.forceActiveFocus();
+          }
+        }
+
+        LabelsEditor {
+          id: labelsEditor
+          width: scroll.width
+          hostWidget: root.hostWidget
+          visible: root.editingLabels
+          LayoutMirroring.enabled: root.rtl
+          LayoutMirroring.childrenInherit: true
+          onEnsureVisible: function(item) { root.ensureVisible(item); }
+          onFinished: {
+            root.editingLabels = false;
+            root.selectedIndex = root.labelsIndex;
+            scroll.contentY = Math.max(0, content.implicitHeight - scroll.height);
+            catcher.forceActiveFocus();
+          }
+        }
+
+        ScalingEditor {
+          id: scalingEditor
+          width: scroll.width
+          hostWidget: root.hostWidget
+          visible: root.editingScaling
+          LayoutMirroring.enabled: root.rtl
+          LayoutMirroring.childrenInherit: true
+          onEnsureVisible: function(item) { root.ensureVisible(item); }
+          onFinished: {
+            root.editingScaling = false;
+            root.selectedIndex = root.scalingIndex;
+            scroll.contentY = Math.max(0, content.implicitHeight - scroll.height);
+            catcher.forceActiveFocus();
+          }
+        }
+
+        Column {
+          id: content
+          visible: !root.editing
+          width: scroll.width
+          spacing: Style.space(12)
+          LayoutMirroring.enabled: root.rtl
+          LayoutMirroring.childrenInherit: true
+
+          Row {
+            width: parent.width
+            Text {
+              width: parent.width - count.implicitWidth
+              text: "ScratchPeek"
+              textFormat: Text.PlainText
+              horizontalAlignment: Text.AlignLeft
+              color: root.barForeground
+              font.family: root.bar ? root.bar.fontFamily : Style.font.family
+              font.pixelSize: Style.font.subtitle
+              font.bold: true
+            }
+            Text {
+              id: count
+              text: root.words.windows + ": " + (root.scratchpadState.status === "unknown" ? "?" : root.scratchpadState.count)
+              textFormat: Text.PlainText
+              color: root.barForeground
+              opacity: 0.7
+              font.pixelSize: Style.font.body
+            }
+          }
+
+          Text {
+            width: parent.width
+            text: root.hostWidget ? root.hostWidget.statusDescription : Model.statusText(root.scratchpadState, root.language)
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: root.scratchpadState.status === "here" ? root.accent : root.barForeground
+            font.pixelSize: Style.font.body
+          }
+
+          Item {
+            id: diagram
+            readonly property var layout: root.hostWidget ? root.hostWidget.monitorDiagram : { items: [], width: 1, height: 1 }
+            width: parent.width
+            height: visible ? Style.space(64) : 0
+            visible: layout.items.length > 1
+            // Physical positions must not be mirrored with Arabic text.
+            LayoutMirroring.enabled: false
+            LayoutMirroring.childrenInherit: true
+            readonly property real scaleFactor: Math.min(width / layout.width, height / layout.height)
+            Repeater {
+              model: diagram.layout.items
+              delegate: Rectangle {
+                id: monitorTile
+                required property var modelData
+                readonly property bool openedHere: root.scratchpadState.monitor === modelData.name
+                x: (diagram.width - diagram.layout.width * diagram.scaleFactor) / 2 + modelData.x * diagram.scaleFactor + 2
+                y: modelData.y * diagram.scaleFactor + 2
+                width: Math.max(1, modelData.width * diagram.scaleFactor - 4)
+                height: Math.max(1, modelData.height * diagram.scaleFactor - 4)
+                radius: Style.space(4)
+                color: Qt.alpha(openedHere ? root.accent : root.barForeground, openedHere ? 0.17 : 0.04)
+                border.width: openedHere ? Style.space(2) : 1
+                border.color: openedHere ? root.accent : Qt.alpha(root.barForeground, 0.25)
+                Accessible.role: Accessible.StaticText
+                Accessible.name: modelData.name + (openedHere ? " · " + root.words.here : "")
+                Text {
+                  anchors.centerIn: parent
+                  width: parent.width - Style.space(8)
+                  text: (monitorTile.openedHere ? "● " : "") + monitorTile.modelData.name
+                  textFormat: Text.PlainText
+                  horizontalAlignment: Text.AlignHCenter
+                  elide: Text.ElideRight
+                  color: monitorTile.openedHere ? root.accent : root.barForeground
+                  font.pixelSize: Style.font.caption
+                }
+              }
+            }
+          }
+
+          Text {
+            visible: root.scratchpadState.count === 0 || root.scratchpadState.status === "unknown"
+            width: parent.width
+            text: root.scratchpadState.status === "unknown"
+              ? (root.hostWidget && !Model.validWorkspace(root.hostWidget.workspaceName) ? root.words.invalidHelp : root.words.unknownHelp)
+              : (root.hostWidget && root.hostWidget.workspaceName === "scratchpad" ? root.words.emptyHelp + "\n\n" + root.words.shortcutNote : root.words.customHelp)
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: root.barForeground
+            font.pixelSize: Style.font.body
+            lineHeight: 1.2
+          }
+
+          ListView {
+            id: list
+            width: parent.width
+            height: visible ? Math.min(Style.space(280), contentHeight, Math.max(Style.space(60), panel.availableCardHeight / root.uiScale - Style.space(400))) : 0
+            visible: root.scratchpadState.count > 0
+            clip: true
+            model: root.opened ? root.scratchpadState.windows : []
+            spacing: Style.space(3)
+            QQC.ScrollBar.vertical: ScrollHandle { id: windowScrollbar; accent: root.accent }
+
+            delegate: Rectangle {
+              id: row
+              required property var modelData
+              required property int index
+              readonly property var appEntry: DesktopEntries.heuristicLookup(modelData.app)
+              readonly property string appName: appEntry ? appEntry.name : (modelData.app || root.words.unnamed)
+              readonly property string iconSource: appEntry && appEntry.icon ? Quickshell.iconPath(appEntry.icon, true) : ""
+              width: list.width - (windowScrollbar.visible ? windowScrollbar.width + Style.space(4) : 0)
+              height: Style.space(58)
+              radius: Style.space(6)
+              color: Qt.alpha(root.barForeground, index === root.selectedIndex ? 0.10 : 0)
+              Accessible.role: Accessible.Button
+              Accessible.name: appName + " · " + (modelData.title || root.words.unnamed)
+              Accessible.onPressAction: if (root.hostWidget) root.hostWidget.focusWindow(modelData.address)
+
+              Rectangle {
+                width: Style.space(2)
+                height: parent.height - Style.space(12)
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                visible: row.modelData.grouped
+                color: Qt.alpha(root.accent, 0.5)
+              }
+              Rectangle {
+                id: iconBox
+                anchors.left: parent.left
+                anchors.leftMargin: Style.space(9)
+                anchors.verticalCenter: parent.verticalCenter
+                width: Style.space(32)
+                height: width
+                radius: Style.space(6)
+                color: Qt.alpha(root.barForeground, 0.06)
+                Image {
+                  id: appIcon
+                  anchors.centerIn: parent
+                  width: Style.space(24)
+                  height: width
+                  source: row.iconSource
+                  sourceSize.width: width
+                  sourceSize.height: height
+                  fillMode: Image.PreserveAspectFit
+                }
+                Text {
+                  anchors.centerIn: parent
+                  visible: appIcon.status !== Image.Ready
+                  text: row.appName.slice(0, 1).toUpperCase()
+                  textFormat: Text.PlainText
+                  color: root.accent
+                  font.pixelSize: Style.font.body
+                }
+              }
+              Column {
+                anchors.left: iconBox.right
+                anchors.right: parent.right
+                anchors.leftMargin: Style.space(10)
+                anchors.rightMargin: Style.space(8)
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: Style.space(3)
+                Text {
+                  width: parent.width
+                  text: row.appName + (row.modelData.grouped ? " · " + root.words.grouped + " #" + row.modelData.groupNumber : "")
+                  textFormat: Text.PlainText
+                  horizontalAlignment: Text.AlignLeft
+                  elide: Text.ElideRight
+                  color: root.barForeground
+                  font.pixelSize: Style.font.body
+                  font.bold: true
+                }
+                Text {
+                  width: parent.width
+                  text: row.modelData.title || root.words.unnamed
+                  textFormat: Text.PlainText
+                  horizontalAlignment: Text.AlignLeft
+                  elide: Text.ElideRight
+                  color: root.barForeground
+                  opacity: 0.7
+                  font.pixelSize: Style.font.caption
+                }
+              }
+              MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onEntered: root.selectedIndex = row.index
+                onClicked: if (root.hostWidget) root.hostWidget.focusWindow(row.modelData.address)
+              }
+            }
+          }
+
+          Ui.Button {
+            width: parent.width
+            visible: root.canToggle
+            text: root.scratchpadState.status === "here" ? root.words.hide : root.words.show
+            foreground: root.barForeground
+            accent: root.accent
+            hasCursor: root.selectedIndex === root.scratchpadState.count
+            bordered: true
+            onHovered: function(value) { if (value) root.selectedIndex = root.scratchpadState.count; }
+            onClicked: if (root.hostWidget) root.hostWidget.toggleScratchpad()
+          }
+
+          Rectangle { width: parent.width; height: 1; color: Qt.alpha(root.barForeground, 0.12) }
+
+          Choice.SearchableDropdown {
+            uiScale: root.uiScale
+            id: languagePicker
+            width: parent.width
+            label: root.language === "en" ? "Language" : root.words.language + " / Language"
+            value: root.hostWidget ? root.hostWidget.languageSetting : "auto"
+            options: I18n.options(root.language, root.hostWidget ? root.hostWidget.detectedLanguage : "en")
+            foreground: root.barForeground
+            accent: root.accent
+            placeholderText: root.words.search
+            emptyText: root.words.noMatches
+            hasCursor: root.selectedIndex === root.languageIndex
+            onHovered: function(value) { if (value) root.selectedIndex = root.languageIndex; }
+            onChanged: function(value) {
+              if (root.hostWidget) root.hostWidget.setLanguage(value);
+              languagePicker.value = Qt.binding(function() { return root.hostWidget ? root.hostWidget.languageSetting : "auto"; });
+            }
+          }
+
+          Text {
+            width: parent.width
+            text: root.hostWidget && root.hostWidget.languageSaveFailed ? root.words.saveError
+              : I18n.format(root.words.detected, { language: I18n.nativeName(root.hostWidget ? root.hostWidget.detectedLanguage : "en") })
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: root.hostWidget && root.hostWidget.languageSaveFailed ? Color.urgent : root.barForeground
+            opacity: 0.7
+            font.pixelSize: Style.font.caption
+          }
+
+          Ui.Button {
+            width: parent.width
+            text: root.words.appearance
+            accent: root.accent
+            bordered: true
+            hasCursor: root.selectedIndex === root.appearanceIndex
+            onHovered: function(value) { if (value) root.selectedIndex = root.appearanceIndex; }
+            onClicked: root.openAppearance()
+          }
+
+          Ui.Button {
+            width: parent.width
+            text: root.words.scaling
+            accent: root.accent
+            bordered: true
+            hasCursor: root.selectedIndex === root.scalingIndex
+            onHovered: function(value) { if (value) root.selectedIndex = root.scalingIndex; }
+            onClicked: root.openScaling()
+          }
+
+          Ui.Button {
+            width: parent.width
+            text: root.words.labels
+            accent: root.accent
+            bordered: true
+            hasCursor: root.selectedIndex === root.labelsIndex
+            onHovered: function(value) { if (value) root.selectedIndex = root.labelsIndex; }
+            onClicked: root.openLabels()
+          }
+
+          Text {
+            width: parent.width
+            text: root.words.author
+            textFormat: Text.PlainText
+            horizontalAlignment: Text.AlignRight
+            color: root.barForeground
+            opacity: 0.65
+            font.pixelSize: Style.font.caption
+          }
+        }
+      }
+    }
+  }
+}

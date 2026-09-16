@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "sarr.scratchpeek",
+  "name": "ScratchPeek",
+  "version": "0.5.1",
+  "author": "Sarr",
+  "license": "MIT",
+  "description": "Know what is in your scratchpad and where it is open. A monitor-aware indicator and window list for Omarchy.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Widget.qml"
+  },
+  "barWidget": {
+    "displayName": "ScratchPeek",
+    "description": "Scratchpad state, window count, and window list",
+    "category": "Compositor",
+    "defaultSection": "left",
+    "allowMultiple": false,
+    "defaults": {
+      "workspace": "scratchpad",
+      "language": "auto",
+      "compact": false,
+      "accentColor": "",
+      "tooltipStyle": "panel",
+      "labelStyle": "short",
+      "customLabels": {},
+      "uiScale": 1,
+      "barScale": 1
+    },
+    "schema": [
+      {
+        "key": "workspace",
+        "type": "string",
+        "label": "Special workspace name"
+      },
+      {
+        "key": "language",
+        "type": "string",
+        "label": "Language code (auto by default; use the widget panel for the picker)"
+      },
+      {
+        "key": "compact",
+        "type": "boolean",
+        "label": "Compact label"
+      },
+      {
+        "key": "accentColor",
+        "type": "string",
+        "label": "Highlight HEX (empty follows theme; use Appearance for the color picker)"
+      },
+      {
+        "key": "tooltipStyle",
+        "type": "string",
+        "label": "Tooltip style: panel or compact"
+      },
+      {
+        "key": "labelStyle",
+        "type": "string",
+        "label": "Description style: short, explicit, switch, custom (edit text in Labels and text)"
+      },
+      {
+        "key": "uiScale",
+        "type": "number",
+        "label": "Panel and tooltip scale (0.8–2.0; 1 follows system size)"
+      },
+      {
+        "key": "barScale",
+        "type": "number",
+        "label": "Bar text scale (0.8–2.0; fits available bar height)"
+      }
+    ]
+  }
+}

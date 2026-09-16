@@ -1,0 +1,26 @@
+name: Test
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/model.test.cjs
+      - name: Check manifest and entry point
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m = json.loads(Path('manifest.json').read_text())
+          assert m['schemaVersion'] == 1
+          assert m['author'] == 'Sarr'
+          assert m['kinds'] == ['bar-widget']
+          for entry in m['entryPoints'].values():
+              assert not Path(entry).is_absolute() and '..' not in Path(entry).parts
+              assert Path(entry).is_file()
+          PY
