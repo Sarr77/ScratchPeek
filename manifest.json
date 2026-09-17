@@ -24,6 +24,7 @@
       "compact": false,
       "hintsMode": "auto",
       "hintsUsed": 0,
+      "autoUpdates": true,
       "accentColor": "",
       "tooltipStyle": "panel",
       "labelStyle": "short",
@@ -36,6 +37,11 @@
       "colorPresets": []
     },
     "schema": [
+      {
+        "key": "autoUpdates",
+        "type": "boolean",
+        "label": "Automatic daily updates to stable releases"
+      },
       {
         "key": "workspace",
         "type": "string",

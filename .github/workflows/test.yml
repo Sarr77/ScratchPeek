@@ -11,6 +11,7 @@ jobs:
         with:
           node-version: '22'
       - run: node --test tests/model.test.cjs
+      - run: python3 tests/test_updates.py
       - name: Check manifest and entry point
         run: |
           python3 - <<'PY'

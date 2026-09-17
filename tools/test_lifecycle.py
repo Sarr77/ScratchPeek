@@ -78,7 +78,7 @@ def inside(base):
             run('omarchy', 'plugin', 'validate', str(installed))
             print('PASS clean installation through actual Omarchy CLI and PluginRegistry', flush=True)
             wait_saved(lambda: json.loads(run('omarchy-shell','shell','testState'))['ready'])
-            preferences = {'language':'pl','accentColor':'#EF98F5','hintsUsed':37,'hintsMode':'auto',
+            preferences = {'language':'pl','accentColor':'#EF98F5','hintsUsed':37,'hintsMode':'auto','autoUpdates':False,
                            'uiScale':1.25,'barScale':1.1,'customLabels':{'active':'My shelf'}}
             assert run('omarchy-shell','shell','testSave',json.dumps(preferences)) == 'true'
             wait_saved(lambda: saved_entry().get('hintsUsed') == 37)
@@ -136,6 +136,7 @@ def main():
         else:
             source.mkdir()
             for name in run('git','-C',str(root),'ls-files','--cached','--others','--exclude-standard').splitlines():
+                if not (root/name).is_file(): continue  # Tracked files may be deleted locally.
                 dest=source/name; dest.parent.mkdir(parents=True,exist_ok=True)
                 shutil.copyfile(root/name,dest)
             run('git','-C',str(source),'init','-q')

@@ -86,7 +86,7 @@ var catalogs = {
     shortcutNote: "Shortcuts refer to Omarchy’s default bindings.", customHelp: "Move a window to this special workspace in Hyprland.",
     clickHelp: "Click: show / hide here\nRight-click: window list and settings", show: "Show here", hide: "Hide", focus: "Select a window to switch to it.",
     unknownHelp: "Hyprland state is unavailable. Try again in a moment.", invalidHelp: "Invalid workspace name. Use letters, digits, a dot, _ or -.",
-    countNote: "Each tab counts as a separate window.", author: "By Sarr",
+    countNote: "Each tab counts as a separate window.", author: "by Sarr",
     language: "Language", automatic: "Automatic", search: "Search languages…", noMatches: "No matches", detected: "System language: {language}",
     saveError: "Language could not be saved. Try again.", compact: "Compact label"
   },
@@ -917,3 +917,165 @@ var settingsErrors = {
   "zh-TW": "無法讀取或儲存設定。"
 };
 Object.keys(settingsErrors).forEach(function(code) { catalogs[code].settingsError = settingsErrors[code]; });
+
+// Daily release updates, shared by the panel and optional hover hints.
+var updateWords = {
+  "en": [
+    "Automatic updates",
+    "Check once a day and install stable releases."
+  ],
+  "pl": [
+    "Automatyczne aktualizacje",
+    "Sprawdzaj raz dziennie i instaluj stabilne wydania."
+  ],
+  "de": [
+    "Automatische Updates",
+    "Einmal täglich prüfen und stabile Versionen installieren."
+  ],
+  "fr": [
+    "Mises à jour automatiques",
+    "Vérifier chaque jour et installer les versions stables."
+  ],
+  "es": [
+    "Actualizaciones automáticas",
+    "Buscar una vez al día e instalar versiones estables."
+  ],
+  "pt-BR": [
+    "Atualizações automáticas",
+    "Verificar uma vez por dia e instalar versões estáveis."
+  ],
+  "pt-PT": [
+    "Atualizações automáticas",
+    "Verificar uma vez por dia e instalar versões estáveis."
+  ],
+  "it": [
+    "Aggiornamenti automatici",
+    "Controlla una volta al giorno e installa le versioni stabili."
+  ],
+  "nl": [
+    "Automatische updates",
+    "Controleer dagelijks en installeer stabiele versies."
+  ],
+  "sv": [
+    "Automatiska uppdateringar",
+    "Sök en gång om dagen och installera stabila versioner."
+  ],
+  "da": [
+    "Automatiske opdateringer",
+    "Søg én gang om dagen, og installér stabile versioner."
+  ],
+  "nb": [
+    "Automatiske oppdateringer",
+    "Sjekk én gang om dagen og installer stabile versjoner."
+  ],
+  "fi": [
+    "Automaattiset päivitykset",
+    "Tarkista kerran päivässä ja asenna vakaat julkaisut."
+  ],
+  "cs": [
+    "Automatické aktualizace",
+    "Kontrolovat jednou denně a instalovat stabilní verze."
+  ],
+  "sk": [
+    "Automatické aktualizácie",
+    "Kontrolovať raz denne a inštalovať stabilné verzie."
+  ],
+  "uk": [
+    "Автоматичні оновлення",
+    "Перевіряти раз на день і встановлювати стабільні версії."
+  ],
+  "ru": [
+    "Автоматические обновления",
+    "Проверять раз в день и устанавливать стабильные версии."
+  ],
+  "tr": [
+    "Otomatik güncellemeler",
+    "Günde bir kez kontrol et ve kararlı sürümleri yükle."
+  ],
+  "ro": [
+    "Actualizări automate",
+    "Verifică o dată pe zi și instalează versiunile stabile."
+  ],
+  "hu": [
+    "Automatikus frissítések",
+    "Napi egyszeri ellenőrzés és stabil kiadások telepítése."
+  ],
+  "el": [
+    "Αυτόματες ενημερώσεις",
+    "Έλεγχος μία φορά την ημέρα και εγκατάσταση σταθερών εκδόσεων."
+  ],
+  "ar": [
+    "التحديثات التلقائية",
+    "التحقق مرة يوميًا وتثبيت الإصدارات المستقرة."
+  ],
+  "hi": [
+    "अपने आप अपडेट",
+    "दिन में एक बार जाँचें और स्थिर संस्करण इंस्टॉल करें।"
+  ],
+  "id": [
+    "Pembaruan otomatis",
+    "Periksa sekali sehari dan pasang rilis stabil."
+  ],
+  "vi": [
+    "Cập nhật tự động",
+    "Kiểm tra mỗi ngày một lần và cài đặt bản phát hành ổn định."
+  ],
+  "th": [
+    "อัปเดตอัตโนมัติ",
+    "ตรวจสอบวันละครั้งและติดตั้งรุ่นเสถียร"
+  ],
+  "ja": [
+    "自動更新",
+    "1日1回確認し、安定版をインストールします。"
+  ],
+  "ko": [
+    "자동 업데이트",
+    "하루에 한 번 확인하고 안정 버전을 설치합니다."
+  ],
+  "zh-CN": [
+    "自动更新",
+    "每天检查一次并安装稳定版本。"
+  ],
+  "zh-TW": [
+    "自動更新",
+    "每天檢查一次並安裝穩定版本。"
+  ]
+};
+Object.keys(updateWords).forEach(function(code) {
+  catalogs[code].autoUpdates = updateWords[code][0];
+  catalogs[code].autoUpdatesHint = updateWords[code][1];
+});
+
+var updateErrors = {
+  "en": "Update failed. We’ll try again tomorrow.",
+  "pl": "Aktualizacja się nie udała. Spróbujemy ponownie jutro.",
+  "de": "Update fehlgeschlagen. Morgen versuchen wir es erneut.",
+  "fr": "La mise à jour a échoué. Nouvel essai demain.",
+  "es": "La actualización falló. Volveremos a intentarlo mañana.",
+  "pt-BR": "A atualização falhou. Tentaremos novamente amanhã.",
+  "pt-PT": "A atualização falhou. Tentaremos novamente amanhã.",
+  "it": "Aggiornamento non riuscito. Riproveremo domani.",
+  "nl": "De update is mislukt. Morgen proberen we het opnieuw.",
+  "sv": "Uppdateringen misslyckades. Vi försöker igen i morgon.",
+  "da": "Opdateringen mislykkedes. Vi prøver igen i morgen.",
+  "nb": "Oppdateringen mislyktes. Vi prøver igjen i morgen.",
+  "fi": "Päivitys epäonnistui. Yritämme uudelleen huomenna.",
+  "cs": "Aktualizace se nezdařila. Zkusíme to znovu zítra.",
+  "sk": "Aktualizácia zlyhala. Skúsime to znova zajtra.",
+  "uk": "Оновлення не вдалося. Спробуємо знову завтра.",
+  "ru": "Не удалось обновить. Попробуем снова завтра.",
+  "tr": "Güncelleme başarısız oldu. Yarın tekrar deneyeceğiz.",
+  "ro": "Actualizarea a eșuat. Vom încerca din nou mâine.",
+  "hu": "A frissítés sikertelen. Holnap újra megpróbáljuk.",
+  "el": "Η ενημέρωση απέτυχε. Θα προσπαθήσουμε ξανά αύριο.",
+  "ar": "تعذّر التحديث. سنحاول مجددًا غدًا.",
+  "hi": "अपडेट नहीं हो सका। कल फिर कोशिश करेंगे।",
+  "id": "Pembaruan gagal. Kami akan mencoba lagi besok.",
+  "vi": "Cập nhật thất bại. Sẽ thử lại vào ngày mai.",
+  "th": "อัปเดตไม่สำเร็จ จะลองอีกครั้งพรุ่งนี้",
+  "ja": "更新できませんでした。明日もう一度試します。",
+  "ko": "업데이트하지 못했습니다. 내일 다시 시도합니다.",
+  "zh-CN": "更新失败。明天会重试。",
+  "zh-TW": "更新失敗。明天會重試。"
+};
+Object.keys(updateErrors).forEach(function(code) { catalogs[code].updateFailed = updateErrors[code]; });

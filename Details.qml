@@ -35,8 +35,8 @@ Panel {
   readonly property bool editing: editingAppearance || editingLabels || editingScaling || editingTransfer
   readonly property int scalingIndex: appearanceIndex + 1
   readonly property int labelsIndex: scalingIndex + 1
-  readonly property int hintsIndex: labelsIndex + 1
-  readonly property int authorIndex: hintsIndex + 1
+  readonly property int updatesIndex: labelsIndex + 1
+  readonly property int hintsIndex: updatesIndex + 1
   readonly property bool hintsEnabled: !hostWidget || hostWidget.hints.enabled
   readonly property real logicalContentHeight: editingTransfer ? transferEditor.implicitHeight : (editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight)))
   readonly property int appearanceIndex: languageIndex + 1
@@ -57,10 +57,10 @@ Panel {
       editingScaling = false;
     }
   }
-  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, authorIndex)
+  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, hintsIndex)
 
   function moveSelection(delta) {
-    selection.move(delta, authorIndex);
+    selection.move(delta, hintsIndex);
     if (selectedIndex < toggleIndex) {
       list.positionViewAtIndex(Math.floor(selectedIndex / windowActionCount), ListView.Contain);
       scroll.contentY = 0;
@@ -68,8 +68,8 @@ Panel {
   }
   function activateSelection() {
     if (!hostWidget || selectedIndex < 0) return;
-    if (selectedIndex === authorIndex) authorLink.activate();
-    else if (selectedIndex === hintsIndex) hostWidget.toggleHints();
+    if (selectedIndex === hintsIndex) hostWidget.toggleHints();
+    else if (selectedIndex === updatesIndex) hostWidget.toggleUpdates();
     else if (selectedIndex === labelsIndex) openLabels();
     else if (selectedIndex === scalingIndex) openScaling();
     else if (selectedIndex === appearanceIndex) openAppearance();
@@ -668,6 +668,46 @@ Panel {
             font.pixelSize: Style.font.caption
           }
 
+          Ui.Toggle {
+            id: updatesToggle
+            width: parent.width
+            label: root.words.autoUpdates
+            titleSize: Style.font.body
+            checked: !root.hostWidget || root.hostWidget.autoUpdates
+            foreground: root.barForeground
+            accent: root.accent
+            hasCursor: root.selectedIndex === root.updatesIndex
+            property bool pointerInside: false
+            onHovered: function(value) { pointerInside = value; selection.hover(root.updatesIndex, value); }
+            onClicked: if (root.hostWidget) root.hostWidget.toggleUpdates()
+            PanelHint {
+              hostWidget: root.hostWidget
+              requested: updatesToggle.pointerInside
+              text: root.words.autoUpdatesHint
+              maximumWidth: scroll.width
+            }
+          }
+
+          Text {
+            visible: !!root.hostWidget && root.hostWidget.updatesSaveFailed
+            width: parent.width
+            text: root.words.settingsError
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: Color.urgent
+            font.pixelSize: Style.font.caption
+          }
+
+          Text {
+            visible: !!root.hostWidget && root.hostWidget.autoUpdates && root.hostWidget.updateStatus === "failed"
+            width: parent.width
+            text: root.words.updateFailed
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: Qt.alpha(root.barForeground, 0.7)
+            font.pixelSize: Style.font.caption
+          }
+
           Item {
             width: parent.width
             height: hintsToggle.height
@@ -686,16 +726,11 @@ Panel {
               onHovered: function(value) { selection.hover(root.hintsIndex, value); }
               onClicked: if (root.hostWidget) root.hostWidget.toggleHints()
             }
-            AuthorLink {
-              id: authorLink
+            AuthorCredit {
               anchors.right: parent.right
               anchors.verticalCenter: parent.verticalCenter
               text: root.words.author
               foreground: root.barForeground
-              accent: root.accent
-              hintWidth: scroll.width
-              hasCursor: root.selectedIndex === root.authorIndex
-              onHovered: function(value) { selection.hover(root.authorIndex, value); }
             }
           }
         }

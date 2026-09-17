@@ -41,10 +41,25 @@ podgląd na żywo; **Zastosuj** zapisuje, a **Anuluj** przywraca poprzedni wybó
 
 **?** włącza i wyłącza podpowiedzi. Początkowo działają przez 100 wyświetleń;
 licznik pokazuje, ile zostało. Zawsze możesz włączyć je ponownie.
-**Autor: Sarr** otwiera profil autora na GitHubie.
 
 Ustawienia i licznik podpowiedzi zapisują się automatycznie. Przetrwają restart,
 aktualizację, wyłączenie wtyczki i ponowną instalację.
+
+## Aktualizacje
+
+Automatyczne aktualizacje są domyślnie włączone. Podczas działania wtyczka
+sprawdza raz dziennie, czy na GitHubie jest nowe stabilne wydanie, i instaluje
+je w tle. Przełącznik **Automatyczne aktualizacje** w panelu pozwala je wyłączyć.
+Ustawienia pozostają zapisane. Błąd pobierania lub weryfikacji pozostawia
+dotychczasową wersję; kolejna próba odbędzie się następnego dnia.
+
+Dotyczy standardowej instalacji przez `omarchy plugin add`. Kopie robocze
+podłączone linkiem, forki i lokalnie zmieniony kod są pomijane. Wersję 0.10.0
+trzeba jednorazowo zaktualizować ręcznie, gdy wydanie z tą funkcją będzie dostępne:
+
+```sh
+omarchy plugin update sarr.scratchpeek
+```
 
 ## Usunięcie
 
@@ -56,10 +71,11 @@ Okna i workspace’y pozostają bez zmian. Ustawienia zostają na przyszłość
 w `~/.local/state/scratchpeek/preferences.json` (lub pod `$XDG_STATE_HOME/scratchpeek`).
 Jeśli chcesz je również usunąć, skasuj ten plik po odinstalowaniu wtyczki.
 
-Bez telemetrii, połączeń sieciowych w tle i uprawnień administratora. Wtyczka
+Bez telemetrii i uprawnień administratora. Wtyczka
 odczytuje lokalny stan Hyprlanda i wykonuje wybrane przez Ciebie działania.
-Tytuły okien nie są zapisywane na dysku. Link autora otwiera przeglądarkę dopiero
-po kliknięciu. Jak inne wtyczki Omarchy, ScratchPeek działa z uprawnieniami użytkownika.
+Tytuły okien nie są zapisywane na dysku. Automatyczne aktualizacje korzystają
+z publicznego API GitHuba i repozytorium ScratchPeek; wymagają Pythona 3 i Gita.
+Jak inne wtyczki Omarchy, ScratchPeek działa z uprawnieniami użytkownika.
 
 [Pełna instrukcja (EN)](GUIDE.md) · [Zgłoś błąd](https://github.com/Sarr77/ScratchPeek/issues) ·
 [Historia zmian](../CHANGELOG.md)

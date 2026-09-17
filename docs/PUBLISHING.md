@@ -18,11 +18,15 @@ Repository: [Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek)
 2. Run the isolated lifecycle and preference tests, plus the relevant Qt and
    native checks listed in [TESTING.md](TESTING.md).
 3. Review the root README, licenses, preview and source archive.
-4. Commit, tag the release, push and wait for CI. Generate its archive with
-   `python3 tools/package.py`.
+4. Prepare the commit and archive locally with `python3 tools/package.py`.
+   Show Sarr the complete diff, exact commit, release title, text, assets and
+   destinations. Get explicit approval of those exact details before any push,
+   tag, release or listing change. Do not add generated release notes.
 5. Confirm the repository is public and test an unauthenticated installation
    with `python3 tools/test_lifecycle.py --remote https://github.com/Sarr77/ScratchPeek`.
-6. Publish the GitHub release. Submit the reviewed repository through the
+6. Publish only the approved GitHub release, with a matching `vX.Y.Z` tag and
+   manifest version. Stable releases become eligible for automatic installation;
+   drafts and prereleases do not. Submit the approved repository through the
    [marketplace form](https://github.com/omacom/omarchy-plugin-marketplace/issues/new?template=submit-plugin.yml)
    or its [CLI submission format](https://github.com/omacom/omarchy-plugin-marketplace/blob/main/SUBMISSION.md).
 7. Check the bot’s validation and baseline reports. Listing requires a maintainer’s
@@ -35,7 +39,7 @@ submission format. There must be one category and **one to three** allowed tags.
 
 ScratchPeek is a native Quickshell bar widget, tested on Omarchy 4.0.4 and
 Hyprland 0.56.2. Window transfers require the Lua configuration available in
-Hyprland 0.56+. It has no separate service or installer.
+Hyprland 0.56+. It has no persistent service or separate installer.
 
 It reads local window/monitor metadata, application icons, theme identity and
 scratchpad keybindings. Explicit user actions focus windows, show/hide the
@@ -48,8 +52,11 @@ Preferences, including hint progress, are stored atomically in
 The scoped Omarchy widget entry mirrors those settings. The durable file remains
 after disable/removal so reinstall can restore it; the README explains how to
 remove it. No window titles are written to disk, and unrelated settings are not
-rewritten by the plugin. The author link opens Sarr’s GitHub profile only when
-activated. There is no telemetry or background network access.
+rewritten by the plugin. Automatic updates are enabled by default, can be
+disabled in the panel, and contact GitHub's public release API and this
+repository once per day while the widget runs. A short-lived Python/Git worker
+stages a stable release, validates it and atomically exchanges the installed
+directory. Update timestamps/results are local. There is no telemetry.
 
 MIT, by Sarr. Adapted Omarchy dropdown controls retain their upstream MIT notice.
 The preview contains fictional examples and no personal desktop information.

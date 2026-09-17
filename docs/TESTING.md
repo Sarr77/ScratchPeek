@@ -2,10 +2,27 @@
 
 ## Unreleased validation — 2026-09-17
 
+- Nineteen updater tests use temporary profiles and real local Git repositories.
+  Stable releases install through an atomic directory exchange; downloads,
+  validation failures, wrong release versions, divergent commits, concurrent
+  workers and changes made during a download leave the old installation intact.
+  The daily schedule survives a new worker, and settings remain byte-for-byte
+  unchanged. Native runs use Omarchy's actual manifest validator.
+- The update switch synchronizes across both widgets. The isolated lifecycle
+  test preserves a disabled update preference through restart, disable/re-enable,
+  removal and reinstall. The native panel shows the switch and plain “by Sarr”
+  credit. The development symlink is skipped without a network request.
+- The real QML scheduler with a test launcher coalesces monitor requests,
+  respects the next daily deadline, defers while a panel or transfer is active,
+  and responds immediately to the saved update switch.
+- Release downloads are simulated with local repositories in the automated
+  tests. No new public release or live replacement of the development checkout
+  was performed during these checks.
 - The footer test reproduces the sticky highlight with the previous enter-only
   handlers and passes with shared pointer/keyboard selection. Actual Qt events
-  cover help and author hover, leaving into the same footer row, keyboard
-  activation, delayed leave events and 100%/200% scaling.
+  cover help hover, leaving into the same footer row, keyboard activation,
+  delayed leave events and 100%/200% scaling. The author credit stays plain
+  text under the pointer and is skipped by keyboard navigation.
 - A full 100-display test alternates between two real widget instances using
   the normal tooltip delay. Fresh processes resume at 50 and 100 from the
   private preference file. The 101st automatic hint cannot open; help remains

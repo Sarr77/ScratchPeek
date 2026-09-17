@@ -10,6 +10,7 @@ import "Appearance.js" as Appearance
 QtObject {
   id: root
   property Preferences preferences: Preferences { }
+  property Updates updates: Updates { preferences: root.preferences }
   property var keyBindings: []
   property Process readBindings: Process {
     command: ["hyprctl", "-j", "binds"]

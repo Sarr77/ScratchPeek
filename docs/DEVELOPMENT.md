@@ -66,5 +66,9 @@ Offscreen tests redirect `XDG_STATE_HOME` into their temporary directory.
 Tests prefixed `test_live_` interact with the current compositor and restore
 the original window layout; run them only in a suitable desktop session.
 
-`AuthorLink.qml` owns the author destination; replace it with Sarr’s portfolio
-when ready.
+`AuthorCredit.qml` displays the author as plain text, without a link or hover action.
+
+`python3 tests/test_updates.py` tests release updates with local Git repositories
+and temporary profiles, without network or desktop access. It uses the actual
+Omarchy validator when available. [UPDATES.md](UPDATES.md) describes scheduling,
+staging and the boundary between GitHub releases and marketplace verification.

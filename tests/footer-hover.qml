@@ -14,9 +14,6 @@ ShellRoot {
   function point(item, x, y) { events.mouseMove(item,x,y,0,Qt.NoButton,Qt.NoModifier); }
   function hover(item) { point(item,item.width/2,item.height/2); }
   function gap() { point(footer,footer.width/2,footer.height/2); }
-  function label(item) {
-    return item.children.filter(function(child) { return child instanceof Text; })[0];
-  }
   TestEvent { id: events }
   Plugin.PanelSelection { id: selection }
   Window {
@@ -27,8 +24,8 @@ ShellRoot {
       x: 20; y: 100; width: 380; height: 30
       scale: test.uiScale; transformOrigin: Item.TopLeft
       focus: true
-      Keys.onTabPressed: selection.move(1,1)
-      Keys.onReturnPressed: if (selection.index === 0) hints.clicked(); else if (selection.index === 1) author.activate()
+      Keys.onTabPressed: selection.move(1,0)
+      Keys.onReturnPressed: if (selection.index === 0) hints.clicked()
       Plugin.HintsToggle {
         id: hints
         words: I18n.words("en")
@@ -36,13 +33,10 @@ ShellRoot {
         onHovered: function(value) { selection.hover(0,value); }
         onClicked: test.activations++
       }
-      Plugin.AuthorLink {
+      Plugin.AuthorCredit {
         id: author
         anchors.right: parent.right
-        text: "By Sarr"
-        hasCursor: selection.index === 1
-        onHovered: function(value) { selection.hover(1,value); }
-        openUrl: function(url) { test.activations++; }
+        text: I18n.words("en").author
       }
     }
   }
@@ -59,10 +53,11 @@ ShellRoot {
           test.check(!hints.hot && !hints.hasCursor,"help highlight clears in the same footer row");
           test.hover(author); break;
         case 3:
-          test.check(test.label(author).font.underline,"author highlights under pointer");
+          test.check(!author.font.underline && !author.activeFocusOnTab,"author remains plain text under pointer");
+          events.mouseClick(author,author.width/2,author.height/2,Qt.LeftButton,Qt.NoModifier,0);
           test.gap(); break;
         case 4:
-          test.check(!test.label(author).font.underline && !author.hasCursor,"author highlight clears in the same footer row");
+          test.check(!author.font.underline,"author remains plain text after leaving");
           test.check(test.activations === 0,"hover never activates a control");
           footer.forceActiveFocus(); events.keyClick(Qt.Key_Tab,Qt.NoModifier,0); break;
         case 5:
@@ -71,12 +66,12 @@ ShellRoot {
           test.check(test.activations === 1,"keyboard help activates once");
           events.keyClick(Qt.Key_Tab,Qt.NoModifier,0); break;
         case 6:
-          test.check(author.hasCursor && test.label(author).font.underline,"keyboard navigation visibly selects author");
+          test.check(hints.hasCursor && !author.activeFocus,"author is skipped by keyboard navigation");
           selection.hover(0,false);
-          test.check(author.hasCursor,"late pointer leave cannot clear another keyboard target");
-          test.hover(author); test.gap(); break;
+          test.check(hints.hasCursor,"pointer leave preserves keyboard selection");
+          test.hover(hints); test.gap(); break;
         case 7:
-          test.check(!author.hasCursor && !test.label(author).font.underline,"pointer takes over from keyboard without sticky highlight");
+          test.check(!hints.hasCursor && !hints.hot,"pointer takes over from keyboard without sticky highlight");
           test.uiScale = 2; test.hover(hints); break;
         case 8: test.gap(); break;
         case 9:
@@ -84,7 +79,7 @@ ShellRoot {
           test.hover(author); break;
         case 10: test.gap(); break;
         case 11:
-          test.check(!author.hasCursor && !test.label(author).font.underline,"author clears at 200 percent scale");
+          test.check(!author.font.underline && !author.activeFocus,"author remains plain text at 200 percent scale");
           console.info("SCRATCHPEEK_FOOTER_HOVER_PASS"); stop(); Qt.quit();
         }
       } catch (error) { console.error("SCRATCHPEEK_FOOTER_HOVER_FAIL: " + error); stop(); Qt.quit(); }

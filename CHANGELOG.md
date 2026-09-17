@@ -3,7 +3,13 @@
 ## Unreleased
 
 - Clear hover highlights as soon as the pointer leaves a control, including
-  the help icon and author link. Keep keyboard selection visible and functional.
+  the help icon. Keep keyboard selection visible and functional.
+- Keep the author credit as plain text, without a link or hover action. Use
+  “by Sarr” in English.
+- Add automatic daily updates for stable GitHub releases, with a saved panel
+  switch. Preserve preferences, skip modified/development copies, and validate
+  a staged version before atomically installing it. Translate the new controls
+  into all 30 languages.
 - Add full hint-budget coverage across two widgets and cold starts at 50 and
   100 displays. Manual re-enabling remains unlimited.
 

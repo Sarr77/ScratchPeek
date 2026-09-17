@@ -17,6 +17,7 @@ HintButton 1.0 HintButton.qml
 PanelHint 1.0 PanelHint.qml
 MoveOutButton 1.0 MoveOutButton.qml
 AddWindowPicker 1.0 AddWindowPicker.qml
-AuthorLink 1.0 AuthorLink.qml
+AuthorCredit 1.0 AuthorCredit.qml
+Updates 1.0 Updates.qml
 Preferences 1.0 Preferences.qml
 ScratchVisibility 1.0 ScratchVisibility.qml

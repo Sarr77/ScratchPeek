@@ -52,10 +52,27 @@ Changes preview live; **Apply** saves and **Cancel** restores your saved choice.
 
 The small **?** switches panel hints on or off. They start enabled for the first
 100 displayed hints, with a remaining count. You can always turn them on again.
-**By Sarr** opens the author’s GitHub profile.
 
 Your preferences and hint progress are saved automatically. They survive
 restarts, updates, disabling the widget and reinstalling it.
+
+## Updates
+
+Automatic updates are on by default. While ScratchPeek is running, it checks
+once a day for a newer stable GitHub release and installs it in the background.
+Turn **Automatic updates** off in the panel to keep your current version.
+Your preferences stay saved. Downloads or validation failures leave the installed
+version in place; another check happens the next day.
+
+This works with the normal `omarchy plugin add` installation. Linked development
+copies, forks and locally modified checkouts are skipped. Users of 0.10.0 need
+one manual update after a version with this feature is published:
+
+```sh
+omarchy plugin update sarr.scratchpeek
+```
+
+See [how updates work](docs/UPDATES.md) for the release and marketplace details.
 
 ## Remove
 
@@ -79,9 +96,11 @@ and `mkdir` to prepare its preference directory. Settings use an atomic local
 file and Omarchy’s scoped widget settings API. It does not rewrite unrelated
 settings or change keybindings.
 
-No telemetry, background network requests, additional daemon or elevated privileges.
-The author link opens your browser only when activated. Like other Omarchy
-plugins, ScratchPeek runs inside the shell with your user permissions.
+Automatic updates contact GitHub's public API and this plugin's repository,
+using Python 3 and Git already included in Omarchy. Update timing and results
+are saved locally alongside preferences. Turning updates off stops future checks.
+No telemetry, additional daemon or elevated privileges.
+Like other Omarchy plugins, ScratchPeek runs inside the shell with your user permissions.
 
 ## Help and development
 

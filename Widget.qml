@@ -21,6 +21,10 @@ BarWidget {
   readonly property var monitorDiagram: Model.monitorLayout(Local.ScratchState.monitors)
   property bool languageSaveFailed: false
   property bool hintsSaveFailed: false
+  property bool updatesSaveFailed: false
+  readonly property bool autoUpdates: setting("autoUpdates", true) !== false
+  readonly property string updateStatus: Local.ScratchState.updates.status
+  function toggleUpdates() { updatesSaveFailed = !persistSettings({autoUpdates: !autoUpdates}); }
   property bool settingsReady: false
   readonly property bool preferencesSaveFailed: Local.ScratchState.preferences.failed
   readonly property var hints: Model.hintState(settings)
@@ -216,6 +220,12 @@ BarWidget {
     function onReadyChanged() { if (Local.ScratchState.preferences.ready) initialSettingsTimer.restart(); }
   }
   Component.onCompleted: initialSettingsTimer.start()
+  Timer {
+    interval: 60000
+    repeat: true
+    running: root.settingsReady && root.autoUpdates
+    onTriggered: Local.ScratchState.updates.check(root.bar ? root.bar.moduleWidgets(root.moduleName) : [root])
+  }
 
   Rectangle {
     anchors.fill: parent
@@ -294,6 +304,7 @@ BarWidget {
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
           detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.10.0",
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
+          autoUpdates: widget.autoUpdates, updateStatus: widget.updateStatus, updatesSaveFailed: widget.updatesSaveFailed,
           preferencesSaveFailed: widget.preferencesSaveFailed,
           preferencesReady: widget.settingsReady && Local.ScratchState.preferences.ready,
           toggleShortcut: widget.toggleShortcut,

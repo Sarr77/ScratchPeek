@@ -16,7 +16,6 @@ ShellRoot {
   property int hintClicks: 0
   property real uiScale: 1
   property bool budgetPhase: false
-  property var authorUrls: []
   function check(value, message) { if (!value) throw new Error(message); }
   function click(item, modifiers) {
     events.mouseMove(item,item.width/2,item.height/2,0,Qt.NoButton,modifiers);
@@ -80,11 +79,6 @@ ShellRoot {
         onClicked: testRoot.normalClicks++
         onQuickMove: testRoot.quickMoves++
       }
-      Plugin.AuthorLink {
-        id: author
-        x: 235; y: 160; text: "By Sarr"
-        openUrl: function(url) { testRoot.authorUrls = testRoot.authorUrls.concat([String(url)]); }
-      }
     }
   }
   Timer {
@@ -139,6 +133,10 @@ ShellRoot {
             testRoot.check(fakeShell.saved.hintsMode === mode, "latest choice reaches persistence");
           }
           testRoot.check(fakeShell.saved.language === "pl" && fakeShell.saved.accentColor === "#EF98F5", "unrelated settings preserved");
+          widgetA.toggleUpdates();
+          testRoot.check(!widgetA.autoUpdates && !widgetB.autoUpdates && fakeShell.saved.autoUpdates === false, "updates can be disabled on both monitors");
+          widgetB.toggleUpdates();
+          testRoot.check(widgetA.autoUpdates && widgetB.autoUpdates && fakeShell.saved.autoUpdates === true, "updates can be enabled again");
           fakeShell.rejectSave = true;
           testRoot.check(!widgetA.setHintsMode("off") && widgetA.hintsSaveFailed, "save failure reported");
           testRoot.check(widgetA.hints.mode === "on" && widgetB.hints.mode === "on", "failed save cannot change either monitor");
@@ -177,11 +175,26 @@ ShellRoot {
           testRoot.hover(move); break;
         case 20:
           testRoot.check(testRoot.visibleTip(move) && widgetA.hints.used === 100, "manual hints show without a budget");
-          testRoot.click(author,Qt.NoModifier);
-          author.forceActiveFocus(); events.keyClick(Qt.Key_Return,Qt.NoModifier,0);
-          testRoot.check(testRoot.authorUrls.length === 2 && testRoot.authorUrls.every(function(url) { return url === "https://github.com/Sarr77"; }), "author link routes mouse and keyboard to the chosen profile");
-          author.enabled = false; author.activate();
-          testRoot.check(testRoot.authorUrls.length === 2, "disabled author link cannot launch");
+          var updater = Plugin.ScratchState.updates;
+          var launches = 0, now = Date.now() / 1000;
+          updater.launch = function() { launches++; };
+          updater.runtimeAvailable = true;
+          updater.check([widgetA,widgetB], now);
+          updater.check([widgetA,widgetB], now);
+          testRoot.check(launches === 1, "two monitor requests start only one worker");
+          updater.nextCheck = now + 86400;
+          updater.lastLaunch = 0;
+          updater.check([widgetA,widgetB], now + 60);
+          testRoot.check(launches === 1, "saved daily deadline survives scheduler restart");
+          updater.check([{opened:true}], now + 86400);
+          updater.check([{transferBusy:true}], now + 86400);
+          testRoot.check(launches === 1, "open panels and transfers postpone updates");
+          widgetA.toggleUpdates();
+          updater.check([widgetA,widgetB], now + 86400);
+          testRoot.check(launches === 1 && !updater.enabled, "saved switch disables scheduling");
+          widgetA.toggleUpdates();
+          updater.check([widgetA,widgetB], now + 86400);
+          testRoot.check(launches === 2, "next day starts one new check when enabled");
           console.info("SCRATCHPEEK_PANEL_ACTIONS_PASS"); stop(); Qt.quit(); break;
         }
       } catch (error) { console.error("SCRATCHPEEK_PANEL_ACTIONS_FAIL: " + error); stop(); Qt.quit(); }
