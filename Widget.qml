@@ -78,21 +78,41 @@ BarWidget {
   readonly property bool transferBusy: Local.ScratchState.transfer.busy
   readonly property bool transferSupported: Hyprland.usingLua
   readonly property string transferError: Local.ScratchState.transfer.error
+  readonly property bool visibilityBusy: Local.ScratchState.visibility.busy
+  readonly property string visibilityError: Local.ScratchState.visibility.errorScreen === screenName ? Local.ScratchState.visibility.error : ""
+  Connections {
+    target: Local.ScratchState.visibility
+    function onFailed(screen) { if (screen === root.screenName) root.open(); }
+  }
+  property string focusBeforePanel: ""
   signal transferCompleted()
   Connections { target: Local.ScratchState.transfer; function onCompleted() { root.transferCompleted(); } }
   function clearTransferError() { Local.ScratchState.transfer.error = ""; }
   function addWindow(address) {
     return Local.ScratchState.transfer.start(Transfers.plan(Local.ScratchState.clients, address, workspaceName, "", [], Hyprland.usingLua));
   }
+  function addFocusedWindow() {
+    if (transferBusy) return false;
+    var address = Transfers.focusedCandidate(Local.ScratchState.clients, Local.ScratchState.activeAddress,
+      opened ? focusBeforePanel : "", Local.ScratchState.monitors);
+    if (!address) { Local.ScratchState.transfer.error = "noFocusedWindow"; return false; }
+    return addWindow(address);
+  }
   function extractWindow(address, destination) {
     if (!destination) return false;
     return Local.ScratchState.transfer.start(Transfers.plan(Local.ScratchState.clients, address, workspaceName, destination, destinations.options, Hyprland.usingLua));
   }
-  function openExtraction(address) { return panelLoader.item ? panelLoader.item.openTransferAddress(address) : false; }
+  function openExtraction(address) {
+    if (!opened) focusBeforePanel = Local.ScratchState.activeAddress;
+    return panelLoader.item ? panelLoader.item.openTransferAddress(address) : false;
+  }
 
-  function open() { if (panelLoader.item) panelLoader.item.open() }
+  function open() {
+    if (!opened) focusBeforePanel = Local.ScratchState.activeAddress;
+    if (panelLoader.item) panelLoader.item.open();
+  }
   function close() { if (panelLoader.item) panelLoader.item.close() }
-  function toggle() { if (panelLoader.item) panelLoader.item.toggle() }
+  function toggle() { if (opened) close(); else open(); }
   function closeForPopoutSwitch() { if (panelLoader.item) panelLoader.item.closeForPopoutSwitch() }
 
   function setLanguage(value) {
@@ -135,11 +155,8 @@ BarWidget {
   }
 
   function toggleScratchpad() {
-    if (scratchpadState.status === "unknown" || (scratchpadState.count === 0 && scratchpadState.status !== "here")) { open(); return; }
-    close();
-    Model.toggleCommands(workspaceName, scratchpadState.monitorId, Hyprland.usingLua).forEach(function(command) {
-      Hyprland.dispatch(command);
-    });
+    Local.ScratchState.visibility.start(workspaceName, screenName, Hyprland.usingLua,
+      function() { root.close(); }, function() { root.open(); });
   }
 
   function focusWindow(address) {
@@ -203,8 +220,9 @@ BarWidget {
     text: Model.label(root.scratchpadState, root.language, root.setting("compact", false), root.vertical, root.labels, root.workspaceName)
     // A local popup supplies styled contents without changing other bar tooltips.
     tooltipText: ""
+    pressable: !root.visibilityBusy
     Accessible.role: Accessible.Button
-    Accessible.name: Model.tooltip(root.scratchpadState, root.language, root.workspaceName, root.labels)
+    Accessible.name: Model.tooltip(root.scratchpadState, root.language, root.workspaceName, root.labels, root.hints.enabled)
     active: root.scratchpadState.status === "here"
     activeColor: root.accent
     dimmed: root.scratchpadState.status === "empty"
@@ -257,9 +275,10 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.8.2",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.9.0",
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
           toggleShortcut: widget.toggleShortcut,
+          visibilityBusy: widget.visibilityBusy, visibilityError: widget.visibilityError,
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,
           themeAccent: String(widget.themeAccent), themeId: widget.themeId, effectiveBarScale: widget.effectiveBarScale,
           underlineColor: String(widget.underlineColor), opened: widget.opened,
@@ -280,6 +299,10 @@ BarWidget {
     function addWindow(screen: string, address: string): bool {
       var widget = root.widgetOnScreen(screen);
       return widget ? widget.addWindow(address) : false;
+    }
+    function addFocusedWindow(screen: string): bool {
+      var widget = root.widgetOnScreen(screen);
+      return widget ? widget.addFocusedWindow() : false;
     }
     function extractWindow(screen: string, address: string, destination: string): bool {
       var widget = root.widgetOnScreen(screen);

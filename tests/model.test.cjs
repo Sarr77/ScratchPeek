@@ -6,6 +6,8 @@ const path = require('node:path');
 const i18n = vm.createContext({});
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../I18n.js'), 'utf8'), i18n);
 const model = vm.createContext({ I18n: i18n });
+const visibility = vm.createContext({});
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../Visibility.js'), 'utf8'), visibility);
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../Model.js'), 'utf8').replace(/^\.import .*\n/gm, ''), model);
 const plain = value => JSON.parse(JSON.stringify(value));
 const appearance = vm.createContext({});
@@ -157,18 +159,12 @@ test('custom workspace names work and unsafe names cannot generate dispatches', 
   assert.equal(model.summarize([window('0x1', { workspace: { name: 'special:music' } })], screens, 'music', 'DP-1', '').count, 1);
   for (const name of ['', 'a"; os.execute("bad")', '../x', 'special:scratchpad', 'x\ny']) {
     assert.equal(model.validWorkspace(name), false);
-    assert.deepEqual(plain(model.toggleCommands(name, 0, true)), []);
+    assert.equal(visibility.plan([], name, 'DP-1'), null);
   }
 });
 
 test('supports both Lua and legacy dispatch syntax without shell interpolation', () => {
-  assert.deepEqual(plain(model.toggleCommands('scratchpad', 1, true)), [
-    'hl.dsp.focus({ monitor = "1" })', 'hl.dsp.workspace.toggle_special("scratchpad")'
-  ]);
-  assert.deepEqual(plain(model.toggleCommands('scratchpad', 1, false)), [
-    'focusmonitor 1', 'togglespecialworkspace scratchpad'
-  ]);
-  assert.deepEqual(plain(model.toggleCommands('scratchpad', -1, true)), []);
+  assert.equal(model.focusCommand('0xabc', true), 'hl.dsp.focus({ window = "address:0xabc" })');
   assert.equal(model.focusCommand('0xabc', false), 'focuswindow address:0xabc');
   assert.equal(model.focusCommand('0xabc;bad', true), '');
 });
@@ -569,6 +565,22 @@ const transfers = vm.createContext({});
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../Transfers.js'), 'utf8'), transfers);
 const ordinary = (address, name='2', extra={}) => window(address,{workspace:{name},...extra});
 const destinations = [{value:'1'},{value:'2'},{value:'name:Work "日本語"'}];
+test('quick add prefers the live focused window and preserves it across panel focus', () => {
+  const clients=[ordinary('0x1','1'),ordinary('0x2','Design')];
+  const monitors=[{activeWorkspace:{name:'1'}},{activeWorkspace:{name:'Design'}}];
+  assert.equal(transfers.focusedCandidate(clients,'0x2','0x1',monitors),'0x2');
+  assert.equal(transfers.focusedCandidate(clients,'','0x1',monitors),'0x1');
+  assert.equal(transfers.focusedCandidate(clients,'','',monitors),'');
+});
+test('quick add never falls back to another window when the focused one is unavailable', () => {
+  const monitors=[{activeWorkspace:{name:'1'}}];
+  const clients=[ordinary('0x1','1'),window('0x2'),ordinary('0x3','special:other'),ordinary('0x4','1',{mapped:false}),ordinary('0x5','2')];
+  for (const active of ['0x2','0x3','0x4','0x5','0xdead','bad'])
+    assert.equal(transfers.focusedCandidate(clients,active,'0x1',monitors),'');
+  assert.equal(transfers.focusedCandidate(clients,'','0xdead',monitors),'');
+  assert.equal(transfers.focusedCandidate(clients,'','0x1',[{activeWorkspace:{name:'2'}}]),'');
+  assert.equal(transfers.focusedCandidate(clients,'','0x1',[{activeWorkspace:{name:'1'},disabled:true}]),'');
+});
 test('transfer picker includes numbered, named and empty workspaces, excluding specials', () => {
   const result=plain(transfers.destinations([{name:'2',monitor:'DP-3'},{name:'Design',monitor:'DP-1'},{name:'special:other'}],
     [{name:'DP-1',activeWorkspace:{name:'1'}},{name:'DP-3',activeWorkspace:{name:'2'}}], 'DP-3'));
@@ -631,4 +643,37 @@ test('external window closure or unexpected workspace changes abort an in-flight
   assert.equal(transfers.progress(job,[]),'error');
   assert.equal(transfers.progress(job,[ordinary('0x1','3')]),'error');
   assert.equal(transfers.progress(job,[ordinary('0x1','2')]),'done');
+});
+
+test('visibility intent uses live monitor names and validates complete snapshots', () => {
+  const snapshot = [{...monitor('DP-3', 17, 'special:scratchpad'), activeWorkspace:{name:'2'}}];
+  const hide = visibility.plan(snapshot, 'scratchpad', 'DP-3');
+  assert.equal(hide.show, false);
+  assert.equal(visibility.plan([{...snapshot[0],id:93}], 'scratchpad', 'DP-3').show, false);
+  assert.equal(visibility.plan(snapshot, 'scratchpad', 'DP-1'), null);
+  assert.equal(visibility.plan([{...snapshot[0],disabled:true}], 'scratchpad', 'DP-3'), null);
+  for (const malformed of [null, {}, [], [{name:'DP-3'}], [{...snapshot[0],specialWorkspace:{}}]])
+    assert.equal(visibility.plan(malformed, 'scratchpad', 'DP-3'), null);
+  assert.equal(visibility.plan(snapshot, 'scratchpad', 'DP-3;evil'), null);
+  assert.equal(visibility.progress(snapshot, hide), 'wait');
+  const hidden = [{...snapshot[0],specialWorkspace:{name:''}}];
+  assert.equal(visibility.progress(hidden, hide), 'done');
+  assert.equal(visibility.progress([{...hidden[0],activeWorkspace:{name:'3'}}], hide), 'error');
+  assert.equal(visibility.progress([], hide), 'error');
+  assert.equal(visibility.plan(hidden, 'scratchpad', 'DP-3').show, true);
+  assert.equal(visibility.plan(snapshot, 'music', 'DP-3').show, true);
+});
+
+test('empty workspace decisions require a fresh, valid client inventory', () => {
+  const job = {target:'special:scratchpad'};
+  assert.equal(visibility.occupied(null,job), null);
+  assert.equal(visibility.occupied({},job), null);
+  assert.equal(visibility.occupied([],job), false);
+  assert.equal(visibility.occupied([window('0x1',{mapped:false})],job), false);
+  assert.equal(visibility.occupied([window('0x1')],job), true);
+  assert.equal(visibility.occupied([window('0x1',{workspace:{name:'special:music'}})],job), false);
+});
+
+test('disconnected target monitor remains unknown instead of reporting hidden', () => {
+  assert.equal(state([window('0x1')], screens, 'DP-9').status,'unknown');
 });

@@ -17,6 +17,12 @@ monitorze**. Każda zakładka liczy się jako osobne okno.
 
 To scratchpad **okien**, a nie historia kopiowanych tekstów i obrazów.
 
+Kliknięcie odczytuje aktualny stan z Hyprlanda, także po restarcie wtyczki.
+W konfiguracji Lua operacja jawnie pokazuje lub chowa scratchpad na wybranym
+monitorze. Powtórne wywołanie podczas tej samej operacji nie odwraca jej wyniku.
+Wtyczka sprawdza potwierdzenie; zmiana workspace’u, odłączenie monitora lub błąd
+odczytu przerywają operację. Nie ponawia automatycznie przełączania.
+
 ## Instalacja
 
 Wymagane jest Omarchy Quattro z paskiem `omarchy-shell`. Nie są potrzebne
@@ -135,16 +141,27 @@ Kliknij ScratchPeek prawym przyciskiem myszy:
 - **Dodaj okno do scratchpada…** — wyszukaj okno po aplikacji, tytule lub workspace i wybierz
   je, aby przenieść je do scratchpada. Ponowne kliknięcie **Dodaj okno do scratchpada…**,
   Escape lub kliknięcie poza listą zamyka wybór.
+- **Ctrl + klik Dodaj okno do scratchpada…** od razu dodaje aktywne okno aplikacji.
+  Jeśli panel przejął fokus, używa okna aktywnego tuż przed jego otwarciem, o ile
+  nadal znajduje się na widocznym zwykłym workspace. Nie wybiera zastępczego okna.
 - **↗ Wyciągnij** obok okna — wybierz docelowy workspace i kliknij **Przenieś**.
   Lista zawiera istniejące workspace’y (także nazwane) oraz puste **1–10**.
   Przy istniejących miejscach pokazuje monitor. Domyślnie wybiera zwykły
   workspace monitora, na którym otwierasz panel.
+- **Ctrl + klik Wyciągnij** przenosi okno od razu na aktywny zwykły workspace
+  monitora z panelem.
 - Przenoszenie nie przełącza widoku. Aby zobaczyć wyciągnięte okno, przejdź
   na wybrany workspace. **Pokaż tutaj / Schowaj** nadal steruje całym scratchpadem.
 
 Podpowiedź po najechaniu na ikonę lub nazwę okna wyjaśnia, że kliknięcie
 przenosi fokus na to okno lub zakładkę. Osobny przycisk **Wyciągnij** otwiera
 wybór workspace’u.
+
+Przycisk **?** na dole włącza lub wyłącza podpowiedzi. Początkowo znikają
+automatycznie po 100 wyświetleniach; licznik jest wspólny dla monitorów i trwały.
+Ręczne włączenie działa bez limitu. Przy włączonych podpowiedziach dymek paska
+mówi wprost o pokazywaniu/chowaniu **scratchpada**; przy wyłączonych używa
+krótszego opisu. Opis samego przycisku **?** pozostaje zawsze dostępny.
 
 Przenoszona jest tylko wybrana zakładka. Przed ruchem Hyprland sprawdza aktualną
 przynależność okna i oddziela je od grupy w jednym poleceniu. Zablokowana grupa

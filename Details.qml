@@ -526,6 +526,7 @@ Panel {
           HintButton {
             width: parent.width
             visible: root.canToggle
+            enabled: !!root.hostWidget && !root.hostWidget.visibilityBusy
             text: root.scratchpadState.status === "here" ? root.words.hide : root.words.show
             hostWidget: root.hostWidget
             hintsAllowed: root.opened && !root.editing && !scroll.moving
@@ -540,8 +541,11 @@ Panel {
             onClicked: if (root.hostWidget) root.hostWidget.toggleScratchpad()
           }
 
-          Choice.SearchableDropdown {
+          AddWindowPicker {
             id: addPicker
+            hostWidget: root.hostWidget
+            hintsAllowed: root.opened && !root.editing && !scroll.moving
+            hintWidth: scroll.width
             visible: root.transferSupported
             width: parent.width
             uiScale: root.uiScale
@@ -558,6 +562,15 @@ Panel {
               if (root.hostWidget) root.hostWidget.addWindow(value);
               addPicker.value = "";
             }
+          }
+          Text {
+            width: parent.width
+            visible: !!root.hostWidget && !!root.hostWidget.visibilityError
+            text: visible ? root.words[root.hostWidget.visibilityError] : ""
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: Color.urgent
+            font.pixelSize: Style.font.caption
           }
           Text {
             width: parent.width

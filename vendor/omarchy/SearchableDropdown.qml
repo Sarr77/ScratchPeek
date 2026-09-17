@@ -46,6 +46,11 @@ Item {
   property string placeholderText: "Search..."
   property string emptyText: "No matches"
   property string triggerLabel: ""
+  // Optional secondary trigger action; other pickers retain normal Ctrl-clicks.
+  property bool controlClickEnabled: false
+  property string accessibleDescription: ""
+  readonly property bool triggerHovered: triggerHover.hovered
+  signal controlClicked()
 
   property color foreground: Color.popups.text
   property color background: Color.popups.background
@@ -139,6 +144,9 @@ Item {
       borderSpec: _borderSpec
 
       activeFocusOnTab: true
+      Accessible.role: Accessible.ComboBox
+      Accessible.name: root.label || root.triggerLabel || root.placeholderText
+      Accessible.description: root.accessibleDescription
 
       HoverHandler {
         id: triggerHover
@@ -183,7 +191,12 @@ Item {
       MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: {
+        onClicked: function(mouse) {
+          if (root.controlClickEnabled && (mouse.modifiers & Qt.ControlModifier)) {
+            popup.close()
+            root.controlClicked()
+            return
+          }
           trigger.forceActiveFocus()
           root.toggle()
         }

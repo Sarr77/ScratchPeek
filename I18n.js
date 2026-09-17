@@ -776,3 +776,110 @@ var shortcutHintCatalogs = {
   "zh-TW": "{shortcut} · 顯示 / 隱藏 Scratchpad"
 };
 Object.keys(shortcutHintCatalogs).forEach(function(code) { catalogs[code].shortcutHint = shortcutHintCatalogs[code]; });
+
+var quickAddKeys = ["quickAddHint", "noFocusedWindow"];
+var quickAddCatalogs = {
+  en: ["Ctrl + click: add the focused window", "No focused window outside the scratchpad."],
+  pl: ["Ctrl + klik: dodaj aktywne okno", "Brak aktywnego okna poza scratchpadem."],
+  de: ["Strg + Klick: fokussiertes Fenster hinzufügen", "Kein fokussiertes Fenster außerhalb des Scratchpads."],
+  fr: ["Ctrl + clic : ajouter la fenêtre active", "Aucune fenêtre active hors du scratchpad."],
+  es: ["Ctrl + clic: añadir la ventana enfocada", "No hay ninguna ventana enfocada fuera del scratchpad."],
+  "pt-BR": ["Ctrl + clique: adicionar a janela em foco", "Nenhuma janela em foco fora do scratchpad."],
+  "pt-PT": ["Ctrl + clique: adicionar a janela em foco", "Nenhuma janela em foco fora do scratchpad."],
+  it: ["Ctrl + clic: aggiungi la finestra attiva", "Nessuna finestra attiva fuori dallo scratchpad."],
+  nl: ["Ctrl + klik: actief venster toevoegen", "Geen actief venster buiten het scratchpad."],
+  sv: ["Ctrl + klick: lägg till fokuserat fönster", "Inget fokuserat fönster utanför scratchpad."],
+  da: ["Ctrl + klik: tilføj det fokuserede vindue", "Intet fokuseret vindue uden for scratchpad."],
+  nb: ["Ctrl + klikk: legg til fokusert vindu", "Ingen fokusert vindu utenfor scratchpad."],
+  fi: ["Ctrl + napsautus: lisää aktiivinen ikkuna", "Ei aktiivista ikkunaa scratchpadin ulkopuolella."],
+  cs: ["Ctrl + kliknutí: přidat aktivní okno", "Žádné aktivní okno mimo scratchpad."],
+  sk: ["Ctrl + kliknutie: pridať aktívne okno", "Žiadne aktívne okno mimo scratchpadu."],
+  uk: ["Ctrl + клацання: додати активне вікно", "Немає активного вікна поза scratchpad."],
+  ru: ["Ctrl + щелчок: добавить активное окно", "Нет активного окна вне scratchpad."],
+  tr: ["Ctrl + tıklama: odaklanan pencereyi ekle", "Scratchpad dışında odaklanmış pencere yok."],
+  ro: ["Ctrl + clic: adaugă fereastra activă", "Nicio fereastră activă în afara scratchpad."],
+  hu: ["Ctrl + kattintás: aktív ablak hozzáadása", "Nincs aktív ablak a scratchpaden kívül."],
+  el: ["Ctrl + κλικ: προσθήκη ενεργού παραθύρου", "Δεν υπάρχει ενεργό παράθυρο εκτός scratchpad."],
+  ar: ["Ctrl + نقر: إضافة النافذة النشطة", "لا توجد نافذة نشطة خارج scratchpad."],
+  hi: ["Ctrl + क्लिक: फ़ोकस की गई विंडो जोड़ें", "Scratchpad के बाहर कोई फ़ोकस की गई विंडो नहीं है।"],
+  id: ["Ctrl + klik: tambahkan jendela yang aktif", "Tidak ada jendela aktif di luar scratchpad."],
+  vi: ["Ctrl + nhấp: thêm cửa sổ đang được chọn", "Không có cửa sổ đang được chọn ngoài scratchpad."],
+  th: ["Ctrl + คลิก: เพิ่มหน้าต่างที่มีโฟกัส", "ไม่มีหน้าต่างที่มีโฟกัสนอก scratchpad"],
+  ja: ["Ctrl + クリック：フォーカス中のウィンドウを追加", "Scratchpadの外にフォーカス中のウィンドウがありません。"],
+  ko: ["Ctrl + 클릭: 포커스된 창 추가", "Scratchpad 밖에 포커스된 창이 없습니다."],
+  "zh-CN": ["Ctrl + 点击：添加当前聚焦的窗口", "Scratchpad 外没有聚焦的窗口。"],
+  "zh-TW": ["Ctrl + 點擊：新增目前聚焦的視窗", "Scratchpad 外沒有聚焦的視窗。"]
+};
+Object.keys(quickAddCatalogs).forEach(function(code) {
+  quickAddKeys.forEach(function(key,index) { catalogs[code][key] = quickAddCatalogs[code][index]; });
+});
+
+var detailedClickCatalogs = {
+  en: "Click: show / hide scratchpad here",
+  pl: "Kliknij: pokaż / schowaj scratchpad tutaj",
+  de: "Klick: Scratchpad hier ein- / ausblenden",
+  fr: "Clic : afficher / masquer le scratchpad ici",
+  es: "Clic: mostrar / ocultar scratchpad aquí",
+  "pt-BR": "Clique: mostrar / ocultar scratchpad aqui",
+  "pt-PT": "Clique: mostrar / ocultar scratchpad aqui",
+  it: "Clic: mostra / nascondi scratchpad qui",
+  nl: "Klik: scratchpad hier tonen / verbergen",
+  sv: "Klicka: visa / dölj scratchpad här",
+  da: "Klik: vis / skjul scratchpad her",
+  nb: "Klikk: vis / skjul scratchpad her",
+  fi: "Napsauta: näytä / piilota scratchpad tässä",
+  cs: "Kliknutí: zobrazit / skrýt scratchpad zde",
+  sk: "Kliknutie: zobraziť / skryť scratchpad tu",
+  uk: "Клацання: показати / приховати scratchpad тут",
+  ru: "Щелчок: показать / скрыть scratchpad здесь",
+  tr: "Tıkla: scratchpad’i burada göster / gizle",
+  ro: "Clic: arată / ascunde scratchpad aici",
+  hu: "Kattintás: scratchpad megjelenítése / elrejtése itt",
+  el: "Κλικ: εμφάνιση / απόκρυψη scratchpad εδώ",
+  ar: "نقر: إظهار / إخفاء scratchpad هنا",
+  hi: "क्लिक: यहाँ scratchpad दिखाएँ / छिपाएँ",
+  id: "Klik: tampilkan / sembunyikan scratchpad di sini",
+  vi: "Nhấp: hiện / ẩn scratchpad ở đây",
+  th: "คลิก: แสดง / ซ่อน scratchpad ที่นี่",
+  ja: "クリック：ここにScratchpadを表示 / 非表示",
+  ko: "클릭: 여기에 Scratchpad 표시 / 숨기기",
+  "zh-CN": "点击：在此显示 / 隐藏 Scratchpad",
+  "zh-TW": "點擊：在此顯示 / 隱藏 Scratchpad"
+};
+Object.keys(detailedClickCatalogs).forEach(function(code) {
+  catalogs[code].clickHelpDetailed = detailedClickCatalogs[code] + "\n" + catalogs[code].clickHelp.split("\n").slice(1).join("\n");
+});
+
+var visibilityErrors = {
+  "en": "Could not confirm the scratchpad state. Please try again.",
+  "pl": "Nie udało się potwierdzić stanu scratchpada. Spróbuj ponownie.",
+  "de": "Der Scratchpad-Zustand konnte nicht bestätigt werden. Bitte erneut versuchen.",
+  "fr": "Impossible de confirmer l’état du scratchpad. Réessayez.",
+  "es": "No se pudo confirmar el estado del scratchpad. Inténtalo de nuevo.",
+  "pt-BR": "Não foi possível confirmar o estado do scratchpad. Tente novamente.",
+  "pt-PT": "Não foi possível confirmar o estado do scratchpad. Tente novamente.",
+  "it": "Impossibile confermare lo stato dello scratchpad. Riprova.",
+  "nl": "De status van het scratchpad kon niet worden bevestigd. Probeer opnieuw.",
+  "sv": "Kunde inte bekräfta scratchpads status. Försök igen.",
+  "da": "Kunne ikke bekræfte scratchpads tilstand. Prøv igen.",
+  "nb": "Kunne ikke bekrefte tilstanden til scratchpad. Prøv igjen.",
+  "fi": "Scratchpadin tilaa ei voitu vahvistaa. Yritä uudelleen.",
+  "cs": "Stav scratchpadu se nepodařilo ověřit. Zkuste to znovu.",
+  "sk": "Stav scratchpadu sa nepodarilo overiť. Skúste to znova.",
+  "uk": "Не вдалося підтвердити стан scratchpad. Спробуйте ще раз.",
+  "ru": "Не удалось подтвердить состояние scratchpad. Попробуйте ещё раз.",
+  "hu": "Nem sikerült megerősíteni a scratchpad állapotát. Próbáld újra.",
+  "tr": "Scratchpad durumu doğrulanamadı. Lütfen tekrar deneyin.",
+  "ro": "Starea scratchpad nu a putut fi confirmată. Încearcă din nou.",
+  "el": "Δεν ήταν δυνατή η επιβεβαίωση της κατάστασης του scratchpad. Δοκιμάστε ξανά.",
+  "ar": "تعذّر تأكيد حالة scratchpad. يُرجى المحاولة مجددًا.",
+  "hi": "Scratchpad की स्थिति की पुष्टि नहीं हो सकी। कृपया फिर कोशिश करें।",
+  "id": "Status scratchpad tidak dapat dikonfirmasi. Coba lagi.",
+  "vi": "Không thể xác nhận trạng thái scratchpad. Vui lòng thử lại.",
+  "ja": "Scratchpadの状態を確認できませんでした。もう一度お試しください。",
+  "ko": "Scratchpad 상태를 확인할 수 없습니다. 다시 시도하세요.",
+  "th": "ยืนยันสถานะ scratchpad ไม่ได้ โปรดลองอีกครั้ง",
+  "zh-CN": "无法确认 Scratchpad 的状态。请重试。",
+  "zh-TW": "無法確認 Scratchpad 的狀態。請重試。"
+};
+Object.keys(visibilityErrors).forEach(function(code) { catalogs[code].visibilityError = visibilityErrors[code]; });

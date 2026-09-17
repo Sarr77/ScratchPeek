@@ -48,6 +48,7 @@ function summarize(clients, monitors, workspace, screenName, activeAddress) {
     if (monitor.specialWorkspace && monitor.specialWorkspace.name === fullName)
       result.monitor = monitor.name;
   }
+  if (!Number.isInteger(result.monitorId) || result.monitorId < 0) return result;
   if (result.monitor) result.status = result.monitor === screenName ? "here" : "elsewhere";
   else result.status = result.count ? "hidden" : "empty";
   result.focused = result.status === "here" && result.windows.some(function(w) { return w.active; });
@@ -96,7 +97,7 @@ function label(state, lang, compact, vertical, settings, workspace) {
   return mark + " " + count + " · " + statusText(state, lang, settings, workspace);
 }
 
-function tooltip(state, lang, workspace, settings) {
+function tooltip(state, lang, workspace, settings, hintsEnabled) {
   var w = words(lang);
   var lines = ["ScratchPeek · " + workspace, statusText(state, lang, settings, workspace)];
   if (state.status === "unknown") lines.push(validWorkspace(workspace) ? w.unknownHelp : w.invalidHelp);
@@ -108,16 +109,8 @@ function tooltip(state, lang, workspace, settings) {
     });
     if (state.count > 12) lines.push("+" + (state.count - 12));
   }
-  lines.push("", w.clickHelp);
+  lines.push("", hintsEnabled ? w.clickHelpDetailed : w.clickHelp);
   return lines.join("\n");
-}
-
-function toggleCommands(workspace, monitorId, lua) {
-  if (!validWorkspace(workspace) || !Number.isInteger(monitorId) || monitorId < 0) return [];
-  return lua ? [
-    'hl.dsp.focus({ monitor = "' + monitorId + '" })',
-    'hl.dsp.workspace.toggle_special("' + workspace + '")'
-  ] : ['focusmonitor ' + monitorId, 'togglespecialworkspace ' + workspace];
 }
 
 function focusCommand(address, lua) {

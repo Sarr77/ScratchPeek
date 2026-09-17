@@ -1,5 +1,38 @@
 # Validation
 
+## 0.9.0 validation — 2026-09-17
+
+- 60 portable tests pass, including focused-window selection, missing monitors,
+  complete visibility snapshots, changed workspace context, fresh client
+  inventories, and matching translation keys/placeholders across 30 languages.
+- `tools/test_visibility.py` exercises the real QML transaction controller with
+  delayed/stale replies, duplicate requests across monitors, malformed JSON,
+  command failure, obsolete responses, missing acknowledgment, timeout, empty
+  scratchpad and legacy focus races. No mutation is automatically retried.
+- `tools/test_live_visibility.py` uses the same public action as the bar on the
+  native two-monitor shell. It checks the first action after restart, show/hide,
+  duplicate invocation, an open keyboard panel, another monitor holding focus,
+  and moving the overlay between monitors. Each action has one sampled state
+  transition. Original overlays/focus are restored; window membership and ordinary
+  workspaces stay unchanged.
+- Production-generated Lua runs in Hyprland's actual interpreter against local
+  mock monitor objects to check idempotence and workspace/unrelated-overlay/
+  removed-monitor guards without changing user windows.
+- The reported intermittent physical first-click flicker was **not reproduced**
+  by the pre-fix IPC test. The change removes the identified focus/toggle race
+  and stale-state dependency; IPC coverage does not simulate every native pointer
+  routing path or physical monitor hot-unplug.
+- Actual offscreen Qt clicks verify Ctrl-add versus ordinary dropdown toggling,
+  disabled controls, hover-budget consumption and generic dropdown compatibility.
+  The panel-actions test checks live footer wording when hints change.
+- `tools/test_live_quick_add.py` confirms that opening a native keyboard panel
+  preserves the intended focused window, and only that tab of a disposable group
+  moves. Existing windows remain on their original workspaces.
+- Transfer-controller regression tests, Omarchy plugin validation, source archive
+  CRC and required-file checks pass. Native shell logs have no ScratchPeek errors.
+  Static QML lint still reports host-facade and QProcess metadata warnings;
+  these are not syntax failures, and the native process path was exercised above.
+
 ## 0.8.1 validation — 2026-09-17
 
 - 55 model/localization checks pass with count-based onboarding: values 0–100,

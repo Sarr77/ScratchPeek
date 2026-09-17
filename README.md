@@ -86,6 +86,15 @@ Clicking a label for an empty, hidden scratchpad opens help instead of displayin
 an empty overlay. Clicking a window in the details panel follows that window;
 use **Show here** to bring the scratchpad to the panel's monitor instead.
 
+Each visibility action reads the current compositor state before releasing the
+panel's keyboard focus. On Lua Hyprland it explicitly shows or hides on the
+named monitor, without a separate monitor-focus toggle. Repeating that operation
+cannot reverse it. Requests are serialized across monitors until the compositor
+confirms the result and a brief transition guard ends. A changed workspace,
+missing monitor or failed reply stops the action and shows an error; there is
+no automatic toggle retry. Legacy Hyprland uses a fresh read after focusing the
+monitor but cannot provide the same atomic workspace guard.
+
 ## Moving windows
 
 Right-click ScratchPeek to open the window list:
@@ -93,6 +102,10 @@ Right-click ScratchPeek to open the window list:
 - **Add window to scratchpad…** searches windows on ordinary workspaces by application,
   title or workspace. Select one to send it to the configured scratchpad.
   Click **Add window to scratchpad…** again, press Escape or click outside to close the list.
+- **Ctrl + click Add window to scratchpad…** adds the focused application window
+  immediately. If opening the panel took keyboard focus, it uses the application
+  that was focused just before opening, provided it is still on a visible ordinary
+  workspace. An unavailable window produces a message instead of selecting another.
 - **↗ Move out**, beside a scratchpad window, opens **Take out of scratchpad…**. Select
   a destination and press **Move**. The picker offers existing numbered and
   named workspaces, plus empty workspaces **1–10**. Existing destinations show
@@ -116,7 +129,9 @@ uses the budget. Counts are shared across monitors and survive restarts/updates.
 Manually enabled hints stay on without a limit until you turn them off yourself.
 You can always turn them on again, including after the automatic budget runs out.
 The bar's window preview remains available; the panel shortcut reminder shows
-only the key combination while hints are off.
+only the key combination while hints are off. With hints enabled, the bar preview
+explicitly says **Click: show / hide scratchpad here**; with hints off, it uses
+the shorter **Click: show / hide here**.
 
 Only the selected window moves. Hyprland checks its current workspace and group
 inside one Lua operation, separates that tab if necessary, then moves it by

@@ -41,6 +41,18 @@ function candidates(clients) {
 function client(clients, address) {
   return (clients || []).filter(function(w) { return w.address === address && w.mapped !== false; })[0];
 }
+function focusedCandidate(clients, active, beforePanel, monitors) {
+  // A keyboard layer can clear activeToplevel. Only then use the window that
+  // was focused when this panel opened, never a different eligible window.
+  var address = active || beforePanel;
+  if (!validAddress(address)) return "";
+  var win = client(clients, address);
+  if (!win || !ordinary(win.workspace)) return "";
+  if (!(monitors || []).some(function(m) {
+    return m && !m.disabled && m.activeWorkspace && m.activeWorkspace.name === win.workspace.name;
+  })) return "";
+  return address;
+}
 function grouped(win) { return !!win && Array.isArray(win.grouped) && win.grouped.length > 1; }
 function moveCommand(address, destination, lua) {
   if (!validAddress(address) || typeof destination !== "string" || !destination

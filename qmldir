@@ -15,3 +15,5 @@ HintsToggle 1.0 HintsToggle.qml
 HintButton 1.0 HintButton.qml
 PanelHint 1.0 PanelHint.qml
 MoveOutButton 1.0 MoveOutButton.qml
+AddWindowPicker 1.0 AddWindowPicker.qml
+ScratchVisibility 1.0 ScratchVisibility.qml

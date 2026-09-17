@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.9.0 — 2026-09-17
+
+- Ctrl + click Add window to scratchpad… immediately adds the focused application
+  window, including when the panel temporarily holds keyboard focus. Ordinary
+  clicks keep the searchable picker. Its new hint follows the shared hint budget.
+- Include “scratchpad” in the bar preview's click description while hints are on;
+  keep the compact wording while off. Translate new messages into all 30 languages.
+- Read live compositor state for each visibility action, including the first
+  action after restart. Use an explicit, idempotent show/hide on the named monitor
+  with Lua Hyprland, instead of two separate focus/toggle commands.
+- Serialize actions across monitors and verify completion. Guard against stale
+  workspace context, disconnected monitors, duplicate invocation, missing replies
+  and timeouts without retrying a toggle. Report failures in the panel.
+- Add deterministic transaction tests and opt-in native checks for restart,
+  cross-monitor visibility, duplicate actions and quick-add of a grouped tab.
+
 ## 0.8.2 — 2026-09-17
 
 - Clarify automatic hiding in the hover counter description. Put the manual

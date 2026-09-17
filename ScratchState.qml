@@ -70,6 +70,9 @@ QtObject {
     dispatch: function(command) { Hyprland.dispatch(command); }
     refresh: function() { root.refresh(); }
   }
+  property ScratchVisibility visibility: ScratchVisibility {
+    refresh: function() { root.refresh(); }
+  }
 
   function refresh() {
     Hyprland.refreshMonitors();

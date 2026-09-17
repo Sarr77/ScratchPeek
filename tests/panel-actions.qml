@@ -51,6 +51,7 @@ ShellRoot {
   }
   Plugin.Widget { id: widgetA; visible: false; bar: fakeBar }
   Plugin.Widget { id: widgetB; visible: false; bar: fakeBar }
+  Plugin.TooltipContent { id: barTip; hostWidget: widgetA; visible: false }
   Window {
     id: window
     visible: true; width: 840; height: 500
@@ -128,6 +129,7 @@ ShellRoot {
             var mode = i % 2 ? "on" : "off";
             testRoot.check(widgetA.setHintsMode(mode), "mode saved");
             testRoot.check(widgetA.hints.mode === mode && widgetB.hints.mode === mode, "rapid writes shared despite stale layout snapshot");
+            testRoot.check(barTip.footerText === widgetA.words[mode === "on" ? "clickHelpDetailed" : "clickHelp"], "bar footer follows hint setting immediately");
             testRoot.check(fakeShell.saved.hintsMode === mode, "latest choice reaches persistence");
           }
           testRoot.check(fakeShell.saved.language === "pl" && fakeShell.saved.accentColor === "#EF98F5", "unrelated settings preserved");
