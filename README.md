@@ -90,16 +90,17 @@ use **Show here** to bring the scratchpad to the panel's monitor instead.
 
 Right-click ScratchPeek to open the window list:
 
-- **Add window…** searches windows on ordinary workspaces by application,
+- **Add window to scratchpad…** searches windows on ordinary workspaces by application,
   title or workspace. Select one to send it to the configured scratchpad.
-  Click **Add window…** again, press Escape or click outside to close the list.
+  Click **Add window to scratchpad…** again, press Escape or click outside to close the list.
 - **↗ Move out**, beside a scratchpad window, opens **Take out of scratchpad…**. Select
   a destination and press **Move**. The picker offers existing numbered and
   named workspaces, plus empty workspaces **1–10**. Existing destinations show
   their monitor; the ordinary workspace on the panel’s monitor is selected first.
 - Moves are silent: you stay on the current workspace. To see an extracted
   window, open its destination workspace. The panel’s **Show here / Hide**
-  action continues to control the whole scratchpad overlay.
+  action continues to control the whole scratchpad overlay. Its hover hint
+  explains the action; hiding keeps the windows inside the scratchpad.
 
 Hovering a window’s icon or name explains that clicking focuses that window or
 tab. The separate **Move out** button opens the destination picker.

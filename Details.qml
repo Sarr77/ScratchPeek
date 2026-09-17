@@ -511,6 +511,8 @@ Panel {
             width: parent.width
             visible: root.canToggle
             text: root.scratchpadState.status === "here" ? root.words.hide : root.words.show
+            tooltipText: root.scratchpadState.status === "here" ? root.words.hideScratchpadHint : root.words.showScratchpadHint
+            Accessible.description: tooltipText
             foreground: root.barForeground
             accent: root.accent
             hasCursor: root.selectedIndex === root.toggleIndex

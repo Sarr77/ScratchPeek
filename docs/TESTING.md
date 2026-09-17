@@ -254,3 +254,12 @@ then handles its own click once, while clicks elsewhere continue to dismiss.
   30 languages, with an accessibility description and wrapped tooltip text.
 - The bar tooltip footer now says Right-click: window list and settings in
   English and uses the corresponding wording in every other supported locale.
+
+## 0.7.3 validation — 2026-09-17
+
+- 51 model/translation checks pass, including complete new visibility hints
+  and expanded add-window labels across all 30 locales.
+- The real Qt dropdown pointer/keyboard regression test passes with the longer
+  Add window to scratchpad… trigger label, including its 200% scaled variant.
+- Omarchy plugin validation and QML syntax/import checks pass. Visibility hints
+  reuse the native button tooltip and use explicit line breaks for compact text.

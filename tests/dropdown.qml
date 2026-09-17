@@ -32,7 +32,7 @@ ShellRoot {
         width: parent.width
         uiScale: testRoot.uiScale
         showLabel: false
-        triggerLabel: "Add window…"
+        triggerLabel: "Add window to scratchpad…"
         placeholderText: "Search windows…"
         options: [{value:"one",label:"Alpha app",description:"Workspace 1"},
           {value:"two",label:"Beta app",description:"Workspace 2"}]

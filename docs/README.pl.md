@@ -132,8 +132,8 @@ Licencja MIT · © 2026 Sarr.
 
 Kliknij ScratchPeek prawym przyciskiem myszy:
 
-- **Dodaj okno…** — wyszukaj okno po aplikacji, tytule lub workspace i wybierz
-  je, aby przenieść je do scratchpada. Ponowne kliknięcie **Dodaj okno…**,
+- **Dodaj okno do scratchpada…** — wyszukaj okno po aplikacji, tytule lub workspace i wybierz
+  je, aby przenieść je do scratchpada. Ponowne kliknięcie **Dodaj okno do scratchpada…**,
   Escape lub kliknięcie poza listą zamyka wybór.
 - **↗ Wyciągnij** obok okna — wybierz docelowy workspace i kliknij **Przenieś**.
   Lista zawiera istniejące workspace’y (także nazwane) oraz puste **1–10**.

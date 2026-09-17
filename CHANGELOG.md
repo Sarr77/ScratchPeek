@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.3 — 2026-09-17
+
+- Label the add-window picker Add window to scratchpad… in all 30 languages.
+- Explain Hide on hover: hides the scratchpad on this monitor while keeping
+  its windows inside. Show here has a corresponding monitor-specific hint.
+- Use compact multiline text and expose visibility hints to accessibility.
+
 ## 0.7.2 — 2026-09-17
 
 - Remove the ellipsis from the Move out button in all 30 languages; preserve
