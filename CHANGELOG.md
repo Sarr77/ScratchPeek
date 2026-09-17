@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.2 — 2026-09-17
+
+- Remove the ellipsis from the Move out button in all 30 languages; preserve
+  the full extraction tooltip and its ellipsis.
+- Hovering a window's icon/name now explains that clicking focuses that
+  window or tab. The extraction button keeps its separate tooltip and action.
+- Clarify the bar tooltip footer: Right-click: window list and settings.
+- Translate the focus hint into all 30 languages, expose it to accessibility,
+  and wrap it within the panel width. Hide it while scrolling or editing.
+
 ## 0.7.1 — 2026-09-17
 
 - Clicking an open dropdown's trigger now closes it instead of reopening it

@@ -379,6 +379,7 @@ Panel {
               color: Qt.alpha(root.barForeground, index * root.windowActionCount === root.selectedIndex ? 0.10 : 0)
               Accessible.role: Accessible.Button
               Accessible.name: appName + " · " + (modelData.title || root.words.unnamed)
+              Accessible.description: root.words.focusWindowHint
               Accessible.onPressAction: if (root.hostWidget) root.hostWidget.focusWindow(modelData.address)
 
               Rectangle {
@@ -446,6 +447,7 @@ Panel {
                 }
               }
               MouseArea {
+                id: focusArea
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -454,6 +456,32 @@ Panel {
                 cursorShape: Qt.PointingHandCursor
                 onEntered: root.selectedIndex = row.index * root.windowActionCount
                 onClicked: if (root.hostWidget) root.hostWidget.focusWindow(row.modelData.address)
+                QQC.ToolTip {
+                  id: focusTip
+                  visible: focusArea.containsMouse && root.opened && !root.editing && !list.moving && !scroll.moving
+                  text: root.words.focusWindowHint
+                  delay: 400
+                  padding: 0
+                  width: Math.min(implicitWidth, scroll.width)
+                  readonly property var tipBorder: Border.localOrSurfaceSpec("tooltip", "border", Color.tooltip.border, Color.tooltip.border, Math.max(1, Style.normalBorderWidth))
+                  background: Ui.BorderSurface {
+                    color: Color.tooltip.background
+                    borderSpec: focusTip.tipBorder
+                    radius: 0
+                  }
+                  contentItem: Text {
+                    text: focusTip.text
+                    textFormat: Text.PlainText
+                    wrapMode: Text.Wrap
+                    color: Color.tooltip.text
+                    font.family: Style.font.family
+                    font.pixelSize: Style.font.bodySmall
+                    leftPadding: Border.left(focusTip.tipBorder) + Style.spacing.controlPaddingX
+                    rightPadding: Border.right(focusTip.tipBorder) + Style.spacing.controlPaddingX
+                    topPadding: Border.top(focusTip.tipBorder) + Style.spacing.controlPaddingY
+                    bottomPadding: Border.bottom(focusTip.tipBorder) + Style.spacing.controlPaddingY
+                  }
+                }
               }
               Ui.Button {
                 id: extractButton

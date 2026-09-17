@@ -240,3 +240,17 @@ Implementation references, pinned to the tested compositor version:
 Qt's [popup close policy](https://doc.qt.io/qt-6/qml-qtquick-controls-popup.html#closePolicy-prop)
 excludes the trigger (popup parent) from press-outside dismissal. The trigger
 then handles its own click once, while clicks elsewhere continue to dismiss.
+
+## 0.7.2 validation — 2026-09-17
+
+- 51 model/translation checks and the existing offscreen appearance preview
+  check pass; Omarchy's plugin validator passes.
+- QML lint reports no syntax/import errors for the details panel. The native
+  panel loads and displays Move out without an ellipsis; the full extraction
+  tooltip retains its ellipsis.
+- The focus hint is attached only to the icon/title click area, excluding the
+  extraction button, and is hidden during scrolling or editing. Its final
+  English wording is Click to focus this window or tab, translated into all
+  30 languages, with an accessibility description and wrapped tooltip text.
+- The bar tooltip footer now says Right-click: window list and settings in
+  English and uses the corresponding wording in every other supported locale.

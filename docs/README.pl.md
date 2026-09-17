@@ -135,12 +135,16 @@ Kliknij ScratchPeek prawym przyciskiem myszy:
 - **Dodaj okno…** — wyszukaj okno po aplikacji, tytule lub workspace i wybierz
   je, aby przenieść je do scratchpada. Ponowne kliknięcie **Dodaj okno…**,
   Escape lub kliknięcie poza listą zamyka wybór.
-- **↗ Wyciągnij…** obok okna — wybierz docelowy workspace i kliknij **Przenieś**.
+- **↗ Wyciągnij** obok okna — wybierz docelowy workspace i kliknij **Przenieś**.
   Lista zawiera istniejące workspace’y (także nazwane) oraz puste **1–10**.
   Przy istniejących miejscach pokazuje monitor. Domyślnie wybiera zwykły
   workspace monitora, na którym otwierasz panel.
 - Przenoszenie nie przełącza widoku. Aby zobaczyć wyciągnięte okno, przejdź
   na wybrany workspace. **Pokaż tutaj / Schowaj** nadal steruje całym scratchpadem.
+
+Podpowiedź po najechaniu na ikonę lub nazwę okna wyjaśnia, że kliknięcie
+przenosi fokus na to okno lub zakładkę. Osobny przycisk **Wyciągnij** otwiera
+wybór workspace’u.
 
 Przenoszona jest tylko wybrana zakładka. Przed ruchem Hyprland sprawdza aktualną
 przynależność okna i oddziela je od grupy w jednym poleceniu. Zablokowana grupa
