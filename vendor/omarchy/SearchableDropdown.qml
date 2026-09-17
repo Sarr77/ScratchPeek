@@ -72,6 +72,7 @@ Item {
   function open() { popup.open() }
   function close() { popup.close() }
   function toggle() { popup.opened ? popup.close() : popup.open() }
+  function focusTrigger() { trigger.forceActiveFocus() }
 
   signal changed(string value)
   signal hovered(bool isHovered)

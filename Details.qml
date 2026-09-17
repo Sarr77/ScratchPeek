@@ -20,23 +20,31 @@ Panel {
   readonly property var words: I18n.words(language)
   readonly property bool rtl: I18n.isRtl(language)
   readonly property bool canToggle: scratchpadState.status !== "unknown" && (scratchpadState.count > 0 || scratchpadState.status === "here")
-  readonly property int languageIndex: scratchpadState.count + (canToggle ? 1 : 0)
+  readonly property bool transferSupported: !!hostWidget && hostWidget.transferSupported
+  readonly property int windowActionCount: transferSupported ? 2 : 1
+  readonly property int toggleIndex: scratchpadState.count * windowActionCount
+  readonly property int addIndex: toggleIndex + (canToggle ? 1 : 0)
+  readonly property int languageIndex: addIndex + (transferSupported ? 1 : 0)
   property int selectedIndex: 0
   property bool editingAppearance: false
   property bool editingLabels: false
   property bool editingScaling: false
+  property bool editingTransfer: false
   readonly property real uiScale: hostWidget ? hostWidget.uiScale : 1
-  readonly property bool editing: editingAppearance || editingLabels || editingScaling
+  readonly property bool editing: editingAppearance || editingLabels || editingScaling || editingTransfer
   readonly property int scalingIndex: appearanceIndex + 1
   readonly property int labelsIndex: scalingIndex + 1
-  readonly property real logicalContentHeight: editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight))
+  readonly property real logicalContentHeight: editingTransfer ? transferEditor.implicitHeight : (editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight)))
   readonly property int appearanceIndex: languageIndex + 1
   readonly property color accent: hostWidget ? hostWidget.accent : Color.accent
 
   onOpenedChanged: {
-    if (opened) { selectedIndex = 0; scroll.contentY = 0; }
+    if (opened) { selectedIndex = 0; scroll.contentY = 0; if (hostWidget) hostWidget.clearTransferError(); }
     else {
       languagePicker.close();
+      addPicker.close();
+      transferEditor.closePicker();
+      editingTransfer = false;
       appearanceEditor.closePickers();
       if (root.hostWidget) { root.hostWidget.cancelAppearance(); root.hostWidget.cancelLabels(); }
       labelsEditor.closePicker();
@@ -49,8 +57,8 @@ Panel {
 
   function moveSelection(delta) {
     selectedIndex = Math.max(0, Math.min(labelsIndex, selectedIndex + delta));
-    if (selectedIndex < scratchpadState.count) {
-      list.positionViewAtIndex(selectedIndex, ListView.Contain);
+    if (selectedIndex < toggleIndex) {
+      list.positionViewAtIndex(Math.floor(selectedIndex / windowActionCount), ListView.Contain);
       scroll.contentY = 0;
     } else scroll.contentY = Math.max(0, scroll.contentHeight - scroll.height);
   }
@@ -60,8 +68,32 @@ Panel {
     else if (selectedIndex === scalingIndex) openScaling();
     else if (selectedIndex === appearanceIndex) openAppearance();
     else if (selectedIndex === languageIndex) openLanguages();
-    else if (selectedIndex === scratchpadState.count) hostWidget.toggleScratchpad();
-    else if (scratchpadState.windows[selectedIndex]) hostWidget.focusWindow(scratchpadState.windows[selectedIndex].address);
+    else if (selectedIndex === addIndex && transferSupported) addPicker.open();
+    else if (selectedIndex === toggleIndex && canToggle) hostWidget.toggleScratchpad();
+    else {
+      var win = scratchpadState.windows[Math.floor(selectedIndex / windowActionCount)];
+      if (win) { if (transferSupported && selectedIndex % windowActionCount) openTransfer(win); else hostWidget.focusWindow(win.address); }
+    }
+  }
+  function openTransfer(win) {
+    if (!hostWidget || hostWidget.transferBusy) return;
+    hostWidget.cancelAppearance();
+    hostWidget.cancelLabels();
+    appearanceEditor.closePickers();
+    labelsEditor.closePicker();
+    editingAppearance = false;
+    editingLabels = false;
+    editingScaling = false;
+    editingTransfer = true;
+    scroll.contentY = 0;
+    transferEditor.begin(win);
+  }
+  function openTransferAddress(address) {
+    var win = scratchpadState.windows.filter(function(w) { return w.address === address; })[0];
+    if (!win || !hostWidget || hostWidget.transferBusy) return false;
+    open();
+    openTransfer(win);
+    return true;
   }
   function openLanguages() {
     selectedIndex = languageIndex;
@@ -71,6 +103,8 @@ Panel {
 
   function openAppearance() {
     if (!hostWidget) return;
+    transferEditor.closePicker();
+    editingTransfer = false;
     hostWidget.cancelLabels();
     editingLabels = false;
     hostWidget.cancelAppearance();
@@ -82,6 +116,8 @@ Panel {
 
   function openLabels() {
     if (!hostWidget) return;
+    transferEditor.closePicker();
+    editingTransfer = false;
     hostWidget.cancelAppearance();
     appearanceEditor.closePickers();
     editingAppearance = false;
@@ -93,6 +129,8 @@ Panel {
 
   function openScaling() {
     if (!hostWidget) return;
+    transferEditor.closePicker();
+    editingTransfer = false;
     hostWidget.cancelLabels();
     hostWidget.cancelAppearance();
     appearanceEditor.closePickers();
@@ -131,9 +169,13 @@ Panel {
       Binding { target: catcher.QQC.Overlay.overlay; property: "transformOrigin"; value: Item.TopLeft; when: catcher.QQC.Overlay.overlay !== null }
       Binding { target: catcher.QQC.Overlay.overlay; property: "scale"; value: root.uiScale; when: catcher.QQC.Overlay.overlay !== null }
       anchors.fill: parent
-      blocked: languagePicker.popupOpen || root.editing
+      blocked: languagePicker.popupOpen || addPicker.popupOpen || root.editing
       onCloseRequested: root.close()
-      onMoveRequested: function(dx, dy) { root.moveSelection(dy) }
+      onMoveRequested: function(dx, dy) {
+        if (dx && root.selectedIndex < root.toggleIndex)
+          root.selectedIndex = Math.floor(root.selectedIndex/root.windowActionCount)*root.windowActionCount + (dx > 0 ? root.windowActionCount-1 : 0);
+        else root.moveSelection(dy);
+      }
       onActivateRequested: root.activateSelection()
       onTabRequested: function(direction) { root.moveSelection(direction) }
 
@@ -156,6 +198,22 @@ Panel {
           height: catcher.height
           uiScale: root.uiScale
           accent: root.accent
+        }
+
+        TransferEditor {
+          id: transferEditor
+          width: scroll.width
+          hostWidget: root.hostWidget
+          visible: root.editingTransfer
+          LayoutMirroring.enabled: root.rtl
+          LayoutMirroring.childrenInherit: true
+          onFinished: {
+            closePicker();
+            root.editingTransfer = false;
+            root.selectedIndex = Math.min(root.selectedIndex, root.labelsIndex);
+            scroll.contentY = 0;
+            catcher.forceActiveFocus();
+          }
         }
 
         AppearanceEditor {
@@ -318,7 +376,7 @@ Panel {
               width: list.width - (windowScrollbar.visible ? windowScrollbar.width + Style.space(4) : 0)
               height: Style.space(58)
               radius: Style.space(6)
-              color: Qt.alpha(root.barForeground, index === root.selectedIndex ? 0.10 : 0)
+              color: Qt.alpha(root.barForeground, index * root.windowActionCount === root.selectedIndex ? 0.10 : 0)
               Accessible.role: Accessible.Button
               Accessible.name: appName + " · " + (modelData.title || root.words.unnamed)
               Accessible.onPressAction: if (root.hostWidget) root.hostWidget.focusWindow(modelData.address)
@@ -361,7 +419,7 @@ Panel {
               }
               Column {
                 anchors.left: iconBox.right
-                anchors.right: parent.right
+                anchors.right: extractButton.left
                 anchors.leftMargin: Style.space(10)
                 anchors.rightMargin: Style.space(8)
                 anchors.verticalCenter: parent.verticalCenter
@@ -388,11 +446,32 @@ Panel {
                 }
               }
               MouseArea {
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: extractButton.left
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onEntered: root.selectedIndex = row.index
+                onEntered: root.selectedIndex = row.index * root.windowActionCount
                 onClicked: if (root.hostWidget) root.hostWidget.focusWindow(row.modelData.address)
+              }
+              Ui.Button {
+                id: extractButton
+                anchors.right: parent.right
+                anchors.rightMargin: Style.space(6)
+                anchors.verticalCenter: parent.verticalCenter
+                visible: root.transferSupported
+                width: visible ? Style.space(32) : 0
+                text: "↗"
+                tooltipText: root.words.extractWindow
+                foreground: root.accent; accent: root.accent
+                hasCursor: root.selectedIndex === row.index * 2 + 1
+                enabled: !root.hostWidget || !root.hostWidget.transferBusy
+                Accessible.role: Accessible.Button
+                Accessible.name: root.words.extractWindow + " · " + row.appName
+                Accessible.onPressAction: root.openTransfer(row.modelData)
+                onHovered: function(value) { if (value) root.selectedIndex = row.index * 2 + 1; }
+                onClicked: root.openTransfer(row.modelData)
               }
             }
           }
@@ -403,10 +482,39 @@ Panel {
             text: root.scratchpadState.status === "here" ? root.words.hide : root.words.show
             foreground: root.barForeground
             accent: root.accent
-            hasCursor: root.selectedIndex === root.scratchpadState.count
+            hasCursor: root.selectedIndex === root.toggleIndex
             bordered: true
-            onHovered: function(value) { if (value) root.selectedIndex = root.scratchpadState.count; }
+            onHovered: function(value) { if (value) root.selectedIndex = root.toggleIndex; }
             onClicked: if (root.hostWidget) root.hostWidget.toggleScratchpad()
+          }
+
+          Choice.SearchableDropdown {
+            id: addPicker
+            visible: root.transferSupported
+            width: parent.width
+            uiScale: root.uiScale
+            showLabel: false
+            triggerLabel: root.words.addWindow
+            options: root.hostWidget ? root.hostWidget.addWindowOptions : []
+            placeholderText: root.words.search
+            emptyText: root.words.noMatches
+            foreground: root.barForeground; accent: root.accent
+            enabled: !!root.hostWidget && !root.hostWidget.transferBusy
+            hasCursor: root.selectedIndex === root.addIndex
+            onHovered: function(value) { if (value) root.selectedIndex = root.addIndex; }
+            onChanged: function(value) {
+              if (root.hostWidget) root.hostWidget.addWindow(value);
+              addPicker.value = "";
+            }
+          }
+          Text {
+            width: parent.width
+            visible: !!root.hostWidget && (root.hostWidget.transferBusy || root.hostWidget.transferError !== "")
+            text: visible ? (root.hostWidget.transferBusy ? root.words.movingWindow : root.words[root.hostWidget.transferError]) : ""
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: root.hostWidget && root.hostWidget.transferError !== "" ? Color.urgent : root.barForeground
+            font.pixelSize: Style.font.caption
           }
 
           Rectangle { width: parent.width; height: 1; color: Qt.alpha(root.barForeground, 0.12) }

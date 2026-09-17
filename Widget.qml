@@ -8,6 +8,7 @@ import "." as Local
 import "Model.js" as Model
 import "I18n.js" as I18n
 import "Appearance.js" as Appearance
+import "Transfers.js" as Transfers
 
 BarWidget {
   id: root
@@ -49,6 +50,31 @@ BarWidget {
     workspaceName, screenName, Local.ScratchState.activeAddress)
   readonly property bool opened: panelLoader.item ? panelLoader.item.opened : false
   readonly property bool popoutSwitchClosing: panelLoader.item ? panelLoader.item.popoutSwitchClosing : false
+  readonly property var destinations: Transfers.destinations(Local.ScratchState.workspaces, Local.ScratchState.monitors, screenName)
+  readonly property string defaultDestination: destinations.current
+  readonly property var destinationOptions: destinations.options.map(function(item) {
+    return {value:item.value, label:I18n.format(words.workspaceLabel, {workspace:item.name}),
+      description:item.monitor + (item.value === defaultDestination ? (item.monitor ? " · " : "") + words.currentWorkspace : "")};
+  })
+  readonly property var addWindowOptions: Transfers.candidates(Local.ScratchState.clients).map(function(win) {
+    var entry = DesktopEntries.heuristicLookup(win.class || win.initialClass || "");
+    return {value:win.address, label:(entry ? entry.name : (win.class || win.initialClass || words.unnamed)) + " · " + (win.title || words.unnamed),
+      description:I18n.format(words.workspaceLabel, {workspace:win.workspace.name})};
+  })
+  readonly property bool transferBusy: Local.ScratchState.transfer.busy
+  readonly property bool transferSupported: Hyprland.usingLua
+  readonly property string transferError: Local.ScratchState.transfer.error
+  signal transferCompleted()
+  Connections { target: Local.ScratchState.transfer; function onCompleted() { root.transferCompleted(); } }
+  function clearTransferError() { Local.ScratchState.transfer.error = ""; }
+  function addWindow(address) {
+    return Local.ScratchState.transfer.start(Transfers.plan(Local.ScratchState.clients, address, workspaceName, "", [], Hyprland.usingLua));
+  }
+  function extractWindow(address, destination) {
+    if (!destination) return false;
+    return Local.ScratchState.transfer.start(Transfers.plan(Local.ScratchState.clients, address, workspaceName, destination, destinations.options, Hyprland.usingLua));
+  }
+  function openExtraction(address) { return panelLoader.item ? panelLoader.item.openTransferAddress(address) : false; }
 
   function open() { if (panelLoader.item) panelLoader.item.open() }
   function close() { if (panelLoader.item) panelLoader.item.close() }
@@ -215,12 +241,12 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.6.1",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.7.0",
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,
           themeAccent: String(widget.themeAccent), themeId: widget.themeId, effectiveBarScale: widget.effectiveBarScale,
           underlineColor: String(widget.underlineColor), opened: widget.opened,
           description: widget.statusDescription, labels: widget.labels, savedLabels: widget.savedLabels,
-          labelWidth: widget.openPanelIndicatorWidth };
+          labelWidth: widget.openPanelIndicatorWidth, transferBusy:widget.transferBusy, transferError:widget.transferError };
       }));
     }
     function toggleScratchpad(screen: string): void {
@@ -233,6 +259,18 @@ BarWidget {
     }
     function closeDetails(): void { root.broadcast("close") }
     function focusWindow(address: string): void { root.focusWindow(address) }
+    function addWindow(screen: string, address: string): bool {
+      var widget = root.widgetOnScreen(screen);
+      return widget ? widget.addWindow(address) : false;
+    }
+    function extractWindow(screen: string, address: string, destination: string): bool {
+      var widget = root.widgetOnScreen(screen);
+      return widget ? widget.extractWindow(address, destination) : false;
+    }
+    function showExtraction(screen: string, address: string): bool {
+      var widget = root.widgetOnScreen(screen);
+      return widget ? widget.openExtraction(address) : false;
+    }
     function setLanguage(language: string): bool { return root.setLanguage(language) }
     function showLanguages(screen: string): void {
       var widget = root.widgetOnScreen(screen);

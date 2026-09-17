@@ -37,7 +37,7 @@ QtObject {
       if (!raw || !raw.address) continue;
       result.push({ address: raw.address, title: top.title, class: raw.class,
         initialClass: raw.initialClass, mapped: raw.mapped, grouped: raw.grouped,
-        workspace: top.workspace ? { name: top.workspace.name } : raw.workspace });
+        workspace: top.workspace ? { name: top.workspace.name, id: top.workspace.id } : raw.workspace });
     }
     return result;
   }
@@ -50,9 +50,21 @@ QtObject {
   readonly property string activeAddress: Hyprland.activeToplevel
     ? "0x" + Hyprland.activeToplevel.address.replace(/^0x/, "") : "";
 
+  readonly property var workspaces: {
+    var result = [], values = Hyprland.workspaces.values;
+    for (var i = 0; i < values.length; i++) result.push(values[i].lastIpcObject);
+    return result;
+  }
+  property WindowTransfer transfer: WindowTransfer {
+    clients: root.clients
+    dispatch: function(command) { Hyprland.dispatch(command); }
+    refresh: function() { root.refresh(); }
+  }
+
   function refresh() {
     Hyprland.refreshMonitors();
     Hyprland.refreshToplevels();
+    Hyprland.refreshWorkspaces();
   }
 
   // Coalesce Hyprland's related events and refresh specialWorkspace, which
@@ -60,7 +72,7 @@ QtObject {
   property Connections events: Connections {
     target: Hyprland
     function onRawEvent(event) {
-      if (/^(activespecial|movewindow|openwindow|closewindow|monitoradded|monitorremoved|workspace|focusedmon|togglegroup|moveintogroup|moveoutofgroup|configreloaded)/.test(event.name))
+      if (/^(activespecial|movewindow|openwindow|closewindow|monitoradded|monitorremoved|workspace|createworkspace|destroyworkspace|renameworkspace|moveworkspace|focusedmon|togglegroup|moveintogroup|moveoutofgroup|configreloaded)/.test(event.name))
         root.refreshTimer.restart();
     }
   }

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0 — 2026-09-17
+
+- Add windows to the scratchpad through a searchable application/window picker.
+- Take out a window with its ↗ action and choose a numbered or named workspace;
+  show monitor names and offer empty workspaces 1–10 as destinations.
+- Atomically check live membership and separate only the selected grouped tab
+  before moving it silently, avoiding stale IPC state and focus-based moves.
+- Confirm moves through compositor state, serialize requests across monitors,
+  and report failed/blocked moves. Locked groups stay in place.
+- Compact transfer editor, keyboard actions, scaling and 30-language coverage.
+- Transfers require Hyprland's Lua window/group API (0.56+). Legacy indicator
+  support remains; unsupported transfer controls are hidden.
+
 ## 0.6.1 — 2026-09-16
 
 - Replaced the theme-color shortcut with Restore saved color and its saved HEX.

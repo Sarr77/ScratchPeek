@@ -194,3 +194,32 @@ public-release review.
   and confirms the target changes after Apply. All 30 catalogs remain complete.
 - Inspected the Polish button in the rendered editor; the compact layout and
   collapsed color settings remain unchanged.
+
+## 0.7.0 validation — 2026-09-17
+
+- 51 model tests pass. Transfer cases cover candidate filtering, stale/invalid
+  selection, numbered/named/empty workspace destinations, explicit client
+  targeting, atomic membership/group guards and acknowledged completion.
+- `python3 tools/test_transfers.py` runs the real QML controller and compact
+  destination editor offscreen. Covers serialized requests, timeout without
+  repeated dispatch, a window closing mid-operation, destination selection,
+  current-workspace default and translation changes preserving the selection.
+- `python3 tools/test_editor.py` still passes the appearance/preset regression
+  checks. `omarchy plugin validate .` passes. QML lint has no syntax/import errors;
+  the installed Omarchy UI kit still produces dynamic-property warnings.
+- `python3 tools/test_live_transfers.py` is an **opt-in live desktop test** using
+  two disposable foot windows on a unique named workspace. It checks adding,
+  extracting to the current workspace, named destinations and both directions
+  for a single grouped tab. It verifies existing user-window membership and
+  active workspaces, then closes the test windows and restores focus.
+- The grouped integration check intentionally creates a group through Hyprland's
+  direct Lua API, which can leave the Quickshell IPC snapshot briefly stale.
+  The transfer guards run inside Hyprland and still move just the selected tab.
+- Native integration passed on Omarchy 4.0.4 / Hyprland 0.56.2, including grouped
+  siblings staying in place. The compact destination panel was visually checked
+  on DP-1. No desktop screenshots or private window titles are included here.
+
+Implementation references, pinned to the tested compositor version:
+[Lua dispatchers](https://github.com/hyprwm/Hyprland/blob/v0.56.2/src/config/lua/bindings/LuaBindingsDispatchers.cpp),
+[window properties](https://github.com/hyprwm/Hyprland/blob/v0.56.2/src/config/lua/objects/LuaWindow.cpp),
+[group membership API](https://github.com/hyprwm/Hyprland/blob/v0.56.2/src/config/lua/objects/LuaGroup.cpp).

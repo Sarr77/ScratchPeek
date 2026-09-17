@@ -17,8 +17,11 @@ When you are working inside it, the label says **active here**.
 - Counts all windows, including inactive tabs in Hyprland window groups.
 - Left-click shows or hides the scratchpad on the clicked monitor.
 - Hover lists applications; right-click opens a scrollable list with window titles.
-- Select a window to focus it. Up/Down or Tab navigate windows, the action, and
-  the language picker; Enter activates and Escape closes.
+- Select a window to focus it; use its ↗ button to take it out of the scratchpad.
+- Add windows from a searchable picker. Choose the destination workspace when
+  taking a window out. Only the selected tab moves, even in a window group.
+- Up/Down or Tab navigate actions; Left/Right choose focus or extraction on a
+  window row. Enter activates and Escape closes.
 - Uses the current Omarchy theme and supports all four bar edges.
 - 30 interface translations, first-start language detection, a searchable
   language picker, and compact labels. Arabic uses a right-to-left layout.
@@ -36,7 +39,9 @@ configuration. Clipboard history for copied text and images is a separate featur
 No additional runtime packages, API keys, network services, or background daemons.
 The old Waybar-based Omarchy bar is not supported. Lua and legacy Hyprland
 dispatch syntax are selected through Quickshell's `Hyprland.usingLua` property;
-the legacy path needs a Quickshell build exposing that property.
+the legacy path needs a Quickshell build exposing that property. Window transfers
+require Hyprland 0.56+ with Lua configuration; their controls are hidden on legacy
+configuration. Other indicator and focus functions retain legacy support.
 
 ## Install
 
@@ -79,6 +84,27 @@ The monitor diagram preserves physical positions even in an RTL interface.
 Clicking a label for an empty, hidden scratchpad opens help instead of displaying
 an empty overlay. Clicking a window in the details panel follows that window;
 use **Show here** to bring the scratchpad to the panel's monitor instead.
+
+## Moving windows
+
+Right-click ScratchPeek to open the window list:
+
+- **Add window…** searches windows on ordinary workspaces by application,
+  title or workspace. Select one to send it to the configured scratchpad.
+- **↗**, beside a scratchpad window, opens **Take out of scratchpad…**. Select
+  a destination and press **Move**. The picker offers existing numbered and
+  named workspaces, plus empty workspaces **1–10**. Existing destinations show
+  their monitor; the ordinary workspace on the panel’s monitor is selected first.
+- Moves are silent: you stay on the current workspace. To see an extracted
+  window, open its destination workspace. The panel’s **Show here / Hide**
+  action continues to control the whole scratchpad overlay.
+
+Only the selected window moves. Hyprland checks its current workspace and group
+inside one Lua operation, separates that tab if necessary, then moves it by
+address. A locked group is left alone. The app waits for compositor confirmation
+and reports an unavailable/blocked window instead of moving the whole group.
+No applications are closed, no keybindings are changed, and other special
+workspaces are excluded from the add picker. All controls support the 30 UI languages.
 
 ## Settings
 

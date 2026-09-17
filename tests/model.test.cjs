@@ -521,3 +521,71 @@ test('restore color keeps preset edits, tooltip and scaling drafts, without muta
   assert.equal(JSON.stringify(saved),before);
   assert.equal(appearance.resolve(draft,'tokyo-night','#7AA2F7'),'#123456');
 });
+
+const transfers = vm.createContext({});
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../Transfers.js'), 'utf8'), transfers);
+const ordinary = (address, name='2', extra={}) => window(address,{workspace:{name},...extra});
+const destinations = [{value:'1'},{value:'2'},{value:'name:Work "日本語"'}];
+test('transfer picker includes numbered, named and empty workspaces, excluding specials', () => {
+  const result=plain(transfers.destinations([{name:'2',monitor:'DP-3'},{name:'Design',monitor:'DP-1'},{name:'special:other'}],
+    [{name:'DP-1',activeWorkspace:{name:'1'}},{name:'DP-3',activeWorkspace:{name:'2'}}], 'DP-3'));
+  assert.equal(result.current,'2');
+  assert.equal(result.options.length,11);
+  assert.equal(result.options.find(o=>o.value==='2').monitor,'DP-3');
+  assert.equal(result.options.find(o=>o.value==='1').monitor,'DP-1');
+  assert.ok(result.options.some(o=>o.value==='10'));
+  assert.ok(result.options.some(o=>o.value==='name:Design'));
+  assert.ok(!result.options.some(o=>o.value.includes('special')));
+});
+test('add picker contains mapped ordinary windows, including inactive grouped tabs', () => {
+  const windows=[ordinary('0x1','1'),ordinary('0x2','Design',{hidden:true,grouped:['0x2','0x3']}),
+    ordinary('0x3','1',{mapped:false}),window('0x4'),ordinary('0x5','special:other'),ordinary('0x1','1'),ordinary('bad','1')];
+  assert.deepEqual(plain(transfers.candidates(windows)).map(w=>w.address),['0x1','0x2']);
+});
+test('moves target the selected address, not focus, and keep the current workspace', () => {
+  for (const lua of [true]) {
+    const add=transfers.plan([ordinary('0x1')],'0x1','music','',[],lua);
+    assert.equal(add.target,'special:music');
+    assert.ok(add.move.includes('address:0x1'));
+    assert.ok(add.move.includes('special:music'));
+    assert.ok(add.move.includes(lua?'follow = false':'movetoworkspacesilent'));
+    const remove=transfers.plan([window('0x1')],'0x1','scratchpad','2',destinations,lua);
+    assert.equal(remove.target,'2');
+    assert.equal(remove.source,'special:scratchpad');
+  }
+});
+test('transfer validation rejects stale membership, unknown destinations and unsafe selectors', () => {
+  assert.equal(transfers.plan([], '0x1','scratchpad','',[],true),null);
+  assert.equal(transfers.plan([window('0x1')], '0x1','scratchpad','',[],true),null);
+  assert.equal(transfers.plan([ordinary('0x1')], '0x1','scratchpad','1',destinations,true),null);
+  assert.equal(transfers.plan([window('0x1')], '0x1','scratchpad','special:other',destinations,true),null);
+  assert.equal(transfers.plan([window('0x1')], '0x1','scratchpad','99',destinations,true),null);
+  assert.equal(transfers.plan([ordinary('0x1')], '0x1','x;exec','',[],true),null);
+  assert.equal(transfers.moveCommand('0x1;exec','1',true),'');
+  assert.equal(transfers.moveCommand('0x1','name:x\n',true),'');
+  assert.equal(transfers.moveCommand('0x1','name:x,address:0x2',false),'');
+  const named=transfers.plan([window('0x1')],'0x1','scratchpad','name:Work "日本語"',destinations,true);
+  assert.equal(named.target,'Work "日本語"');
+  assert.ok(named.move.includes('workspace = "name:Work \\"日本語\\""'));
+});
+test('every Lua move atomically checks live membership and separates only the chosen tab', () => {
+  // The live group guard must be present even when the snapshot says ungrouped.
+  for (const grouped of [[],['0x1','0x2']]) {
+    const job=transfers.plan([window('0x1',{grouped})],'0x1','scratchpad','2',destinations,true);
+    assert.ok(job.move.includes('local w = hl.get_window("address:0x1")'));
+    assert.ok(job.move.includes('w.workspace.name ~= "special:scratchpad"'));
+    assert.ok(job.move.includes('if w.group.locked then return end'));
+    assert.ok(job.move.includes('w.group:remove(w)'));
+    assert.ok(job.move.indexOf('w.group:remove(w)') < job.move.indexOf('hl.dispatch('));
+    assert.ok(job.move.includes('if w.group and w.group.size > 1 then return end; hl.dispatch('));
+    assert.equal(transfers.progress(job,[window('0x1',{grouped})]),'wait');
+    assert.equal(transfers.progress(job,[ordinary('0x1')]),'done');
+    assert.equal(transfers.plan([window('0x1',{grouped})],'0x1','scratchpad','2',destinations,false),null);
+  }
+});
+test('external window closure or unexpected workspace changes abort an in-flight transfer', () => {
+  const job=transfers.plan([window('0x1')],'0x1','scratchpad','2',destinations,true);
+  assert.equal(transfers.progress(job,[]),'error');
+  assert.equal(transfers.progress(job,[ordinary('0x1','3')]),'error');
+  assert.equal(transfers.progress(job,[ordinary('0x1','2')]),'done');
+});

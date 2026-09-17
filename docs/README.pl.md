@@ -127,3 +127,25 @@ Nie zmienia skrótów klawiszowych, nie zamyka aplikacji i nie zapisuje tytułó
 okien na dysku. Usunięcie: `omarchy plugin remove sarr.scratchpeek`.
 
 Licencja MIT · © 2026 Sarr.
+
+## Przenoszenie okien
+
+Kliknij ScratchPeek prawym przyciskiem myszy:
+
+- **Dodaj okno…** — wyszukaj okno po aplikacji, tytule lub workspace i wybierz
+  je, aby przenieść je do scratchpada.
+- **↗** obok okna — wybierz docelowy workspace i kliknij **Przenieś**.
+  Lista zawiera istniejące workspace’y (także nazwane) oraz puste **1–10**.
+  Przy istniejących miejscach pokazuje monitor. Domyślnie wybiera zwykły
+  workspace monitora, na którym otwierasz panel.
+- Przenoszenie nie przełącza widoku. Aby zobaczyć wyciągnięte okno, przejdź
+  na wybrany workspace. **Pokaż tutaj / Schowaj** nadal steruje całym scratchpadem.
+
+Przenoszona jest tylko wybrana zakładka. Przed ruchem Hyprland sprawdza aktualną
+przynależność okna i oddziela je od grupy w jednym poleceniu. Zablokowana grupa
+pozostaje bez zmian. Zamknięte okno lub odmowa przeniesienia wyświetla błąd.
+Tab i strzałki pozwalają wybrać działanie; lewo/prawo przełącza pomiędzy
+ustawieniem fokusu a wyciąganiem okna. Enter uruchamia wybór, Escape wraca.
+
+Przenoszenie wymaga Hyprland 0.56+ z konfiguracją Lua, jak w obecnym Omarchy.
+Na starszej konfiguracji przyciski przenoszenia są ukryte; wskaźnik nadal działa.

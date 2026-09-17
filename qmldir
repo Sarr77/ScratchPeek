@@ -9,3 +9,5 @@ ScalingEditor 1.0 ScalingEditor.qml
 ScrollHandle 1.0 ScrollHandle.qml
 TooltipContent 1.0 TooltipContent.qml
 Widget 1.0 Widget.qml
+WindowTransfer 1.0 WindowTransfer.qml
+TransferEditor 1.0 TransferEditor.qml
