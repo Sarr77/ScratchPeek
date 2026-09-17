@@ -1,5 +1,21 @@
 # Validation
 
+## Unreleased validation — 2026-09-17
+
+- The footer test reproduces the sticky highlight with the previous enter-only
+  handlers and passes with shared pointer/keyboard selection. Actual Qt events
+  cover help and author hover, leaving into the same footer row, keyboard
+  activation, delayed leave events and 100%/200% scaling.
+- A full 100-display test alternates between two real widget instances using
+  the normal tooltip delay. Fresh processes resume at 50 and 100 from the
+  private preference file. The 101st automatic hint cannot open; help remains
+  available. Explicit manual re-enabling works without resetting the counter.
+- Existing panel-action checks, 61 model/localization tests and Omarchy
+  manifest validation pass. QML lint retains host-facade type warnings.
+- The corrected panel loads in the native two-monitor shell without new
+  ScratchPeek runtime errors. Native pointer routing is not simulated by the
+  offscreen Qt tests above.
+
 ## 0.10.0 validation — 2026-09-17
 
 - 61 portable tests pass, including preference migration, revision ordering,

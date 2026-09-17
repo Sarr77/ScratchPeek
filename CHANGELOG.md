@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Clear hover highlights as soon as the pointer leaves a control, including
+  the help icon and author link. Keep keyboard selection visible and functional.
+- Add full hint-budget coverage across two widgets and cold starts at 50 and
+  100 displays. Manual re-enabling remains unlimited.
+
 ## 0.10.0 — 2026-09-17
 
 - Save preferences and hint progress atomically outside the bar layout. Restore

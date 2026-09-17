@@ -1,6 +1,7 @@
 singleton ScratchState 1.0 ScratchState.qml
 AppearanceEditor 1.0 AppearanceEditor.qml
 Details 1.0 Details.qml
+PanelSelection 1.0 PanelSelection.qml
 HoverTip 1.0 HoverTip.qml
 LabelsEditor 1.0 LabelsEditor.qml
 PresetChip 1.0 PresetChip.qml

@@ -25,7 +25,8 @@ Panel {
   readonly property int toggleIndex: scratchpadState.count * windowActionCount
   readonly property int addIndex: toggleIndex + (canToggle ? 1 : 0)
   readonly property int languageIndex: addIndex + (transferSupported ? 1 : 0)
-  property int selectedIndex: 0
+  property alias selectedIndex: selection.index
+  PanelSelection { id: selection }
   property bool editingAppearance: false
   property bool editingLabels: false
   property bool editingScaling: false
@@ -42,7 +43,7 @@ Panel {
   readonly property color accent: hostWidget ? hostWidget.accent : Color.accent
 
   onOpenedChanged: {
-    if (opened) { selectedIndex = 0; scroll.contentY = 0; if (hostWidget) hostWidget.clearTransferError(); }
+    if (opened) { selection.reset(); scroll.contentY = 0; if (hostWidget) hostWidget.clearTransferError(); }
     else {
       languagePicker.close();
       addPicker.close();
@@ -59,14 +60,14 @@ Panel {
   onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, authorIndex)
 
   function moveSelection(delta) {
-    selectedIndex = Math.max(0, Math.min(authorIndex, selectedIndex + delta));
+    selection.move(delta, authorIndex);
     if (selectedIndex < toggleIndex) {
       list.positionViewAtIndex(Math.floor(selectedIndex / windowActionCount), ListView.Contain);
       scroll.contentY = 0;
     } else scroll.contentY = Math.max(0, scroll.contentHeight - scroll.height);
   }
   function activateSelection() {
-    if (!hostWidget) return;
+    if (!hostWidget || selectedIndex < 0) return;
     if (selectedIndex === authorIndex) authorLink.activate();
     else if (selectedIndex === hintsIndex) hostWidget.toggleHints();
     else if (selectedIndex === labelsIndex) openLabels();
@@ -183,9 +184,10 @@ Panel {
       blocked: languagePicker.popupOpen || addPicker.popupOpen || root.editing
       onCloseRequested: root.close()
       onMoveRequested: function(dx, dy) {
-        if (dx && root.selectedIndex < root.toggleIndex)
+        if (dx && root.selectedIndex >= 0 && root.selectedIndex < root.toggleIndex) {
+          selection.fromKeyboard = true;
           root.selectedIndex = Math.floor(root.selectedIndex/root.windowActionCount)*root.windowActionCount + (dx > 0 ? root.windowActionCount-1 : 0);
-        else root.moveSelection(dy);
+        } else root.moveSelection(dy);
       }
       onActivateRequested: root.activateSelection()
       onTabRequested: function(direction) { root.moveSelection(direction) }
@@ -487,7 +489,8 @@ Panel {
                 anchors.right: extractButton.left
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onEntered: root.selectedIndex = row.index * root.windowActionCount
+                onEntered: selection.hover(row.index * root.windowActionCount, true)
+                onExited: selection.hover(row.index * root.windowActionCount, false)
                 onClicked: if (root.hostWidget) root.hostWidget.focusWindow(row.modelData.address)
                 PanelHint {
                   hostWidget: root.hostWidget
@@ -518,7 +521,7 @@ Panel {
                 Accessible.name: root.words.extractWindow + " · " + row.appName
                 Accessible.description: root.words.quickExtractHint
                 Accessible.onPressAction: root.openTransfer(row.modelData)
-                onHovered: function(value) { if (value) root.selectedIndex = row.index * 2 + 1; }
+                onHovered: function(value) { selection.hover(row.index * 2 + 1, value); }
                 onClicked: root.openTransfer(row.modelData)
                 onQuickMove: root.quickExtract(row.modelData)
               }
@@ -539,7 +542,7 @@ Panel {
             accent: root.accent
             hasCursor: root.selectedIndex === root.toggleIndex
             bordered: true
-            onHovered: function(value) { if (value) root.selectedIndex = root.toggleIndex; }
+            onHovered: function(value) { selection.hover(root.toggleIndex, value); }
             onClicked: if (root.hostWidget) root.hostWidget.toggleScratchpad()
           }
 
@@ -559,7 +562,7 @@ Panel {
             foreground: root.barForeground; accent: root.accent
             enabled: !!root.hostWidget && !root.hostWidget.transferBusy
             hasCursor: root.selectedIndex === root.addIndex
-            onHovered: function(value) { if (value) root.selectedIndex = root.addIndex; }
+            onHovered: function(value) { selection.hover(root.addIndex, value); }
             onChanged: function(value) {
               if (root.hostWidget) root.hostWidget.addWindow(value);
               addPicker.value = "";
@@ -607,7 +610,7 @@ Panel {
             placeholderText: root.words.search
             emptyText: root.words.noMatches
             hasCursor: root.selectedIndex === root.languageIndex
-            onHovered: function(value) { if (value) root.selectedIndex = root.languageIndex; }
+            onHovered: function(value) { selection.hover(root.languageIndex, value); }
             onChanged: function(value) {
               if (root.hostWidget) root.hostWidget.setLanguage(value);
               languagePicker.value = Qt.binding(function() { return root.hostWidget ? root.hostWidget.languageSetting : "auto"; });
@@ -631,7 +634,7 @@ Panel {
             accent: root.accent
             bordered: true
             hasCursor: root.selectedIndex === root.appearanceIndex
-            onHovered: function(value) { if (value) root.selectedIndex = root.appearanceIndex; }
+            onHovered: function(value) { selection.hover(root.appearanceIndex, value); }
             onClicked: root.openAppearance()
           }
 
@@ -641,7 +644,7 @@ Panel {
             accent: root.accent
             bordered: true
             hasCursor: root.selectedIndex === root.scalingIndex
-            onHovered: function(value) { if (value) root.selectedIndex = root.scalingIndex; }
+            onHovered: function(value) { selection.hover(root.scalingIndex, value); }
             onClicked: root.openScaling()
           }
 
@@ -651,7 +654,7 @@ Panel {
             accent: root.accent
             bordered: true
             hasCursor: root.selectedIndex === root.labelsIndex
-            onHovered: function(value) { if (value) root.selectedIndex = root.labelsIndex; }
+            onHovered: function(value) { selection.hover(root.labelsIndex, value); }
             onClicked: root.openLabels()
           }
 
@@ -680,7 +683,7 @@ Panel {
               foreground: root.hintsEnabled ? root.accent : Qt.alpha(root.barForeground, 0.65)
               accent: root.accent
               hasCursor: root.selectedIndex === root.hintsIndex
-              onHovered: function(value) { if (value) root.selectedIndex = root.hintsIndex; }
+              onHovered: function(value) { selection.hover(root.hintsIndex, value); }
               onClicked: if (root.hostWidget) root.hostWidget.toggleHints()
             }
             AuthorLink {
@@ -692,7 +695,7 @@ Panel {
               accent: root.accent
               hintWidth: scroll.width
               hasCursor: root.selectedIndex === root.authorIndex
-              onHovered: function(value) { if (value) root.selectedIndex = root.authorIndex; }
+              onHovered: function(value) { selection.hover(root.authorIndex, value); }
             }
           }
         }

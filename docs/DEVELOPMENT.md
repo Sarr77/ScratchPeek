@@ -10,6 +10,11 @@ the real QML editor with an in-memory settings host. It never edits desktop sett
 `python3 tools/test_panel_actions.py` checks hover hints, Ctrl-click routing and
 rapid preference changes on two widget instances, also without changing the desktop.
 
+`python3 tools/test_footer_hover.py` checks hover exit and keyboard selection at
+100% and 200% scale. `python3 tools/test_hint_budget.py` displays 100 delayed hints
+across two widgets, with cold starts at 50 and 100; it takes about a minute and
+uses a temporary preference file.
+
 Node is needed only for tests. If a recent Node release reports only the test
 file, `node tests/model.test.cjs` prints all individual checks.
 See [TESTING.md](TESTING.md) for compositor and
