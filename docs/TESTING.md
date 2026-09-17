@@ -1,7 +1,12 @@
 # Validation
 
-## Unreleased validation — 2026-09-17
+## 0.11.0 candidate validation — 2026-09-17
 
+- Candidate checks pass: 61 model/localization tests, 19 updater tests, native
+  manifest validation, isolated install/update/remove/reinstall, panel actions,
+  footer hover and the complete 100-display hint budget. These tests use private
+  profiles and preserve live desktop settings. GitHub CI and an
+  unauthenticated installation of the new public commit remain post-push checks.
 - Nineteen updater tests use temporary profiles and real local Git repositories.
   Stable releases install through an atomic directory exchange; downloads,
   validation failures, wrong release versions, divergent commits, concurrent

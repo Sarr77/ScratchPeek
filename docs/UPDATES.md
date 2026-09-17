@@ -44,8 +44,8 @@ download's installation if the change is saved before the final check.
 
 ## Existing installations
 
-Version 0.10.0 has no automatic updater. After a release containing this feature
-is published, existing users need one manual update:
+Automatic updates were added in 0.11.0. Users of 0.10.0 need one manual update
+to get this feature:
 
 ```sh
 omarchy plugin update sarr.scratchpeek

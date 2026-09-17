@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.11.0 — 2026-09-17
 
 - Clear hover highlights as soon as the pointer leaves a control, including
   the help icon. Keep keyboard selection visible and functional.

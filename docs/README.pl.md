@@ -56,7 +56,7 @@ dotychczasową wersję; kolejna próba odbędzie się następnego dnia.
 
 Dotyczy standardowej instalacji przez `omarchy plugin add`. Kopie robocze
 podłączone linkiem, forki i lokalnie zmieniony kod są pomijane. Wersję 0.10.0
-trzeba jednorazowo zaktualizować ręcznie, gdy wydanie z tą funkcją będzie dostępne:
+trzeba jednorazowo zaktualizować ręcznie, aby korzystać z tej funkcji w 0.11.0:
 
 ```sh
 omarchy plugin update sarr.scratchpeek

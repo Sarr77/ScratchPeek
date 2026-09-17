@@ -302,7 +302,7 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.10.0",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.11.0",
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
           autoUpdates: widget.autoUpdates, updateStatus: widget.updateStatus, updatesSaveFailed: widget.updatesSaveFailed,
           preferencesSaveFailed: widget.preferencesSaveFailed,

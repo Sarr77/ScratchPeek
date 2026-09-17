@@ -67,7 +67,7 @@ version in place; another check happens the next day.
 
 This works with the normal `omarchy plugin add` installation. Linked development
 copies, forks and locally modified checkouts are skipped. Users of 0.10.0 need
-one manual update after a version with this feature is published:
+one manual update to get this feature in 0.11.0:
 
 ```sh
 omarchy plugin update sarr.scratchpeek
