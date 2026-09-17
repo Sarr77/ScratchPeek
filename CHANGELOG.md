@@ -14,6 +14,9 @@
   100 displays. Manual re-enabling remains unlimited.
 - Make the updates switch smaller and dimmer, beside the help icon. Require
   confirmation before turning updates off, with translated guidance in the dialog.
+- Clarify the update confirmation and fit its full button label. Always name
+  the scratchpad in the bar preview's click description, including with hints off.
+  Remove final full stops from hover descriptions in all 30 languages.
 - Use “visible here” and “visible on …” for visibility states, with matching
   translations. Preserve custom labels and the separate active/focused state.
 - Record the phase and reason of a failed visibility action locally, without

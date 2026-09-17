@@ -249,7 +249,7 @@ BarWidget {
     tooltipText: ""
     pressable: !root.visibilityBusy
     Accessible.role: Accessible.Button
-    Accessible.name: Model.tooltip(root.scratchpadState, root.language, root.workspaceName, root.labels, root.hints.enabled)
+    Accessible.name: Model.tooltip(root.scratchpadState, root.language, root.workspaceName, root.labels)
     active: root.scratchpadState.status === "here"
     activeColor: root.accent
     dimmed: root.scratchpadState.status === "empty"

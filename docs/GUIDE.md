@@ -66,9 +66,8 @@ uses the budget. Counts are shared across monitors and survive restarts/updates.
 Manually enabled hints stay on without a limit until you turn them off yourself.
 You can always turn them on again, including after the automatic budget runs out.
 The bar's window preview remains available; the panel shortcut reminder shows
-only the key combination while hints are off. With hints enabled, the bar preview
-explicitly says **Click: show / hide scratchpad here**; with hints off, it uses
-the shorter **Click: show / hide here**.
+only the key combination while hints are off. The bar preview always says
+**Click: show / hide scratchpad here**, regardless of the hint setting.
 
 Only the selected window moves. Hyprland checks its current workspace and group
 inside one Lua operation, separates that tab if necessary, then moves it by

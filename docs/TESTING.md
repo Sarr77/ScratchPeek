@@ -22,6 +22,11 @@
   updates; explicit confirmation saves off on both widgets. Re-enabling takes
   one click. A rejected settings write leaves updates enabled. All 30 catalogs
   include the question, warning and confirmation button; the hover remains short.
+- The full “I confirm, disable updates” label fits at 200% scale. A wider
+  confirmation button keeps the English dialog compact; longer translations
+  can use stacked buttons. The bar preview still names the scratchpad after
+  hints are switched off. Hover descriptions in all 30 catalogs have no final
+  full stop; sentence separators and action ellipses are preserved.
 - Visibility labels now use “visible here/on” across all 30 catalogs; short,
   explicit and custom-label fallback checks pass. Custom text is preserved.
 - The reported intermittent visibility error did not recur in the native
@@ -104,7 +109,7 @@ keyboard/pointer path remain outside the automated coverage.
   routing path or physical monitor hot-unplug.
 - Actual offscreen Qt clicks verify Ctrl-add versus ordinary dropdown toggling,
   disabled controls, hover-budget consumption and generic dropdown compatibility.
-  The panel-actions test checks live footer wording when hints change.
+  The panel-actions test checks that footer wording stays explicit when hints change.
 - `tools/test_live_quick_add.py` confirms that opening a native keyboard panel
   preserves the intended focused window, and only that tab of a disposable group
   moves. Existing windows remain on their original workspaces.

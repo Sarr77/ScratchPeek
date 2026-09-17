@@ -82,10 +82,10 @@ var catalogs = {
   en: {
     empty: "empty", hidden: "hidden", here: "visible here", active: "active here", elsewhere: "visible on {monitor}", unknown: "status unknown",
     windows: "Windows", grouped: "tab", unnamed: "Untitled window",
-    emptyHelp: "Send a window with Super + Alt + S.\nSuper + S shows and hides the scratchpad.",
-    shortcutNote: "Shortcuts refer to Omarchy’s default bindings.", customHelp: "Move a window to this special workspace in Hyprland.",
+    emptyHelp: "Send a window with Super + Alt + S.\nSuper + S shows and hides the scratchpad",
+    shortcutNote: "Shortcuts refer to Omarchy’s default bindings.", customHelp: "Move a window to this special workspace in Hyprland",
     clickHelp: "Click: show / hide here\nRight-click: window list and settings", show: "Show here", hide: "Hide", focus: "Select a window to switch to it.",
-    unknownHelp: "Hyprland state is unavailable. Try again in a moment.", invalidHelp: "Invalid workspace name. Use letters, digits, a dot, _ or -.",
+    unknownHelp: "Hyprland state is unavailable. Try again in a moment", invalidHelp: "Invalid workspace name. Use letters, digits, a dot, _ or -",
     countNote: "Each tab counts as a separate window.", author: "by Sarr",
     language: "Language", automatic: "Automatic", search: "Search languages…", noMatches: "No matches", detected: "System language: {language}",
     saveError: "Language could not be saved. Try again.", compact: "Compact label"
@@ -93,10 +93,10 @@ var catalogs = {
   pl: {
     empty: "pusty", hidden: "ukryty", here: "widoczny tutaj", active: "aktywny tutaj", elsewhere: "widoczny na {monitor}", unknown: "stan nieznany",
     windows: "Okna", grouped: "zakładka", unnamed: "Okno bez tytułu",
-    emptyHelp: "Przenieś okno skrótem Super + Alt + S.\nSuper + S pokazuje i chowa scratchpad.",
-    shortcutNote: "Skróty dotyczą domyślnej konfiguracji Omarchy.", customHelp: "Przenieś okno do tego specjalnego pulpitu w Hyprlandzie.",
+    emptyHelp: "Przenieś okno skrótem Super + Alt + S.\nSuper + S pokazuje i chowa scratchpad",
+    shortcutNote: "Skróty dotyczą domyślnej konfiguracji Omarchy.", customHelp: "Przenieś okno do tego specjalnego pulpitu w Hyprlandzie",
     clickHelp: "Kliknij: pokaż / schowaj tutaj\nPrawy przycisk: lista okien i ustawienia", show: "Pokaż tutaj", hide: "Schowaj", focus: "Wybierz okno, aby do niego przejść.",
-    unknownHelp: "Nie można odczytać stanu Hyprlanda. Spróbuj ponownie za chwilę.", invalidHelp: "Nieprawidłowa nazwa pulpitu. Użyj liter, cyfr, kropki, _ lub -.",
+    unknownHelp: "Nie można odczytać stanu Hyprlanda. Spróbuj ponownie za chwilę", invalidHelp: "Nieprawidłowa nazwa pulpitu. Użyj liter, cyfr, kropki, _ lub -",
     countNote: "Każda zakładka liczy się jako osobne okno.", author: "Autor: Sarr",
     language: "Język", automatic: "Automatycznie", search: "Szukaj języka…", noMatches: "Brak wyników", detected: "Język systemu: {language}",
     saveError: "Nie udało się zapisać języka. Spróbuj ponownie.", compact: "Krótka etykieta"
@@ -104,10 +104,10 @@ var catalogs = {
   de: {
     empty: "leer", hidden: "verborgen", here: "hier sichtbar", active: "hier aktiv", elsewhere: "sichtbar auf {monitor}", unknown: "Status unbekannt",
     windows: "Fenster", grouped: "Tab", unnamed: "Fenster ohne Titel",
-    emptyHelp: "Fenster mit Super + Alt + S verschieben.\nSuper + S zeigt und verbirgt den Scratchpad.",
-    shortcutNote: "Die Kürzel gelten für die Standardkonfiguration von Omarchy.", customHelp: "Verschiebe ein Fenster auf diesen speziellen Arbeitsbereich in Hyprland.",
+    emptyHelp: "Fenster mit Super + Alt + S verschieben.\nSuper + S zeigt und verbirgt den Scratchpad",
+    shortcutNote: "Die Kürzel gelten für die Standardkonfiguration von Omarchy.", customHelp: "Verschiebe ein Fenster auf diesen speziellen Arbeitsbereich in Hyprland",
     clickHelp: "Klick: hier zeigen / verbergen\nRechtsklick: Fensterliste und Einstellungen", show: "Hier anzeigen", hide: "Verbergen", focus: "Wähle ein Fenster, um zu ihm zu wechseln.",
-    unknownHelp: "Der Hyprland-Status ist nicht verfügbar. Versuche es gleich erneut.", invalidHelp: "Ungültiger Arbeitsbereichsname. Erlaubt sind Buchstaben, Ziffern, Punkt, _ und -.",
+    unknownHelp: "Der Hyprland-Status ist nicht verfügbar. Versuche es gleich erneut", invalidHelp: "Ungültiger Arbeitsbereichsname. Erlaubt sind Buchstaben, Ziffern, Punkt, _ und -",
     countNote: "Jeder Tab zählt als eigenes Fenster.", author: "Von Sarr",
     language: "Sprache", automatic: "Automatisch", search: "Sprachen suchen…", noMatches: "Keine Treffer", detected: "Systemsprache: {language}",
     saveError: "Die Sprache konnte nicht gespeichert werden. Versuche es erneut.", compact: "Kompakte Beschriftung"
@@ -115,10 +115,10 @@ var catalogs = {
   fr: {
     empty: "vide", hidden: "masqué", here: "visible ici", active: "actif ici", elsewhere: "visible sur {monitor}", unknown: "état inconnu",
     windows: "Fenêtres", grouped: "onglet", unnamed: "Fenêtre sans titre",
-    emptyHelp: "Déplacez une fenêtre avec Super + Alt + S.\nSuper + S affiche et masque le scratchpad.",
-    shortcutNote: "Ces raccourcis correspondent à la configuration par défaut d’Omarchy.", customHelp: "Déplacez une fenêtre vers cet espace de travail spécial dans Hyprland.",
+    emptyHelp: "Déplacez une fenêtre avec Super + Alt + S.\nSuper + S affiche et masque le scratchpad",
+    shortcutNote: "Ces raccourcis correspondent à la configuration par défaut d’Omarchy.", customHelp: "Déplacez une fenêtre vers cet espace de travail spécial dans Hyprland",
     clickHelp: "Clic : afficher / masquer ici\nClic droit : liste des fenêtres et paramètres", show: "Afficher ici", hide: "Masquer", focus: "Sélectionnez une fenêtre pour y accéder.",
-    unknownHelp: "L’état d’Hyprland est indisponible. Réessayez dans un instant.", invalidHelp: "Nom d’espace invalide. Utilisez des lettres, des chiffres, un point, _ ou -.",
+    unknownHelp: "L’état d’Hyprland est indisponible. Réessayez dans un instant", invalidHelp: "Nom d’espace invalide. Utilisez des lettres, des chiffres, un point, _ ou -",
     countNote: "Chaque onglet compte comme une fenêtre distincte.", author: "Par Sarr",
     language: "Langue", automatic: "Automatique", search: "Rechercher une langue…", noMatches: "Aucun résultat", detected: "Langue du système : {language}",
     saveError: "Impossible d’enregistrer la langue. Réessayez.", compact: "Libellé compact"
@@ -126,10 +126,10 @@ var catalogs = {
   es: {
     empty: "vacío", hidden: "oculto", here: "visible aquí", active: "activo aquí", elsewhere: "visible en {monitor}", unknown: "estado desconocido",
     windows: "Ventanas", grouped: "pestaña", unnamed: "Ventana sin título",
-    emptyHelp: "Mueve una ventana con Super + Alt + S.\nSuper + S muestra y oculta el scratchpad.",
-    shortcutNote: "Los atajos corresponden a la configuración predeterminada de Omarchy.", customHelp: "Mueve una ventana a este espacio de trabajo especial en Hyprland.",
+    emptyHelp: "Mueve una ventana con Super + Alt + S.\nSuper + S muestra y oculta el scratchpad",
+    shortcutNote: "Los atajos corresponden a la configuración predeterminada de Omarchy.", customHelp: "Mueve una ventana a este espacio de trabajo especial en Hyprland",
     clickHelp: "Clic: mostrar / ocultar aquí\nClic derecho: lista de ventanas y ajustes", show: "Mostrar aquí", hide: "Ocultar", focus: "Selecciona una ventana para cambiar a ella.",
-    unknownHelp: "El estado de Hyprland no está disponible. Vuelve a intentarlo en un momento.", invalidHelp: "Nombre de espacio no válido. Usa letras, dígitos, un punto, _ o -.",
+    unknownHelp: "El estado de Hyprland no está disponible. Vuelve a intentarlo en un momento", invalidHelp: "Nombre de espacio no válido. Usa letras, dígitos, un punto, _ o -",
     countNote: "Cada pestaña cuenta como una ventana independiente.", author: "Por Sarr",
     language: "Idioma", automatic: "Automático", search: "Buscar idiomas…", noMatches: "Sin resultados", detected: "Idioma del sistema: {language}",
     saveError: "No se pudo guardar el idioma. Vuelve a intentarlo.", compact: "Etiqueta compacta"
@@ -137,10 +137,10 @@ var catalogs = {
   "pt-BR": {
     empty: "vazio", hidden: "oculto", here: "visível aqui", active: "ativo aqui", elsewhere: "visível em {monitor}", unknown: "estado desconhecido",
     windows: "Janelas", grouped: "aba", unnamed: "Janela sem título",
-    emptyHelp: "Mova uma janela com Super + Alt + S.\nSuper + S mostra e oculta o scratchpad.",
-    shortcutNote: "Os atalhos correspondem à configuração padrão do Omarchy.", customHelp: "Mova uma janela para este espaço de trabalho especial no Hyprland.",
+    emptyHelp: "Mova uma janela com Super + Alt + S.\nSuper + S mostra e oculta o scratchpad",
+    shortcutNote: "Os atalhos correspondem à configuração padrão do Omarchy.", customHelp: "Mova uma janela para este espaço de trabalho especial no Hyprland",
     clickHelp: "Clique: mostrar / ocultar aqui\nClique direito: lista de janelas e configurações", show: "Mostrar aqui", hide: "Ocultar", focus: "Selecione uma janela para alternar para ela.",
-    unknownHelp: "O estado do Hyprland não está disponível. Tente novamente em instantes.", invalidHelp: "Nome de espaço inválido. Use letras, números, ponto, _ ou -.",
+    unknownHelp: "O estado do Hyprland não está disponível. Tente novamente em instantes", invalidHelp: "Nome de espaço inválido. Use letras, números, ponto, _ ou -",
     countNote: "Cada aba conta como uma janela separada.", author: "Por Sarr",
     language: "Idioma", automatic: "Automático", search: "Buscar idiomas…", noMatches: "Nenhum resultado", detected: "Idioma do sistema: {language}",
     saveError: "Não foi possível salvar o idioma. Tente novamente.", compact: "Rótulo compacto"
@@ -148,10 +148,10 @@ var catalogs = {
   "pt-PT": {
     empty: "vazio", hidden: "oculto", here: "visível aqui", active: "ativo aqui", elsewhere: "visível em {monitor}", unknown: "estado desconhecido",
     windows: "Janelas", grouped: "separador", unnamed: "Janela sem título",
-    emptyHelp: "Mova uma janela com Super + Alt + S.\nSuper + S mostra e oculta o scratchpad.",
-    shortcutNote: "Os atalhos correspondem à configuração predefinida do Omarchy.", customHelp: "Mova uma janela para este espaço de trabalho especial no Hyprland.",
+    emptyHelp: "Mova uma janela com Super + Alt + S.\nSuper + S mostra e oculta o scratchpad",
+    shortcutNote: "Os atalhos correspondem à configuração predefinida do Omarchy.", customHelp: "Mova uma janela para este espaço de trabalho especial no Hyprland",
     clickHelp: "Clique: mostrar / ocultar aqui\nClique direito: lista de janelas e definições", show: "Mostrar aqui", hide: "Ocultar", focus: "Selecione uma janela para mudar para ela.",
-    unknownHelp: "O estado do Hyprland não está disponível. Tente novamente dentro de instantes.", invalidHelp: "Nome de espaço inválido. Utilize letras, algarismos, ponto, _ ou -.",
+    unknownHelp: "O estado do Hyprland não está disponível. Tente novamente dentro de instantes", invalidHelp: "Nome de espaço inválido. Utilize letras, algarismos, ponto, _ ou -",
     countNote: "Cada separador conta como uma janela distinta.", author: "Por Sarr",
     language: "Idioma", automatic: "Automático", search: "Pesquisar idiomas…", noMatches: "Sem resultados", detected: "Idioma do sistema: {language}",
     saveError: "Não foi possível guardar o idioma. Tente novamente.", compact: "Etiqueta compacta"
@@ -159,10 +159,10 @@ var catalogs = {
   it: {
     empty: "vuoto", hidden: "nascosto", here: "visibile qui", active: "attivo qui", elsewhere: "visibile su {monitor}", unknown: "stato sconosciuto",
     windows: "Finestre", grouped: "scheda", unnamed: "Finestra senza titolo",
-    emptyHelp: "Sposta una finestra con Super + Alt + S.\nSuper + S mostra e nasconde lo scratchpad.",
-    shortcutNote: "Le scorciatoie si riferiscono alla configurazione predefinita di Omarchy.", customHelp: "Sposta una finestra in questo spazio di lavoro speciale in Hyprland.",
+    emptyHelp: "Sposta una finestra con Super + Alt + S.\nSuper + S mostra e nasconde lo scratchpad",
+    shortcutNote: "Le scorciatoie si riferiscono alla configurazione predefinita di Omarchy.", customHelp: "Sposta una finestra in questo spazio di lavoro speciale in Hyprland",
     clickHelp: "Clic: mostra / nascondi qui\nClic destro: elenco finestre e impostazioni", show: "Mostra qui", hide: "Nascondi", focus: "Seleziona una finestra per passare a essa.",
-    unknownHelp: "Lo stato di Hyprland non è disponibile. Riprova tra un momento.", invalidHelp: "Nome dello spazio non valido. Usa lettere, cifre, un punto, _ o -.",
+    unknownHelp: "Lo stato di Hyprland non è disponibile. Riprova tra un momento", invalidHelp: "Nome dello spazio non valido. Usa lettere, cifre, un punto, _ o -",
     countNote: "Ogni scheda conta come una finestra separata.", author: "Di Sarr",
     language: "Lingua", automatic: "Automatica", search: "Cerca lingue…", noMatches: "Nessun risultato", detected: "Lingua del sistema: {language}",
     saveError: "Impossibile salvare la lingua. Riprova.", compact: "Etichetta compatta"
@@ -170,10 +170,10 @@ var catalogs = {
   nl: {
     empty: "leeg", hidden: "verborgen", here: "hier zichtbaar", active: "hier actief", elsewhere: "zichtbaar op {monitor}", unknown: "status onbekend",
     windows: "Vensters", grouped: "tabblad", unnamed: "Venster zonder titel",
-    emptyHelp: "Verplaats een venster met Super + Alt + S.\nSuper + S toont en verbergt het scratchpad.",
-    shortcutNote: "De sneltoetsen gelden voor de standaardconfiguratie van Omarchy.", customHelp: "Verplaats een venster naar dit speciale werkblad in Hyprland.",
+    emptyHelp: "Verplaats een venster met Super + Alt + S.\nSuper + S toont en verbergt het scratchpad",
+    shortcutNote: "De sneltoetsen gelden voor de standaardconfiguratie van Omarchy.", customHelp: "Verplaats een venster naar dit speciale werkblad in Hyprland",
     clickHelp: "Klik: hier tonen / verbergen\nRechtsklik: vensterlijst en instellingen", show: "Hier tonen", hide: "Verbergen", focus: "Selecteer een venster om ernaartoe te gaan.",
-    unknownHelp: "De Hyprland-status is niet beschikbaar. Probeer het zo opnieuw.", invalidHelp: "Ongeldige werkbladnaam. Gebruik letters, cijfers, een punt, _ of -.",
+    unknownHelp: "De Hyprland-status is niet beschikbaar. Probeer het zo opnieuw", invalidHelp: "Ongeldige werkbladnaam. Gebruik letters, cijfers, een punt, _ of -",
     countNote: "Elk tabblad telt als een apart venster.", author: "Door Sarr",
     language: "Taal", automatic: "Automatisch", search: "Talen zoeken…", noMatches: "Geen resultaten", detected: "Systeemtaal: {language}",
     saveError: "De taal kon niet worden opgeslagen. Probeer het opnieuw.", compact: "Compact label"
@@ -181,10 +181,10 @@ var catalogs = {
   da: {
     empty: "tom", hidden: "skjult", here: "synlig her", active: "aktiv her", elsewhere: "synlig på {monitor}", unknown: "ukendt status",
     windows: "Vinduer", grouped: "fane", unnamed: "Vindue uden titel",
-    emptyHelp: "Flyt et vindue med Super + Alt + S.\nSuper + S viser og skjuler scratchpad.",
-    shortcutNote: "Genvejene gælder Omarchys standardopsætning.", customHelp: "Flyt et vindue til dette særlige arbejdsområde i Hyprland.",
+    emptyHelp: "Flyt et vindue med Super + Alt + S.\nSuper + S viser og skjuler scratchpad",
+    shortcutNote: "Genvejene gælder Omarchys standardopsætning.", customHelp: "Flyt et vindue til dette særlige arbejdsområde i Hyprland",
     clickHelp: "Klik: vis / skjul her\nHøjreklik: vinduesliste og indstillinger", show: "Vis her", hide: "Skjul", focus: "Vælg et vindue for at skifte til det.",
-    unknownHelp: "Hyprlands status er ikke tilgængelig. Prøv igen om lidt.", invalidHelp: "Ugyldigt navn på arbejdsområdet. Brug bogstaver, tal, punktum, _ eller -.",
+    unknownHelp: "Hyprlands status er ikke tilgængelig. Prøv igen om lidt", invalidHelp: "Ugyldigt navn på arbejdsområdet. Brug bogstaver, tal, punktum, _ eller -",
     countNote: "Hver fane tæller som et særskilt vindue.", author: "Af Sarr",
     language: "Sprog", automatic: "Automatisk", search: "Søg efter sprog…", noMatches: "Ingen resultater", detected: "Systemsprog: {language}",
     saveError: "Sproget kunne ikke gemmes. Prøv igen.", compact: "Kompakt etiket"
@@ -192,10 +192,10 @@ var catalogs = {
   nb: {
     empty: "tom", hidden: "skjult", here: "synlig her", active: "aktiv her", elsewhere: "synlig på {monitor}", unknown: "ukjent status",
     windows: "Vinduer", grouped: "fane", unnamed: "Vindu uten tittel",
-    emptyHelp: "Flytt et vindu med Super + Alt + S.\nSuper + S viser og skjuler scratchpad.",
-    shortcutNote: "Snarveiene gjelder standardoppsettet i Omarchy.", customHelp: "Flytt et vindu til dette spesielle arbeidsområdet i Hyprland.",
+    emptyHelp: "Flytt et vindu med Super + Alt + S.\nSuper + S viser og skjuler scratchpad",
+    shortcutNote: "Snarveiene gjelder standardoppsettet i Omarchy.", customHelp: "Flytt et vindu til dette spesielle arbeidsområdet i Hyprland",
     clickHelp: "Klikk: vis / skjul her\nHøyreklikk: vindusliste og innstillinger", show: "Vis her", hide: "Skjul", focus: "Velg et vindu for å bytte til det.",
-    unknownHelp: "Hyprland-statusen er ikke tilgjengelig. Prøv igjen om litt.", invalidHelp: "Ugyldig navn på arbeidsområdet. Bruk bokstaver, sifre, punktum, _ eller -.",
+    unknownHelp: "Hyprland-statusen er ikke tilgjengelig. Prøv igjen om litt", invalidHelp: "Ugyldig navn på arbeidsområdet. Bruk bokstaver, sifre, punktum, _ eller -",
     countNote: "Hver fane telles som et eget vindu.", author: "Av Sarr",
     language: "Språk", automatic: "Automatisk", search: "Søk etter språk…", noMatches: "Ingen treff", detected: "Systemspråk: {language}",
     saveError: "Språket kunne ikke lagres. Prøv igjen.", compact: "Kompakt etikett"
@@ -203,10 +203,10 @@ var catalogs = {
   fi: {
     empty: "tyhjä", hidden: "piilotettu", here: "näkyvissä tässä", active: "aktiivinen tässä", elsewhere: "näkyvissä näytöllä {monitor}", unknown: "tila tuntematon",
     windows: "Ikkunat", grouped: "välilehti", unnamed: "Nimetön ikkuna",
-    emptyHelp: "Siirrä ikkuna näppäimillä Super + Alt + S.\nSuper + S näyttää ja piilottaa scratchpadin.",
-    shortcutNote: "Pikanäppäimet koskevat Omarchyn oletusasetuksia.", customHelp: "Siirrä ikkuna tähän Hyprlandin erityistyötilaan.",
+    emptyHelp: "Siirrä ikkuna näppäimillä Super + Alt + S.\nSuper + S näyttää ja piilottaa scratchpadin",
+    shortcutNote: "Pikanäppäimet koskevat Omarchyn oletusasetuksia.", customHelp: "Siirrä ikkuna tähän Hyprlandin erityistyötilaan",
     clickHelp: "Napsautus: näytä / piilota tässä\nOikea napsautus: ikkunaluettelo ja asetukset", show: "Näytä tässä", hide: "Piilota", focus: "Siirry ikkunaan valitsemalla se.",
-    unknownHelp: "Hyprlandin tilaa ei ole saatavilla. Yritä hetken kuluttua uudelleen.", invalidHelp: "Virheellinen työtilan nimi. Käytä kirjaimia, numeroita, pistettä, _ tai -.",
+    unknownHelp: "Hyprlandin tilaa ei ole saatavilla. Yritä hetken kuluttua uudelleen", invalidHelp: "Virheellinen työtilan nimi. Käytä kirjaimia, numeroita, pistettä, _ tai -",
     countNote: "Jokainen välilehti lasketaan erilliseksi ikkunaksi.", author: "Tekijä: Sarr",
     language: "Kieli", automatic: "Automaattinen", search: "Etsi kieliä…", noMatches: "Ei tuloksia", detected: "Järjestelmän kieli: {language}",
     saveError: "Kielen tallennus epäonnistui. Yritä uudelleen.", compact: "Tiivis teksti"
@@ -214,10 +214,10 @@ var catalogs = {
   cs: {
     empty: "prázdný", hidden: "skrytý", here: "viditelný zde", active: "aktivní zde", elsewhere: "viditelný na {monitor}", unknown: "neznámý stav",
     windows: "Okna", grouped: "karta", unnamed: "Okno bez názvu",
-    emptyHelp: "Přesuňte okno pomocí Super + Alt + S.\nSuper + S zobrazí a skryje scratchpad.",
-    shortcutNote: "Zkratky odpovídají výchozímu nastavení Omarchy.", customHelp: "Přesuňte okno na tuto speciální pracovní plochu v Hyprlandu.",
+    emptyHelp: "Přesuňte okno pomocí Super + Alt + S.\nSuper + S zobrazí a skryje scratchpad",
+    shortcutNote: "Zkratky odpovídají výchozímu nastavení Omarchy.", customHelp: "Přesuňte okno na tuto speciální pracovní plochu v Hyprlandu",
     clickHelp: "Kliknutí: zobrazit / skrýt zde\nPravé tlačítko: seznam oken a nastavení", show: "Zobrazit zde", hide: "Skrýt", focus: "Vyberte okno, na které chcete přejít.",
-    unknownHelp: "Stav Hyprlandu není dostupný. Zkuste to za chvíli znovu.", invalidHelp: "Neplatný název plochy. Použijte písmena, číslice, tečku, _ nebo -.",
+    unknownHelp: "Stav Hyprlandu není dostupný. Zkuste to za chvíli znovu", invalidHelp: "Neplatný název plochy. Použijte písmena, číslice, tečku, _ nebo -",
     countNote: "Každá karta se počítá jako samostatné okno.", author: "Autor: Sarr",
     language: "Jazyk", automatic: "Automaticky", search: "Hledat jazyky…", noMatches: "Žádné výsledky", detected: "Jazyk systému: {language}",
     saveError: "Jazyk se nepodařilo uložit. Zkuste to znovu.", compact: "Krátký popisek"
@@ -225,10 +225,10 @@ var catalogs = {
   sk: {
     empty: "prázdny", hidden: "skrytý", here: "viditeľný tu", active: "aktívny tu", elsewhere: "viditeľný na {monitor}", unknown: "neznámy stav",
     windows: "Okná", grouped: "karta", unnamed: "Okno bez názvu",
-    emptyHelp: "Presuňte okno pomocou Super + Alt + S.\nSuper + S zobrazí a skryje scratchpad.",
-    shortcutNote: "Skratky zodpovedajú predvolenému nastaveniu Omarchy.", customHelp: "Presuňte okno na túto špeciálnu pracovnú plochu v Hyprlande.",
+    emptyHelp: "Presuňte okno pomocou Super + Alt + S.\nSuper + S zobrazí a skryje scratchpad",
+    shortcutNote: "Skratky zodpovedajú predvolenému nastaveniu Omarchy.", customHelp: "Presuňte okno na túto špeciálnu pracovnú plochu v Hyprlande",
     clickHelp: "Kliknutie: zobraziť / skryť tu\nPravé tlačidlo: zoznam okien a nastavenia", show: "Zobraziť tu", hide: "Skryť", focus: "Vyberte okno, na ktoré chcete prejsť.",
-    unknownHelp: "Stav Hyprlandu nie je dostupný. Skúste to o chvíľu znova.", invalidHelp: "Neplatný názov plochy. Použite písmená, číslice, bodku, _ alebo -.",
+    unknownHelp: "Stav Hyprlandu nie je dostupný. Skúste to o chvíľu znova", invalidHelp: "Neplatný názov plochy. Použite písmená, číslice, bodku, _ alebo -",
     countNote: "Každá karta sa počíta ako samostatné okno.", author: "Autor: Sarr",
     language: "Jazyk", automatic: "Automaticky", search: "Hľadať jazyky…", noMatches: "Žiadne výsledky", detected: "Jazyk systému: {language}",
     saveError: "Jazyk sa nepodarilo uložiť. Skúste to znova.", compact: "Krátky popis"
@@ -236,10 +236,10 @@ var catalogs = {
   uk: {
     empty: "порожній", hidden: "прихований", here: "видимий тут", active: "активний тут", elsewhere: "видимий на {monitor}", unknown: "стан невідомий",
     windows: "Вікна", grouped: "вкладка", unnamed: "Вікно без назви",
-    emptyHelp: "Перемістіть вікно за допомогою Super + Alt + S.\nSuper + S показує та приховує scratchpad.",
-    shortcutNote: "Скорочення відповідають типовим налаштуванням Omarchy.", customHelp: "Перемістіть вікно на цей спеціальний робочий простір у Hyprland.",
+    emptyHelp: "Перемістіть вікно за допомогою Super + Alt + S.\nSuper + S показує та приховує scratchpad",
+    shortcutNote: "Скорочення відповідають типовим налаштуванням Omarchy.", customHelp: "Перемістіть вікно на цей спеціальний робочий простір у Hyprland",
     clickHelp: "Клацання: показати / приховати тут\nПрава кнопка: список вікон і налаштування", show: "Показати тут", hide: "Приховати", focus: "Виберіть вікно, щоб перейти до нього.",
-    unknownHelp: "Стан Hyprland недоступний. Спробуйте ще раз за мить.", invalidHelp: "Неприпустима назва простору. Використовуйте літери, цифри, крапку, _ або -.",
+    unknownHelp: "Стан Hyprland недоступний. Спробуйте ще раз за мить", invalidHelp: "Неприпустима назва простору. Використовуйте літери, цифри, крапку, _ або -",
     countNote: "Кожна вкладка рахується як окреме вікно.", author: "Автор: Sarr",
     language: "Мова", automatic: "Автоматично", search: "Пошук мов…", noMatches: "Немає результатів", detected: "Мова системи: {language}",
     saveError: "Не вдалося зберегти мову. Спробуйте ще раз.", compact: "Короткий підпис"
@@ -247,10 +247,10 @@ var catalogs = {
   ru: {
     empty: "пустой", hidden: "скрыт", here: "виден здесь", active: "активен здесь", elsewhere: "виден на {monitor}", unknown: "состояние неизвестно",
     windows: "Окна", grouped: "вкладка", unnamed: "Окно без названия",
-    emptyHelp: "Переместите окно с помощью Super + Alt + S.\nSuper + S показывает и скрывает scratchpad.",
-    shortcutNote: "Сочетания клавиш соответствуют стандартным настройкам Omarchy.", customHelp: "Переместите окно на это специальное рабочее пространство в Hyprland.",
+    emptyHelp: "Переместите окно с помощью Super + Alt + S.\nSuper + S показывает и скрывает scratchpad",
+    shortcutNote: "Сочетания клавиш соответствуют стандартным настройкам Omarchy.", customHelp: "Переместите окно на это специальное рабочее пространство в Hyprland",
     clickHelp: "Щелчок: показать / скрыть здесь\nПравая кнопка: список окон и настройки", show: "Показать здесь", hide: "Скрыть", focus: "Выберите окно, чтобы перейти к нему.",
-    unknownHelp: "Состояние Hyprland недоступно. Повторите попытку через мгновение.", invalidHelp: "Недопустимое имя пространства. Используйте буквы, цифры, точку, _ или -.",
+    unknownHelp: "Состояние Hyprland недоступно. Повторите попытку через мгновение", invalidHelp: "Недопустимое имя пространства. Используйте буквы, цифры, точку, _ или -",
     countNote: "Каждая вкладка считается отдельным окном.", author: "Автор: Sarr",
     language: "Язык", automatic: "Автоматически", search: "Поиск языков…", noMatches: "Нет результатов", detected: "Язык системы: {language}",
     saveError: "Не удалось сохранить язык. Попробуйте ещё раз.", compact: "Короткая подпись"
@@ -258,10 +258,10 @@ var catalogs = {
   tr: {
     empty: "boş", hidden: "gizli", here: "burada görünür", active: "burada etkin", elsewhere: "{monitor} üzerinde görünür", unknown: "durum bilinmiyor",
     windows: "Pencereler", grouped: "sekme", unnamed: "Başlıksız pencere",
-    emptyHelp: "Super + Alt + S ile bir pencere taşıyın.\nSuper + S, scratchpad’i gösterir ve gizler.",
-    shortcutNote: "Kısayollar Omarchy’nin varsayılan ayarlarına aittir.", customHelp: "Hyprland’deki bu özel çalışma alanına bir pencere taşıyın.",
+    emptyHelp: "Super + Alt + S ile bir pencere taşıyın.\nSuper + S, scratchpad’i gösterir ve gizler",
+    shortcutNote: "Kısayollar Omarchy’nin varsayılan ayarlarına aittir.", customHelp: "Hyprland’deki bu özel çalışma alanına bir pencere taşıyın",
     clickHelp: "Tıklama: burada göster / gizle\nSağ tıklama: pencere listesi ve ayarlar", show: "Burada göster", hide: "Gizle", focus: "Geçiş yapmak için bir pencere seçin.",
-    unknownHelp: "Hyprland durumu alınamıyor. Biraz sonra tekrar deneyin.", invalidHelp: "Geçersiz çalışma alanı adı. Harf, rakam, nokta, _ veya - kullanın.",
+    unknownHelp: "Hyprland durumu alınamıyor. Biraz sonra tekrar deneyin", invalidHelp: "Geçersiz çalışma alanı adı. Harf, rakam, nokta, _ veya - kullanın",
     countNote: "Her sekme ayrı bir pencere olarak sayılır.", author: "Geliştirici: Sarr",
     language: "Dil", automatic: "Otomatik", search: "Dil ara…", noMatches: "Sonuç bulunamadı", detected: "Sistem dili: {language}",
     saveError: "Dil kaydedilemedi. Tekrar deneyin.", compact: "Kısa etiket"
@@ -269,10 +269,10 @@ var catalogs = {
   ro: {
     empty: "gol", hidden: "ascuns", here: "vizibil aici", active: "activ aici", elsewhere: "vizibil pe {monitor}", unknown: "stare necunoscută",
     windows: "Ferestre", grouped: "filă", unnamed: "Fereastră fără titlu",
-    emptyHelp: "Mută o fereastră cu Super + Alt + S.\nSuper + S afișează și ascunde scratchpad-ul.",
-    shortcutNote: "Scurtăturile corespund configurației implicite Omarchy.", customHelp: "Mută o fereastră în acest spațiu de lucru special din Hyprland.",
+    emptyHelp: "Mută o fereastră cu Super + Alt + S.\nSuper + S afișează și ascunde scratchpad-ul",
+    shortcutNote: "Scurtăturile corespund configurației implicite Omarchy.", customHelp: "Mută o fereastră în acest spațiu de lucru special din Hyprland",
     clickHelp: "Clic: afișează / ascunde aici\nClic dreapta: lista ferestrelor și setări", show: "Afișează aici", hide: "Ascunde", focus: "Selectează o fereastră pentru a trece la ea.",
-    unknownHelp: "Starea Hyprland nu este disponibilă. Încearcă din nou peste un moment.", invalidHelp: "Nume de spațiu nevalid. Folosește litere, cifre, punct, _ sau -.",
+    unknownHelp: "Starea Hyprland nu este disponibilă. Încearcă din nou peste un moment", invalidHelp: "Nume de spațiu nevalid. Folosește litere, cifre, punct, _ sau -",
     countNote: "Fiecare filă este numărată ca fereastră separată.", author: "Autor: Sarr",
     language: "Limbă", automatic: "Automat", search: "Caută limbi…", noMatches: "Niciun rezultat", detected: "Limba sistemului: {language}",
     saveError: "Limba nu a putut fi salvată. Încearcă din nou.", compact: "Etichetă compactă"
@@ -280,10 +280,10 @@ var catalogs = {
   hu: {
     empty: "üres", hidden: "rejtett", here: "itt látható", active: "itt aktív", elsewhere: "látható itt: {monitor}", unknown: "ismeretlen állapot",
     windows: "Ablakok", grouped: "lap", unnamed: "Névtelen ablak",
-    emptyHelp: "Ablak áthelyezése: Super + Alt + S.\nA Super + S megjeleníti és elrejti a scratchpadet.",
-    shortcutNote: "A gyorsbillentyűk az Omarchy alapbeállításaira vonatkoznak.", customHelp: "Helyezz át egy ablakot erre a speciális Hyprland-munkaterületre.",
+    emptyHelp: "Ablak áthelyezése: Super + Alt + S.\nA Super + S megjeleníti és elrejti a scratchpadet",
+    shortcutNote: "A gyorsbillentyűk az Omarchy alapbeállításaira vonatkoznak.", customHelp: "Helyezz át egy ablakot erre a speciális Hyprland-munkaterületre",
     clickHelp: "Kattintás: megjelenítés / elrejtés itt\nJobb kattintás: ablaklista és beállítások", show: "Megjelenítés itt", hide: "Elrejtés", focus: "Válassz egy ablakot a váltáshoz.",
-    unknownHelp: "A Hyprland állapota nem érhető el. Próbáld újra később.", invalidHelp: "Érvénytelen munkaterületnév. Használj betűket, számjegyeket, pontot, _ vagy - jelet.",
+    unknownHelp: "A Hyprland állapota nem érhető el. Próbáld újra később", invalidHelp: "Érvénytelen munkaterületnév. Használj betűket, számjegyeket, pontot, _ vagy - jelet",
     countNote: "Minden lap külön ablaknak számít.", author: "Készítette: Sarr",
     language: "Nyelv", automatic: "Automatikus", search: "Nyelvek keresése…", noMatches: "Nincs találat", detected: "Rendszernyelv: {language}",
     saveError: "A nyelvet nem sikerült menteni. Próbáld újra.", compact: "Rövid felirat"
@@ -291,10 +291,10 @@ var catalogs = {
   el: {
     empty: "κενό", hidden: "κρυφό", here: "ορατό εδώ", active: "ενεργό εδώ", elsewhere: "ορατό στην οθόνη {monitor}", unknown: "άγνωστη κατάσταση",
     windows: "Παράθυρα", grouped: "καρτέλα", unnamed: "Παράθυρο χωρίς τίτλο",
-    emptyHelp: "Μετακινήστε ένα παράθυρο με Super + Alt + S.\nΤο Super + S εμφανίζει και κρύβει το scratchpad.",
-    shortcutNote: "Οι συντομεύσεις αντιστοιχούν στις προεπιλογές του Omarchy.", customHelp: "Μετακινήστε ένα παράθυρο σε αυτόν τον ειδικό χώρο εργασίας του Hyprland.",
+    emptyHelp: "Μετακινήστε ένα παράθυρο με Super + Alt + S.\nΤο Super + S εμφανίζει και κρύβει το scratchpad",
+    shortcutNote: "Οι συντομεύσεις αντιστοιχούν στις προεπιλογές του Omarchy.", customHelp: "Μετακινήστε ένα παράθυρο σε αυτόν τον ειδικό χώρο εργασίας του Hyprland",
     clickHelp: "Κλικ: εμφάνιση / απόκρυψη εδώ\nΔεξί κλικ: λίστα παραθύρων και ρυθμίσεις", show: "Εμφάνιση εδώ", hide: "Απόκρυψη", focus: "Επιλέξτε ένα παράθυρο για μετάβαση σε αυτό.",
-    unknownHelp: "Η κατάσταση του Hyprland δεν είναι διαθέσιμη. Δοκιμάστε ξανά σε λίγο.", invalidHelp: "Μη έγκυρο όνομα χώρου. Χρησιμοποιήστε γράμματα, ψηφία, τελεία, _ ή -.",
+    unknownHelp: "Η κατάσταση του Hyprland δεν είναι διαθέσιμη. Δοκιμάστε ξανά σε λίγο", invalidHelp: "Μη έγκυρο όνομα χώρου. Χρησιμοποιήστε γράμματα, ψηφία, τελεία, _ ή -",
     countNote: "Κάθε καρτέλα μετρά ως ξεχωριστό παράθυρο.", author: "Από τον Sarr",
     language: "Γλώσσα", automatic: "Αυτόματα", search: "Αναζήτηση γλωσσών…", noMatches: "Κανένα αποτέλεσμα", detected: "Γλώσσα συστήματος: {language}",
     saveError: "Δεν ήταν δυνατή η αποθήκευση της γλώσσας. Δοκιμάστε ξανά.", compact: "Σύντομη ετικέτα"
@@ -302,10 +302,10 @@ var catalogs = {
   ar: {
     empty: "فارغ", hidden: "مخفي", here: "ظاهر هنا", active: "نشط هنا", elsewhere: "ظاهر على {monitor}", unknown: "الحالة غير معروفة",
     windows: "النوافذ", grouped: "علامة تبويب", unnamed: "نافذة بلا عنوان",
-    emptyHelp: "انقل نافذة باستخدام ⁦Super + Alt + S⁩.\nيُظهر ⁦Super + S⁩ مساحة Scratchpad ويخفيها.",
-    shortcutNote: "تشير الاختصارات إلى إعدادات Omarchy الافتراضية.", customHelp: "انقل نافذة إلى مساحة العمل الخاصة هذه في Hyprland.",
+    emptyHelp: "انقل نافذة باستخدام ⁦Super + Alt + S⁩.\nيُظهر ⁦Super + S⁩ مساحة Scratchpad ويخفيها",
+    shortcutNote: "تشير الاختصارات إلى إعدادات Omarchy الافتراضية.", customHelp: "انقل نافذة إلى مساحة العمل الخاصة هذه في Hyprland",
     clickHelp: "نقر: إظهار / إخفاء هنا\nنقر بالزر الأيمن: قائمة النوافذ والإعدادات", show: "إظهار هنا", hide: "إخفاء", focus: "اختر نافذة للانتقال إليها.",
-    unknownHelp: "حالة Hyprland غير متاحة. حاول مجددًا بعد قليل.", invalidHelp: "اسم مساحة العمل غير صالح. استخدم أحرفًا لاتينية أو أرقامًا أو نقطة أو ⁦_⁩ أو ⁦-⁩.",
+    unknownHelp: "حالة Hyprland غير متاحة. حاول مجددًا بعد قليل", invalidHelp: "اسم مساحة العمل غير صالح. استخدم أحرفًا لاتينية أو أرقامًا أو نقطة أو ⁦_⁩ أو ⁦-⁩",
     countNote: "تُحسب كل علامة تبويب كنافذة مستقلة.", author: "من تطوير Sarr",
     language: "اللغة", automatic: "تلقائي", search: "ابحث عن لغة…", noMatches: "لا توجد نتائج", detected: "لغة النظام: {language}",
     saveError: "تعذر حفظ اللغة. حاول مجددًا.", compact: "تسمية مختصرة"
@@ -313,10 +313,10 @@ var catalogs = {
   hi: {
     empty: "खाली", hidden: "छिपा हुआ", here: "यहाँ दिखाई दे रहा है", active: "यहाँ सक्रिय", elsewhere: "{monitor} पर दिखाई दे रहा है", unknown: "स्थिति अज्ञात",
     windows: "विंडो", grouped: "टैब", unnamed: "बिना शीर्षक की विंडो",
-    emptyHelp: "Super + Alt + S से विंडो भेजें।\nSuper + S से स्क्रैचपैड दिखाएँ या छिपाएँ।",
-    shortcutNote: "ये शॉर्टकट Omarchy की डिफ़ॉल्ट सेटिंग के अनुसार हैं।", customHelp: "Hyprland के इस विशेष कार्यक्षेत्र में एक विंडो भेजें।",
+    emptyHelp: "Super + Alt + S से विंडो भेजें।\nSuper + S से स्क्रैचपैड दिखाएँ या छिपाएँ",
+    shortcutNote: "ये शॉर्टकट Omarchy की डिफ़ॉल्ट सेटिंग के अनुसार हैं।", customHelp: "Hyprland के इस विशेष कार्यक्षेत्र में एक विंडो भेजें",
     clickHelp: "क्लिक: यहाँ दिखाएँ / छिपाएँ\nदायाँ क्लिक: विंडो सूची और सेटिंग्स", show: "यहाँ दिखाएँ", hide: "छिपाएँ", focus: "किसी विंडो पर जाने के लिए उसे चुनें।",
-    unknownHelp: "Hyprland की स्थिति उपलब्ध नहीं है। कुछ देर बाद फिर कोशिश करें।", invalidHelp: "कार्यक्षेत्र का नाम अमान्य है। लैटिन अक्षर, अंक, बिंदु, _ या - इस्तेमाल करें।",
+    unknownHelp: "Hyprland की स्थिति उपलब्ध नहीं है। कुछ देर बाद फिर कोशिश करें", invalidHelp: "कार्यक्षेत्र का नाम अमान्य है। लैटिन अक्षर, अंक, बिंदु, _ या - इस्तेमाल करें",
     countNote: "हर टैब एक अलग विंडो के रूप में गिना जाता है।", author: "निर्माता: Sarr",
     language: "भाषा", automatic: "स्वचालित", search: "भाषाएँ खोजें…", noMatches: "कोई परिणाम नहीं", detected: "सिस्टम की भाषा: {language}",
     saveError: "भाषा सहेजी नहीं जा सकी। फिर कोशिश करें।", compact: "छोटा लेबल"
@@ -324,10 +324,10 @@ var catalogs = {
   id: {
     empty: "kosong", hidden: "tersembunyi", here: "terlihat di sini", active: "aktif di sini", elsewhere: "terlihat di {monitor}", unknown: "status tidak diketahui",
     windows: "Jendela", grouped: "tab", unnamed: "Jendela tanpa judul",
-    emptyHelp: "Pindahkan jendela dengan Super + Alt + S.\nSuper + S menampilkan dan menyembunyikan scratchpad.",
-    shortcutNote: "Pintasan mengacu pada pengaturan bawaan Omarchy.", customHelp: "Pindahkan jendela ke ruang kerja khusus ini di Hyprland.",
+    emptyHelp: "Pindahkan jendela dengan Super + Alt + S.\nSuper + S menampilkan dan menyembunyikan scratchpad",
+    shortcutNote: "Pintasan mengacu pada pengaturan bawaan Omarchy.", customHelp: "Pindahkan jendela ke ruang kerja khusus ini di Hyprland",
     clickHelp: "Klik: tampilkan / sembunyikan di sini\nKlik kanan: daftar jendela dan pengaturan", show: "Tampilkan di sini", hide: "Sembunyikan", focus: "Pilih jendela untuk beralih ke sana.",
-    unknownHelp: "Status Hyprland tidak tersedia. Coba lagi sebentar.", invalidHelp: "Nama ruang kerja tidak valid. Gunakan huruf, angka, titik, _ atau -.",
+    unknownHelp: "Status Hyprland tidak tersedia. Coba lagi sebentar", invalidHelp: "Nama ruang kerja tidak valid. Gunakan huruf, angka, titik, _ atau -",
     countNote: "Setiap tab dihitung sebagai jendela terpisah.", author: "Oleh Sarr",
     language: "Bahasa", automatic: "Otomatis", search: "Cari bahasa…", noMatches: "Tidak ada hasil", detected: "Bahasa sistem: {language}",
     saveError: "Bahasa tidak dapat disimpan. Coba lagi.", compact: "Label ringkas"
@@ -335,10 +335,10 @@ var catalogs = {
   vi: {
     empty: "trống", hidden: "đang ẩn", here: "hiển thị ở đây", active: "đang dùng ở đây", elsewhere: "hiển thị trên {monitor}", unknown: "không rõ trạng thái",
     windows: "Cửa sổ", grouped: "thẻ", unnamed: "Cửa sổ không có tiêu đề",
-    emptyHelp: "Chuyển cửa sổ bằng Super + Alt + S.\nSuper + S hiện và ẩn scratchpad.",
-    shortcutNote: "Các phím tắt theo cấu hình mặc định của Omarchy.", customHelp: "Chuyển cửa sổ vào không gian làm việc đặc biệt này trong Hyprland.",
+    emptyHelp: "Chuyển cửa sổ bằng Super + Alt + S.\nSuper + S hiện và ẩn scratchpad",
+    shortcutNote: "Các phím tắt theo cấu hình mặc định của Omarchy.", customHelp: "Chuyển cửa sổ vào không gian làm việc đặc biệt này trong Hyprland",
     clickHelp: "Nhấp: hiện / ẩn ở đây\nNhấp phải: danh sách cửa sổ và cài đặt", show: "Hiện ở đây", hide: "Ẩn", focus: "Chọn cửa sổ để chuyển đến.",
-    unknownHelp: "Không đọc được trạng thái Hyprland. Hãy thử lại sau giây lát.", invalidHelp: "Tên không gian không hợp lệ. Dùng chữ cái Latinh, chữ số, dấu chấm, _ hoặc -.",
+    unknownHelp: "Không đọc được trạng thái Hyprland. Hãy thử lại sau giây lát", invalidHelp: "Tên không gian không hợp lệ. Dùng chữ cái Latinh, chữ số, dấu chấm, _ hoặc -",
     countNote: "Mỗi thẻ được tính là một cửa sổ riêng.", author: "Tác giả: Sarr",
     language: "Ngôn ngữ", automatic: "Tự động", search: "Tìm ngôn ngữ…", noMatches: "Không có kết quả", detected: "Ngôn ngữ hệ thống: {language}",
     saveError: "Không thể lưu ngôn ngữ. Hãy thử lại.", compact: "Nhãn ngắn gọn"
@@ -357,10 +357,10 @@ var catalogs = {
   ja: {
     empty: "空", hidden: "非表示", here: "ここに表示中", active: "ここで操作中", elsewhere: "{monitor} に表示中", unknown: "状態不明",
     windows: "ウィンドウ", grouped: "タブ", unnamed: "無題のウィンドウ",
-    emptyHelp: "Super + Alt + S でウィンドウを移動します。\nSuper + S でスクラッチパッドを表示・非表示にします。",
-    shortcutNote: "ショートカットは Omarchy の標準設定に基づきます。", customHelp: "Hyprland のこの特別なワークスペースにウィンドウを移動してください。",
+    emptyHelp: "Super + Alt + S でウィンドウを移動します。\nSuper + S でスクラッチパッドを表示・非表示にします",
+    shortcutNote: "ショートカットは Omarchy の標準設定に基づきます。", customHelp: "Hyprland のこの特別なワークスペースにウィンドウを移動してください",
     clickHelp: "クリック：ここに表示／非表示\n右クリック：ウィンドウ一覧と設定", show: "ここに表示", hide: "非表示", focus: "ウィンドウを選ぶと、そのウィンドウに切り替わります。",
-    unknownHelp: "Hyprland の状態を取得できません。しばらくしてから再試行してください。", invalidHelp: "ワークスペース名が無効です。半角英数字、ピリオド、_、- を使用してください。",
+    unknownHelp: "Hyprland の状態を取得できません。しばらくしてから再試行してください", invalidHelp: "ワークスペース名が無効です。半角英数字、ピリオド、_、- を使用してください",
     countNote: "各タブは個別のウィンドウとして数えます。", author: "作者：Sarr",
     language: "言語", automatic: "自動", search: "言語を検索…", noMatches: "該当なし", detected: "システムの言語：{language}",
     saveError: "言語を保存できませんでした。再試行してください。", compact: "短いラベル"
@@ -368,10 +368,10 @@ var catalogs = {
   ko: {
     empty: "비어 있음", hidden: "숨김", here: "여기에 표시 중", active: "여기서 사용 중", elsewhere: "{monitor}에 표시 중", unknown: "상태 알 수 없음",
     windows: "창", grouped: "탭", unnamed: "제목 없는 창",
-    emptyHelp: "Super + Alt + S로 창을 이동합니다.\nSuper + S로 스크래치패드를 표시하거나 숨깁니다.",
-    shortcutNote: "단축키는 Omarchy의 기본 설정을 기준으로 합니다.", customHelp: "Hyprland의 이 특수 작업 공간으로 창을 이동하세요.",
+    emptyHelp: "Super + Alt + S로 창을 이동합니다.\nSuper + S로 스크래치패드를 표시하거나 숨깁니다",
+    shortcutNote: "단축키는 Omarchy의 기본 설정을 기준으로 합니다.", customHelp: "Hyprland의 이 특수 작업 공간으로 창을 이동하세요",
     clickHelp: "클릭: 여기에 표시 / 숨기기\n오른쪽 클릭: 창 목록 및 설정", show: "여기에 표시", hide: "숨기기", focus: "창을 선택하면 해당 창으로 전환합니다.",
-    unknownHelp: "Hyprland 상태를 가져올 수 없습니다. 잠시 후 다시 시도하세요.", invalidHelp: "작업 공간 이름이 올바르지 않습니다. 영문자, 숫자, 마침표, _ 또는 -를 사용하세요.",
+    unknownHelp: "Hyprland 상태를 가져올 수 없습니다. 잠시 후 다시 시도하세요", invalidHelp: "작업 공간 이름이 올바르지 않습니다. 영문자, 숫자, 마침표, _ 또는 -를 사용하세요",
     countNote: "각 탭은 별도의 창으로 계산됩니다.", author: "제작: Sarr",
     language: "언어", automatic: "자동", search: "언어 검색…", noMatches: "결과 없음", detected: "시스템 언어: {language}",
     saveError: "언어를 저장할 수 없습니다. 다시 시도하세요.", compact: "짧은 레이블"
@@ -379,10 +379,10 @@ var catalogs = {
   "zh-CN": {
     empty: "空", hidden: "已隐藏", here: "此处可见", active: "正在此处使用", elsewhere: "在 {monitor} 上可见", unknown: "状态未知",
     windows: "窗口", grouped: "标签页", unnamed: "无标题窗口",
-    emptyHelp: "按 Super + Alt + S 移入窗口。\n按 Super + S 显示或隐藏暂存区。",
-    shortcutNote: "这些快捷键基于 Omarchy 的默认设置。", customHelp: "将窗口移至 Hyprland 的此特殊工作区。",
+    emptyHelp: "按 Super + Alt + S 移入窗口。\n按 Super + S 显示或隐藏暂存区",
+    shortcutNote: "这些快捷键基于 Omarchy 的默认设置。", customHelp: "将窗口移至 Hyprland 的此特殊工作区",
     clickHelp: "单击：在此显示／隐藏\n右键单击：窗口列表和设置", show: "在此显示", hide: "隐藏", focus: "选择窗口以切换到该窗口。",
-    unknownHelp: "无法读取 Hyprland 状态，请稍后重试。", invalidHelp: "工作区名称无效，请使用英文字母、数字、点、_ 或 -。",
+    unknownHelp: "无法读取 Hyprland 状态，请稍后重试", invalidHelp: "工作区名称无效，请使用英文字母、数字、点、_ 或 -",
     countNote: "每个标签页都计为一个独立窗口。", author: "作者：Sarr",
     language: "语言", automatic: "自动", search: "搜索语言…", noMatches: "无匹配结果", detected: "系统语言：{language}",
     saveError: "无法保存语言，请重试。", compact: "简短标签"
@@ -390,10 +390,10 @@ var catalogs = {
   "zh-TW": {
     empty: "空", hidden: "已隱藏", here: "此處可見", active: "正在此處使用", elsewhere: "在 {monitor} 上可見", unknown: "狀態不明",
     windows: "視窗", grouped: "分頁", unnamed: "無標題視窗",
-    emptyHelp: "按 Super + Alt + S 移入視窗。\n按 Super + S 顯示或隱藏暫存區。",
-    shortcutNote: "這些快捷鍵依據 Omarchy 的預設設定。", customHelp: "將視窗移至 Hyprland 的此特殊工作區。",
+    emptyHelp: "按 Super + Alt + S 移入視窗。\n按 Super + S 顯示或隱藏暫存區",
+    shortcutNote: "這些快捷鍵依據 Omarchy 的預設設定。", customHelp: "將視窗移至 Hyprland 的此特殊工作區",
     clickHelp: "按一下：在此顯示／隱藏\n按右鍵：視窗清單與設定", show: "在此顯示", hide: "隱藏", focus: "選取視窗以切換至該視窗。",
-    unknownHelp: "無法讀取 Hyprland 狀態，請稍後再試。", invalidHelp: "工作區名稱無效，請使用英文字母、數字、點、_ 或 -。",
+    unknownHelp: "無法讀取 Hyprland 狀態，請稍後再試", invalidHelp: "工作區名稱無效，請使用英文字母、數字、點、_ 或 -",
     countNote: "每個分頁都計為一個獨立視窗。", author: "作者：Sarr",
     language: "語言", automatic: "自動", search: "搜尋語言…", noMatches: "沒有符合的結果", detected: "系統語言：{language}",
     saveError: "無法儲存語言，請重試。", compact: "簡短標籤"
@@ -401,10 +401,10 @@ var catalogs = {
   sv: {
     empty: "tom", hidden: "dold", here: "synlig här", active: "aktiv här", elsewhere: "synlig på {monitor}", unknown: "okänd status",
     windows: "Fönster", grouped: "flik", unnamed: "Fönster utan titel",
-    emptyHelp: "Flytta ett fönster med Super + Alt + S.\nSuper + S visar och döljer scratchpad.",
-    shortcutNote: "Genvägarna gäller Omarchys standardinställningar.", customHelp: "Flytta ett fönster till denna särskilda arbetsyta i Hyprland.",
+    emptyHelp: "Flytta ett fönster med Super + Alt + S.\nSuper + S visar och döljer scratchpad",
+    shortcutNote: "Genvägarna gäller Omarchys standardinställningar.", customHelp: "Flytta ett fönster till denna särskilda arbetsyta i Hyprland",
     clickHelp: "Klick: visa / dölj här\nHögerklick: fönsterlista och inställningar", show: "Visa här", hide: "Dölj", focus: "Välj ett fönster för att växla till det.",
-    unknownHelp: "Hyprlands status är inte tillgänglig. Försök igen om en stund.", invalidHelp: "Ogiltigt namn på arbetsytan. Använd bokstäver, siffror, punkt, _ eller -.",
+    unknownHelp: "Hyprlands status är inte tillgänglig. Försök igen om en stund", invalidHelp: "Ogiltigt namn på arbetsytan. Använd bokstäver, siffror, punkt, _ eller -",
     countNote: "Varje flik räknas som ett eget fönster.", author: "Av Sarr",
     language: "Språk", automatic: "Automatiskt", search: "Sök språk…", noMatches: "Inga träffar", detected: "Systemspråk: {language}",
     saveError: "Språket kunde inte sparas. Försök igen.", compact: "Kompakt etikett"
@@ -671,36 +671,36 @@ Object.keys(focusHintCatalogs).forEach(function(code) { catalogs[code].focusWind
 // Visibility actions use one concise, monitor-specific sentence.
 var visibilityHintKeys = ["hideScratchpadHint", "showScratchpadHint"];
 var visibilityHintCatalogs = {
-  en: ["Temporarily hide the scratchpad on this monitor.", "Show the scratchpad on this monitor."],
-  pl: ["Tymczasowo schowaj scratchpad na tym monitorze.", "Pokaż scratchpad na tym monitorze."],
-  de: ["Scratchpad auf diesem Monitor vorübergehend ausblenden.", "Zeige das Scratchpad auf diesem Monitor."],
-  fr: ["Masquer temporairement le scratchpad sur cet écran.", "Afficher le scratchpad sur cet écran."],
-  es: ["Ocultar temporalmente el scratchpad en este monitor.", "Mostrar el scratchpad en este monitor."],
-  "pt-BR": ["Ocultar temporariamente o scratchpad neste monitor.", "Mostrar o scratchpad neste monitor."],
-  "pt-PT": ["Ocultar temporariamente o scratchpad neste monitor.", "Mostrar o scratchpad neste monitor."],
-  it: ["Nascondi temporaneamente lo scratchpad su questo monitor.", "Mostra lo scratchpad su questo monitor."],
-  nl: ["Verberg het scratchpad tijdelijk op deze monitor.", "Toon het scratchpad op deze monitor."],
-  sv: ["Dölj scratchpad tillfälligt på denna skärm.", "Visa scratchpad på denna skärm."],
-  da: ["Skjul scratchpad midlertidigt på denne skærm.", "Vis scratchpad på denne skærm."],
-  nb: ["Skjul scratchpad midlertidig på denne skjermen.", "Vis scratchpad på denne skjermen."],
-  fi: ["Piilota scratchpad väliaikaisesti tällä näytöllä.", "Näytä scratchpad tällä näytöllä."],
-  cs: ["Dočasně skrýt scratchpad na tomto monitoru.", "Zobrazit scratchpad na tomto monitoru."],
-  sk: ["Dočasne skryť scratchpad na tomto monitore.", "Zobraziť scratchpad na tomto monitore."],
-  uk: ["Тимчасово приховати scratchpad на цьому моніторі.", "Показати scratchpad на цьому моніторі."],
-  ru: ["Временно скрыть scratchpad на этом мониторе.", "Показать scratchpad на этом мониторе."],
-  tr: ["Scratchpad’i bu monitörde geçici olarak gizle.", "Scratchpad’i bu monitörde göster."],
-  ro: ["Ascunde temporar scratchpad pe acest monitor.", "Arată scratchpad pe acest monitor."],
-  hu: ["Scratchpad ideiglenes elrejtése ezen a monitoron.", "Scratchpad megjelenítése ezen a monitoron."],
-  el: ["Προσωρινή απόκρυψη του scratchpad σε αυτή την οθόνη.", "Εμφάνιση του scratchpad σε αυτή την οθόνη."],
-  ar: ["إخفاء scratchpad مؤقتًا على هذه الشاشة.", "إظهار scratchpad على هذه الشاشة."],
-  hi: ["इस मॉनिटर पर scratchpad अस्थायी रूप से छिपाएँ।", "इस मॉनिटर पर scratchpad दिखाएँ।"],
-  id: ["Sembunyikan scratchpad sementara di monitor ini.", "Tampilkan scratchpad di monitor ini."],
-  vi: ["Tạm ẩn scratchpad trên màn hình này.", "Hiện scratchpad trên màn hình này."],
+  en: ["Temporarily hide the scratchpad on this monitor", "Show the scratchpad on this monitor"],
+  pl: ["Tymczasowo schowaj scratchpad na tym monitorze", "Pokaż scratchpad na tym monitorze"],
+  de: ["Scratchpad auf diesem Monitor vorübergehend ausblenden", "Zeige das Scratchpad auf diesem Monitor"],
+  fr: ["Masquer temporairement le scratchpad sur cet écran", "Afficher le scratchpad sur cet écran"],
+  es: ["Ocultar temporalmente el scratchpad en este monitor", "Mostrar el scratchpad en este monitor"],
+  "pt-BR": ["Ocultar temporariamente o scratchpad neste monitor", "Mostrar o scratchpad neste monitor"],
+  "pt-PT": ["Ocultar temporariamente o scratchpad neste monitor", "Mostrar o scratchpad neste monitor"],
+  it: ["Nascondi temporaneamente lo scratchpad su questo monitor", "Mostra lo scratchpad su questo monitor"],
+  nl: ["Verberg het scratchpad tijdelijk op deze monitor", "Toon het scratchpad op deze monitor"],
+  sv: ["Dölj scratchpad tillfälligt på denna skärm", "Visa scratchpad på denna skärm"],
+  da: ["Skjul scratchpad midlertidigt på denne skærm", "Vis scratchpad på denne skærm"],
+  nb: ["Skjul scratchpad midlertidig på denne skjermen", "Vis scratchpad på denne skjermen"],
+  fi: ["Piilota scratchpad väliaikaisesti tällä näytöllä", "Näytä scratchpad tällä näytöllä"],
+  cs: ["Dočasně skrýt scratchpad na tomto monitoru", "Zobrazit scratchpad na tomto monitoru"],
+  sk: ["Dočasne skryť scratchpad na tomto monitore", "Zobraziť scratchpad na tomto monitore"],
+  uk: ["Тимчасово приховати scratchpad на цьому моніторі", "Показати scratchpad на цьому моніторі"],
+  ru: ["Временно скрыть scratchpad на этом мониторе", "Показать scratchpad на этом мониторе"],
+  tr: ["Scratchpad’i bu monitörde geçici olarak gizle", "Scratchpad’i bu monitörde göster"],
+  ro: ["Ascunde temporar scratchpad pe acest monitor", "Arată scratchpad pe acest monitor"],
+  hu: ["Scratchpad ideiglenes elrejtése ezen a monitoron", "Scratchpad megjelenítése ezen a monitoron"],
+  el: ["Προσωρινή απόκρυψη του scratchpad σε αυτή την οθόνη", "Εμφάνιση του scratchpad σε αυτή την οθόνη"],
+  ar: ["إخفاء scratchpad مؤقتًا على هذه الشاشة", "إظهار scratchpad على هذه الشاشة"],
+  hi: ["इस मॉनिटर पर scratchpad अस्थायी रूप से छिपाएँ", "इस मॉनिटर पर scratchpad दिखाएँ"],
+  id: ["Sembunyikan scratchpad sementara di monitor ini", "Tampilkan scratchpad di monitor ini"],
+  vi: ["Tạm ẩn scratchpad trên màn hình này", "Hiện scratchpad trên màn hình này"],
   th: ["ซ่อน scratchpad บนจอภาพนี้ชั่วคราว", "แสดง scratchpad บนจอภาพนี้"],
-  ja: ["このモニターのScratchpadを一時的に非表示にします。", "このモニターにScratchpadを表示します。"],
-  ko: ["이 모니터에서 Scratchpad를 일시적으로 숨깁니다.", "이 모니터에 Scratchpad를 표시합니다."],
-  "zh-CN": ["在此显示器上暂时隐藏 Scratchpad。", "在此显示器上显示 Scratchpad。"],
-  "zh-TW": ["在此螢幕上暫時隱藏 Scratchpad。", "在此螢幕上顯示 Scratchpad。"]
+  ja: ["このモニターのScratchpadを一時的に非表示にします", "このモニターにScratchpadを表示します"],
+  ko: ["이 모니터에서 Scratchpad를 일시적으로 숨깁니다", "이 모니터에 Scratchpad를 표시합니다"],
+  "zh-CN": ["在此显示器上暂时隐藏 Scratchpad", "在此显示器上显示 Scratchpad"],
+  "zh-TW": ["在此螢幕上暫時隱藏 Scratchpad", "在此螢幕上顯示 Scratchpad"]
 };
 Object.keys(visibilityHintCatalogs).forEach(function(code) {
   visibilityHintKeys.forEach(function(key,index) { catalogs[code][key] = visibilityHintCatalogs[code][index]; });
@@ -922,103 +922,103 @@ Object.keys(settingsErrors).forEach(function(code) { catalogs[code].settingsErro
 var updateWords = {
   "en": [
     "Automatic updates",
-    "Check once a day to install stable releases."
+    "Check once a day to install stable releases"
   ],
   "pl": [
     "Automatyczne aktualizacje",
-    "Sprawdzaj raz dziennie i instaluj stabilne wydania."
+    "Sprawdzaj raz dziennie i instaluj stabilne wydania"
   ],
   "de": [
     "Automatische Updates",
-    "Einmal täglich prüfen und stabile Versionen installieren."
+    "Einmal täglich prüfen und stabile Versionen installieren"
   ],
   "fr": [
     "Mises à jour automatiques",
-    "Vérifier chaque jour et installer les versions stables."
+    "Vérifier chaque jour et installer les versions stables"
   ],
   "es": [
     "Actualizaciones automáticas",
-    "Buscar una vez al día e instalar versiones estables."
+    "Buscar una vez al día e instalar versiones estables"
   ],
   "pt-BR": [
     "Atualizações automáticas",
-    "Verificar uma vez por dia e instalar versões estáveis."
+    "Verificar uma vez por dia e instalar versões estáveis"
   ],
   "pt-PT": [
     "Atualizações automáticas",
-    "Verificar uma vez por dia e instalar versões estáveis."
+    "Verificar uma vez por dia e instalar versões estáveis"
   ],
   "it": [
     "Aggiornamenti automatici",
-    "Controlla una volta al giorno e installa le versioni stabili."
+    "Controlla una volta al giorno e installa le versioni stabili"
   ],
   "nl": [
     "Automatische updates",
-    "Controleer dagelijks en installeer stabiele versies."
+    "Controleer dagelijks en installeer stabiele versies"
   ],
   "sv": [
     "Automatiska uppdateringar",
-    "Sök en gång om dagen och installera stabila versioner."
+    "Sök en gång om dagen och installera stabila versioner"
   ],
   "da": [
     "Automatiske opdateringer",
-    "Søg én gang om dagen, og installér stabile versioner."
+    "Søg én gang om dagen, og installér stabile versioner"
   ],
   "nb": [
     "Automatiske oppdateringer",
-    "Sjekk én gang om dagen og installer stabile versjoner."
+    "Sjekk én gang om dagen og installer stabile versjoner"
   ],
   "fi": [
     "Automaattiset päivitykset",
-    "Tarkista kerran päivässä ja asenna vakaat julkaisut."
+    "Tarkista kerran päivässä ja asenna vakaat julkaisut"
   ],
   "cs": [
     "Automatické aktualizace",
-    "Kontrolovat jednou denně a instalovat stabilní verze."
+    "Kontrolovat jednou denně a instalovat stabilní verze"
   ],
   "sk": [
     "Automatické aktualizácie",
-    "Kontrolovať raz denne a inštalovať stabilné verzie."
+    "Kontrolovať raz denne a inštalovať stabilné verzie"
   ],
   "uk": [
     "Автоматичні оновлення",
-    "Перевіряти раз на день і встановлювати стабільні версії."
+    "Перевіряти раз на день і встановлювати стабільні версії"
   ],
   "ru": [
     "Автоматические обновления",
-    "Проверять раз в день и устанавливать стабильные версии."
+    "Проверять раз в день и устанавливать стабильные версии"
   ],
   "tr": [
     "Otomatik güncellemeler",
-    "Günde bir kez kontrol et ve kararlı sürümleri yükle."
+    "Günde bir kez kontrol et ve kararlı sürümleri yükle"
   ],
   "ro": [
     "Actualizări automate",
-    "Verifică o dată pe zi și instalează versiunile stabile."
+    "Verifică o dată pe zi și instalează versiunile stabile"
   ],
   "hu": [
     "Automatikus frissítések",
-    "Napi egyszeri ellenőrzés és stabil kiadások telepítése."
+    "Napi egyszeri ellenőrzés és stabil kiadások telepítése"
   ],
   "el": [
     "Αυτόματες ενημερώσεις",
-    "Έλεγχος μία φορά την ημέρα και εγκατάσταση σταθερών εκδόσεων."
+    "Έλεγχος μία φορά την ημέρα και εγκατάσταση σταθερών εκδόσεων"
   ],
   "ar": [
     "التحديثات التلقائية",
-    "التحقق مرة يوميًا وتثبيت الإصدارات المستقرة."
+    "التحقق مرة يوميًا وتثبيت الإصدارات المستقرة"
   ],
   "hi": [
     "अपने आप अपडेट",
-    "दिन में एक बार जाँचें और स्थिर संस्करण इंस्टॉल करें।"
+    "दिन में एक बार जाँचें और स्थिर संस्करण इंस्टॉल करें"
   ],
   "id": [
     "Pembaruan otomatis",
-    "Periksa sekali sehari dan pasang rilis stabil."
+    "Periksa sekali sehari dan pasang rilis stabil"
   ],
   "vi": [
     "Cập nhật tự động",
-    "Kiểm tra mỗi ngày một lần và cài đặt bản phát hành ổn định."
+    "Kiểm tra mỗi ngày một lần và cài đặt bản phát hành ổn định"
   ],
   "th": [
     "อัปเดตอัตโนมัติ",
@@ -1026,19 +1026,19 @@ var updateWords = {
   ],
   "ja": [
     "自動更新",
-    "1日1回確認し、安定版をインストールします。"
+    "1日1回確認し、安定版をインストールします"
   ],
   "ko": [
     "자동 업데이트",
-    "하루에 한 번 확인하고 안정 버전을 설치합니다."
+    "하루에 한 번 확인하고 안정 버전을 설치합니다"
   ],
   "zh-CN": [
     "自动更新",
-    "每天检查一次并安装稳定版本。"
+    "每天检查一次并安装稳定版本"
   ],
   "zh-TW": [
     "自動更新",
-    "每天檢查一次並安裝穩定版本。"
+    "每天檢查一次並安裝穩定版本"
   ]
 };
 Object.keys(updateWords).forEach(function(code) {
@@ -1082,154 +1082,154 @@ Object.keys(updateErrors).forEach(function(code) { catalogs[code].updateFailed =
 
 var updateConfirmationWords = {
   "en": [
-    "Turn off automatic updates?",
-    "Don't turn this off if you value a stable system",
-    "Turn off"
+    "Disable automatic updates?",
+    "Don't turn them off if you prefer a stable experience and improvements.",
+    "I confirm, disable updates"
   ],
   "pl": [
-    "Wyłączyć automatyczne aktualizacje?",
-    "Nie wyłączaj tej opcji, jeśli zależy Ci na stabilnym systemie",
-    "Wyłącz"
+    "Dezaktywować automatyczne aktualizacje?",
+    "Nie wyłączaj ich, jeśli zależy Ci na stabilnym działaniu i ulepszeniach.",
+    "Potwierdzam, wyłącz aktualizacje"
   ],
   "de": [
-    "Automatische Updates ausschalten?",
-    "Schalte dies nicht aus, wenn dir ein stabiles System wichtig ist",
-    "Ausschalten"
+    "Automatische Updates deaktivieren?",
+    "Schalte sie nicht aus, wenn dir ein stabiles Nutzungserlebnis und Verbesserungen wichtig sind.",
+    "Ich bestätige, Updates deaktivieren"
   ],
   "fr": [
     "Désactiver les mises à jour automatiques ?",
-    "Ne désactivez pas cette option si vous tenez à la stabilité de votre système",
-    "Désactiver"
+    "Ne les désactivez pas si vous préférez une expérience stable et des améliorations.",
+    "Je confirme, désactiver les mises à jour"
   ],
   "es": [
     "¿Desactivar las actualizaciones automáticas?",
-    "No desactives esta opción si valoras la estabilidad del sistema",
-    "Desactivar"
+    "No las desactives si prefieres una experiencia estable y mejoras.",
+    "Confirmo, desactivar actualizaciones"
   ],
   "pt-BR": [
     "Desativar as atualizações automáticas?",
-    "Não desative esta opção se você valoriza um sistema estável",
-    "Desativar"
+    "Não as desative se você prefere uma experiência estável e melhorias.",
+    "Confirmo, desativar atualizações"
   ],
   "pt-PT": [
     "Desativar as atualizações automáticas?",
-    "Não desative esta opção se valoriza um sistema estável",
-    "Desativar"
+    "Não as desative se prefere uma experiência estável e melhorias.",
+    "Confirmo, desativar atualizações"
   ],
   "it": [
-    "Disattivare gli aggiornamenti automatici?",
-    "Non disattivare questa opzione se desideri un sistema stabile",
-    "Disattiva"
+    "Disabilitare gli aggiornamenti automatici?",
+    "Non disattivarli se preferisci un’esperienza stabile e miglioramenti.",
+    "Confermo, disabilita gli aggiornamenti"
   ],
   "nl": [
     "Automatische updates uitschakelen?",
-    "Schakel dit niet uit als je een stabiel systeem belangrijk vindt",
-    "Uitschakelen"
+    "Schakel ze niet uit als je een stabiele ervaring en verbeteringen belangrijk vindt.",
+    "Ik bevestig, updates uitschakelen"
   ],
   "sv": [
-    "Stänga av automatiska uppdateringar?",
-    "Stäng inte av detta om du värdesätter ett stabilt system",
-    "Stäng av"
+    "Inaktivera automatiska uppdateringar?",
+    "Stäng inte av dem om du föredrar en stabil upplevelse och förbättringar.",
+    "Jag bekräftar, inaktivera uppdateringar"
   ],
   "da": [
-    "Slå automatiske opdateringer fra?",
-    "Slå ikke dette fra, hvis du værdsætter et stabilt system",
-    "Slå fra"
+    "Deaktivér automatiske opdateringer?",
+    "Slå dem ikke fra, hvis du foretrækker en stabil oplevelse og forbedringer.",
+    "Jeg bekræfter, deaktivér opdateringer"
   ],
   "nb": [
-    "Slå av automatiske oppdateringer?",
-    "Ikke slå av dette hvis du verdsetter et stabilt system",
-    "Slå av"
+    "Deaktiver automatiske oppdateringer?",
+    "Ikke slå dem av hvis du foretrekker en stabil opplevelse og forbedringer.",
+    "Jeg bekrefter, deaktiver oppdateringer"
   ],
   "fi": [
     "Poistetaanko automaattiset päivitykset käytöstä?",
-    "Älä poista tätä käytöstä, jos arvostat vakaata järjestelmää",
-    "Poista käytöstä"
+    "Älä poista niitä käytöstä, jos arvostat vakaata käyttökokemusta ja parannuksia.",
+    "Vahvistan, poista päivitykset käytöstä"
   ],
   "cs": [
-    "Vypnout automatické aktualizace?",
-    "Tuto možnost nevypínejte, pokud vám záleží na stabilním systému",
-    "Vypnout"
+    "Zakázat automatické aktualizace?",
+    "Nevypínejte je, pokud dáváte přednost stabilnímu používání a vylepšením.",
+    "Potvrzuji, zakázat aktualizace"
   ],
   "sk": [
-    "Vypnúť automatické aktualizácie?",
-    "Túto možnosť nevypínajte, ak vám záleží na stabilnom systéme",
-    "Vypnúť"
+    "Zakázať automatické aktualizácie?",
+    "Nevypínajte ich, ak uprednostňujete stabilné používanie a vylepšenia.",
+    "Potvrdzujem, zakázať aktualizácie"
   ],
   "uk": [
-    "Вимкнути автоматичні оновлення?",
-    "Не вимикайте цю опцію, якщо цінуєте стабільність системи",
-    "Вимкнути"
+    "Деактивувати автоматичні оновлення?",
+    "Не вимикайте їх, якщо віддаєте перевагу стабільній роботі та вдосконаленням.",
+    "Підтверджую, вимкнути оновлення"
   ],
   "ru": [
-    "Отключить автоматические обновления?",
-    "Не отключайте эту опцию, если цените стабильность системы",
-    "Отключить"
+    "Деактивировать автоматические обновления?",
+    "Не выключайте их, если предпочитаете стабильную работу и улучшения.",
+    "Подтверждаю, отключить обновления"
   ],
   "tr": [
-    "Otomatik güncellemeler kapatılsın mı?",
-    "Kararlı bir sisteme önem veriyorsanız bunu kapatmayın",
-    "Kapat"
+    "Otomatik güncellemeler devre dışı bırakılsın mı?",
+    "Kararlı bir deneyim ve iyileştirmeler istiyorsanız bunları kapatmayın.",
+    "Onaylıyorum, güncellemeleri kapat"
   ],
   "ro": [
     "Dezactivați actualizările automate?",
-    "Nu dezactivați această opțiune dacă apreciați un sistem stabil",
-    "Dezactivează"
+    "Nu le dezactivați dacă preferați o experiență stabilă și îmbunătățiri.",
+    "Confirm, dezactivează actualizările"
   ],
   "hu": [
-    "Kikapcsolja az automatikus frissítéseket?",
-    "Ne kapcsolja ki ezt, ha fontos Önnek a stabil rendszer",
-    "Kikapcsolás"
+    "Letiltja az automatikus frissítéseket?",
+    "Ne kapcsolja ki őket, ha a stabil működést és a fejlesztéseket részesíti előnyben.",
+    "Megerősítem, frissítések letiltása"
   ],
   "el": [
     "Απενεργοποίηση αυτόματων ενημερώσεων;",
-    "Μην το απενεργοποιήσετε αν εκτιμάτε τη σταθερότητα του συστήματος",
-    "Απενεργοποίηση"
+    "Μην τις απενεργοποιήσετε αν προτιμάτε μια σταθερή εμπειρία και βελτιώσεις.",
+    "Επιβεβαιώνω, απενεργοποίηση ενημερώσεων"
   ],
   "ar": [
-    "هل تريد إيقاف التحديثات التلقائية؟",
-    "لا توقف هذا الخيار إذا كنت تهتم باستقرار النظام",
-    "إيقاف"
+    "هل تريد تعطيل التحديثات التلقائية؟",
+    "لا توقفها إذا كنت تفضّل تجربة مستقرة وتحسينات.",
+    "أؤكد، تعطيل التحديثات"
   ],
   "hi": [
-    "अपने आप अपडेट बंद करें?",
-    "अगर आप एक स्थिर सिस्टम चाहते हैं, तो इसे बंद न करें",
-    "बंद करें"
+    "अपने आप अपडेट निष्क्रिय करें?",
+    "अगर आप स्थिर अनुभव और सुधार चाहते हैं, तो इन्हें बंद न करें।",
+    "मैं पुष्टि करता हूँ, अपडेट बंद करें"
   ],
   "id": [
-    "Matikan pembaruan otomatis?",
-    "Jangan matikan opsi ini jika Anda mengutamakan sistem yang stabil",
-    "Matikan"
+    "Nonaktifkan pembaruan otomatis?",
+    "Jangan matikan jika Anda menginginkan pengalaman yang stabil dan peningkatan.",
+    "Saya konfirmasi, nonaktifkan pembaruan"
   ],
   "vi": [
-    "Tắt cập nhật tự động?",
-    "Đừng tắt tùy chọn này nếu bạn coi trọng một hệ thống ổn định",
-    "Tắt"
+    "Vô hiệu hóa cập nhật tự động?",
+    "Đừng tắt nếu bạn muốn có trải nghiệm ổn định và các cải tiến.",
+    "Tôi xác nhận, tắt cập nhật"
   ],
   "th": [
-    "ปิดการอัปเดตอัตโนมัติหรือไม่",
-    "อย่าปิดตัวเลือกนี้หากคุณให้ความสำคัญกับความเสถียรของระบบ",
-    "ปิด"
+    "ปิดใช้งานการอัปเดตอัตโนมัติหรือไม่",
+    "อย่าปิดหากคุณต้องการประสบการณ์ที่เสถียรและการปรับปรุงอย่างต่อเนื่อง",
+    "ยืนยัน ปิดใช้งานการอัปเดต"
   ],
   "ja": [
-    "自動更新をオフにしますか？",
-    "システムの安定性を重視するなら、オフにしないでください",
-    "オフにする"
+    "自動更新を無効にしますか？",
+    "安定した使用感と改善を望むなら、オフにしないでください。",
+    "確認しました。更新を無効にする"
   ],
   "ko": [
-    "자동 업데이트를 끄시겠습니까?",
-    "안정적인 시스템을 원한다면 이 옵션을 끄지 마세요",
-    "끄기"
+    "자동 업데이트를 비활성화하시겠습니까?",
+    "안정적인 사용 경험과 개선을 원한다면 끄지 마세요.",
+    "확인했습니다. 업데이트 비활성화"
   ],
   "zh-CN": [
-    "关闭自动更新？",
-    "如果你重视系统稳定性，请勿关闭此选项",
-    "关闭"
+    "禁用自动更新？",
+    "如果你希望获得稳定的使用体验和持续改进，请不要关闭自动更新。",
+    "我确认，禁用更新"
   ],
   "zh-TW": [
-    "關閉自動更新？",
-    "如果你重視系統穩定性，請勿關閉此選項",
-    "關閉"
+    "停用自動更新？",
+    "如果你希望獲得穩定的使用體驗與持續改進，請不要關閉自動更新。",
+    "我確認，停用更新"
   ]
 };
 Object.keys(updateConfirmationWords).forEach(function(code) {

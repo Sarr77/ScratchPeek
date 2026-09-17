@@ -69,20 +69,27 @@ FocusScope {
         color: root.foreground
         font.pixelSize: Style.font.body
       }
-      Row {
+      Grid {
+        id: actions
         width: parent.width
-        spacing: Style.space(10)
+        readonly property bool stacked: cancelButton.implicitWidth + confirmButton.implicitWidth + columnSpacing > width
+        columns: stacked ? 1 : 2
+        columnSpacing: Style.space(10)
+        rowSpacing: Style.space(8)
         Ui.Button {
+          id: cancelButton
           objectName: "cancelUpdateOff"
-          width: (parent.width - parent.spacing) / 2
+          width: actions.stacked ? actions.width : Math.max(implicitWidth,
+            Math.min(actions.width * 0.3, actions.width - confirmButton.implicitWidth - actions.columnSpacing))
           text: root.words.cancel
           accent: root.accent
           hasCursor: root.selectedIndex === 0
           onClicked: root.cancel()
         }
         Ui.Button {
+          id: confirmButton
           objectName: "confirmUpdateOff"
-          width: (parent.width - parent.spacing) / 2
+          width: actions.stacked ? actions.width : actions.width - cancelButton.width - actions.columnSpacing
           text: root.words.turnOffUpdates
           accent: root.accent
           bordered: true

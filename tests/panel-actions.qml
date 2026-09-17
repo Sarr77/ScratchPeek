@@ -160,7 +160,7 @@ ShellRoot {
             var mode = i % 2 ? "on" : "off";
             testRoot.check(widgetA.setHintsMode(mode), "mode saved");
             testRoot.check(widgetA.hints.mode === mode && widgetB.hints.mode === mode, "rapid writes shared despite stale layout snapshot");
-            testRoot.check(barTip.footerText === widgetA.words[mode === "on" ? "clickHelpDetailed" : "clickHelp"], "bar footer follows hint setting immediately");
+            testRoot.check(barTip.footerText === widgetA.words.clickHelpDetailed, "bar footer names the scratchpad regardless of hint mode");
             testRoot.check(fakeShell.saved.hintsMode === mode, "latest choice reaches persistence");
           }
           testRoot.check(fakeShell.saved.language === "pl" && fakeShell.saved.accentColor === "#EF98F5", "unrelated settings preserved");
@@ -226,11 +226,15 @@ ShellRoot {
           widgetA.toggleUpdates();
           updater.check([widgetA,widgetB], now + 86400);
           testRoot.check(launches === 2, "next day starts one new check when enabled");
-          testRoot.check(I18n.words("en").autoUpdatesHint === "Check once a day to install stable releases.", "hover uses the requested short wording");
-          testRoot.check(confirmation.words.updatesOffWarning === "Don't turn this off if you value a stable system", "warning appears in confirmation only");
+          testRoot.check(I18n.words("en").autoUpdatesHint === "Check once a day to install stable releases", "hover uses the requested short wording without a final period");
+          testRoot.check(confirmation.words.updatesOffQuestion === "Disable automatic updates?", "title uses disable");
+          testRoot.check(confirmation.words.updatesOffWarning === "Don't turn them off if you prefer a stable experience and improvements.", "warning uses the requested wording");
+          testRoot.check(confirmation.words.turnOffUpdates === "I confirm, disable updates", "button makes confirmation explicit");
           testRoot.click(updatesControl,Qt.NoModifier); break;
         case 21:
           testRoot.check(confirmation.opened && widgetA.autoUpdates && widgetB.autoUpdates, "opening confirmation never disables updates");
+          var confirmButton = testRoot.findControl(confirmation,"confirmUpdateOff");
+          testRoot.check(confirmButton.width >= confirmButton.implicitWidth, "complete confirmation label fits the button at 200 percent");
           if (Quickshell.env("SCRATCHPEEK_UPDATE_CONFIRMATION_IMAGE"))
             confirmation.grabToImage(function(result) { result.saveToFile(Quickshell.env("SCRATCHPEEK_UPDATE_CONFIRMATION_IMAGE")); });
           events.keyClick(Qt.Key_Escape,Qt.NoModifier,0);

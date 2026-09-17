@@ -11,8 +11,7 @@ Rectangle {
   readonly property bool compact: hostWidget ? hostWidget.appearance.tooltipStyle === "compact" : false
   readonly property var scratchpadState: hostWidget ? hostWidget.scratchpadState : {status:"unknown",count:0,windows:[]}
   readonly property var words: hostWidget ? hostWidget.words : I18n.words("en")
-  readonly property bool hintsEnabled: !hostWidget || !hostWidget.hints || hostWidget.hints.enabled
-  readonly property string footerText: hintsEnabled ? words.clickHelpDetailed : words.clickHelp
+  readonly property string footerText: words.clickHelpDetailed
   readonly property string language: hostWidget ? hostWidget.language : "en"
   readonly property string workspace: hostWidget ? hostWidget.workspaceName : "scratchpad"
   readonly property color accent: hostWidget ? hostWidget.accent : Color.accent

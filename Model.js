@@ -97,7 +97,7 @@ function label(state, lang, compact, vertical, settings, workspace) {
   return mark + " " + count + " · " + statusText(state, lang, settings, workspace);
 }
 
-function tooltip(state, lang, workspace, settings, hintsEnabled) {
+function tooltip(state, lang, workspace, settings) {
   var w = words(lang);
   var lines = ["ScratchPeek · " + workspace, statusText(state, lang, settings, workspace)];
   if (state.status === "unknown") lines.push(validWorkspace(workspace) ? w.unknownHelp : w.invalidHelp);
@@ -109,7 +109,7 @@ function tooltip(state, lang, workspace, settings, hintsEnabled) {
     });
     if (state.count > 12) lines.push("+" + (state.count - 12));
   }
-  lines.push("", hintsEnabled ? w.clickHelpDetailed : w.clickHelp);
+  lines.push("", w.clickHelpDetailed);
   return lines.join("\n");
 }
 
