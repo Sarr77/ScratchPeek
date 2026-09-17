@@ -146,6 +146,45 @@ function mergeSettings(current, values, id) {
   return entry;
 }
 
+// Calendar time, persisted once: restarting or upgrading never starts a new week.
+var hintsWeekMs = 7 * 24 * 60 * 60 * 1000;
+function hintState(settings, now) {
+  settings = settings || {};
+  var mode = ["auto", "on", "off"].indexOf(settings.hintsMode) >= 0 ? settings.hintsMode : "auto";
+  var firstSeen = settings.hintsFirstSeenAt;
+  if (!Number.isFinite(firstSeen) || firstSeen <= 0) firstSeen = 0;
+  var expiresAt = firstSeen ? firstSeen + hintsWeekMs : 0;
+  return { mode: mode, firstSeenAt: firstSeen, expiresAt: expiresAt,
+    daysLeft: expiresAt ? Math.max(0, Math.min(7, Math.ceil((expiresAt - now) / (24 * 60 * 60 * 1000)))) : 7,
+    enabled: mode === "on" || (mode === "auto" && (!expiresAt || now < expiresAt)) };
+}
+function hintMaintenance(settings, now) {
+  var state = hintState(settings, now);
+  if (state.mode !== "auto") return {};
+  if (!state.firstSeenAt) return { hintsFirstSeenAt: now };
+  // Persist expiry so a later clock correction cannot turn hints back on.
+  return state.enabled ? {} : { hintsMode: "off" };
+}
+
+function toggleShortcut(bindings, workspace) {
+  var matches = (bindings || []).filter(function(bind) {
+    if (!bind || bind.submap || !bind.key || !Number.isInteger(bind.modmask)) return false;
+    // Lua dispatch arguments are opaque IDs. Omarchy supplies this description
+    // for its default scratchpad; legacy dispatch identifies the workspace.
+    return (bind.dispatcher === "togglespecialworkspace" && bind.arg === workspace)
+      || (workspace === "scratchpad" && bind.dispatcher === "__lua" && bind.description === "Toggle scratchpad");
+  });
+  if (!matches.length) return "";
+  var bind = matches[0], keys = [];
+  if (bind.modmask & ~(1 | 4 | 8 | 64)) return "";
+  if (bind.modmask & 64) keys.push("Super");
+  if (bind.modmask & 4) keys.push("Ctrl");
+  if (bind.modmask & 8) keys.push("Alt");
+  if (bind.modmask & 1) keys.push("Shift");
+  keys.push(bind.key.length === 1 ? bind.key.toUpperCase() : bind.key);
+  return keys.join(" + ");
+}
+
 function monitorLayout(monitors) {
   var items = (monitors || []).filter(function(m) {
     return m && !m.disabled && Number.isFinite(m.x) && Number.isFinite(m.y)

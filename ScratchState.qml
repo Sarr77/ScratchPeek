@@ -5,10 +5,25 @@ import Quickshell.Io
 import Quickshell.Hyprland
 import "Appearance.js" as Appearance
 
-// One shared event-driven reader for all monitors. No polling shell commands,
-// background processes or external network access.
+// One shared event-driven reader for all monitors, without network access.
+// Bindings are read only at startup/config reload, never by a polling command.
 QtObject {
   id: root
+  property double hintsNow: Date.now()
+  property Timer hintsClock: Timer {
+    interval: 60000; running: true; repeat: true
+    onTriggered: root.hintsNow = Date.now()
+  }
+  property var keyBindings: []
+  property Process readBindings: Process {
+    command: ["hyprctl", "-j", "binds"]
+    stdout: StdioCollector {
+      onStreamFinished: {
+        try { var bindings = JSON.parse(text); root.keyBindings = Array.isArray(bindings) ? bindings : []; }
+        catch (error) { root.keyBindings = []; }
+      }
+    }
+  }
   // Omarchy's stable theme slug, independent of the theme's accent or wallpaper.
   property string themeId: ""
   property FileView themeFile: FileView {
@@ -72,6 +87,7 @@ QtObject {
   property Connections events: Connections {
     target: Hyprland
     function onRawEvent(event) {
+      if (event.name === "configreloaded") root.readBindings.running = true;
       if (/^(activespecial|movewindow|openwindow|closewindow|monitoradded|monitorremoved|workspace|createworkspace|destroyworkspace|renameworkspace|moveworkspace|focusedmon|togglegroup|moveintogroup|moveoutofgroup|configreloaded)/.test(event.name))
         root.refreshTimer.restart();
     }
@@ -79,5 +95,5 @@ QtObject {
   property Timer refreshTimer: Timer { interval: 120; onTriggered: root.refresh() }
   // Repair missed events after reconnect/reload without spawning any process.
   property Timer reconcile: Timer { interval: 5000; running: true; repeat: true; onTriggered: root.refresh() }
-  Component.onCompleted: refresh()
+  Component.onCompleted: { refresh(); readBindings.running = true; }
 }

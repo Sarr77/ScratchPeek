@@ -34,6 +34,8 @@ Panel {
   readonly property bool editing: editingAppearance || editingLabels || editingScaling || editingTransfer
   readonly property int scalingIndex: appearanceIndex + 1
   readonly property int labelsIndex: scalingIndex + 1
+  readonly property int hintsIndex: labelsIndex + 1
+  readonly property bool hintsEnabled: !hostWidget || hostWidget.hints.enabled
   readonly property real logicalContentHeight: editingTransfer ? transferEditor.implicitHeight : (editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight)))
   readonly property int appearanceIndex: languageIndex + 1
   readonly property color accent: hostWidget ? hostWidget.accent : Color.accent
@@ -53,10 +55,10 @@ Panel {
       editingScaling = false;
     }
   }
-  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, labelsIndex)
+  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, hintsIndex)
 
   function moveSelection(delta) {
-    selectedIndex = Math.max(0, Math.min(labelsIndex, selectedIndex + delta));
+    selectedIndex = Math.max(0, Math.min(hintsIndex, selectedIndex + delta));
     if (selectedIndex < toggleIndex) {
       list.positionViewAtIndex(Math.floor(selectedIndex / windowActionCount), ListView.Contain);
       scroll.contentY = 0;
@@ -64,7 +66,8 @@ Panel {
   }
   function activateSelection() {
     if (!hostWidget) return;
-    if (selectedIndex === labelsIndex) openLabels();
+    if (selectedIndex === hintsIndex) hostWidget.toggleHints();
+    else if (selectedIndex === labelsIndex) openLabels();
     else if (selectedIndex === scalingIndex) openScaling();
     else if (selectedIndex === appearanceIndex) openAppearance();
     else if (selectedIndex === languageIndex) openLanguages();
@@ -87,6 +90,12 @@ Panel {
     editingTransfer = true;
     scroll.contentY = 0;
     transferEditor.begin(win);
+  }
+  function quickExtract(win) {
+    if (!hostWidget || hostWidget.transferBusy) return;
+    // Never guess a workspace if the monitor has disappeared or isn't ready.
+    if (!hostWidget.defaultDestination) { openTransfer(win); return; }
+    hostWidget.extractWindow(win.address, hostWidget.defaultDestination);
   }
   function openTransferAddress(address) {
     var win = scratchpadState.windows.filter(function(w) { return w.address === address; })[0];
@@ -210,7 +219,7 @@ Panel {
           onFinished: {
             closePicker();
             root.editingTransfer = false;
-            root.selectedIndex = Math.min(root.selectedIndex, root.labelsIndex);
+            root.selectedIndex = Math.min(root.selectedIndex, root.hintsIndex);
             scroll.contentY = 0;
             catcher.forceActiveFocus();
           }
@@ -294,13 +303,35 @@ Panel {
             }
           }
 
-          Text {
+          Item {
+            id: statusLine
             width: parent.width
-            text: root.hostWidget ? root.hostWidget.statusDescription : Model.statusText(root.scratchpadState, root.language)
-            textFormat: Text.PlainText
-            wrapMode: Text.Wrap
-            color: root.scratchpadState.status === "here" ? root.accent : root.barForeground
-            font.pixelSize: Style.font.body
+            readonly property bool stacked: shortcut.visible && statusText.implicitWidth + shortcut.implicitWidth + Style.space(16) > width
+            height: stacked ? statusText.implicitHeight + shortcut.implicitHeight + Style.space(4) : Math.max(statusText.implicitHeight, shortcut.implicitHeight)
+            LayoutMirroring.enabled: false
+            Text {
+              id: statusText
+              width: parent.width
+              text: root.hostWidget ? root.hostWidget.statusDescription : Model.statusText(root.scratchpadState, root.language)
+              textFormat: Text.PlainText
+              wrapMode: Text.Wrap
+              color: root.scratchpadState.status === "here" ? root.accent : root.barForeground
+              font.pixelSize: Style.font.body
+            }
+            Text {
+              id: shortcut
+              anchors.right: parent.right
+              y: statusLine.stacked ? statusText.implicitHeight + Style.space(4) : Math.max(0, (statusText.implicitHeight - implicitHeight) / 2)
+              width: Math.min(implicitWidth, parent.width)
+              visible: !!root.hostWidget && root.hostWidget.toggleShortcut !== ""
+              text: visible ? I18n.format(root.words.shortcutHint, { shortcut: root.hostWidget.toggleShortcut }) : ""
+              textFormat: Text.PlainText
+              wrapMode: Text.Wrap
+              horizontalAlignment: Text.AlignRight
+              color: root.barForeground
+              opacity: 0.65
+              font.pixelSize: Style.font.caption
+            }
           }
 
           Item {
@@ -458,7 +489,7 @@ Panel {
                 onClicked: if (root.hostWidget) root.hostWidget.focusWindow(row.modelData.address)
                 QQC.ToolTip {
                   id: focusTip
-                  visible: focusArea.containsMouse && root.opened && !root.editing && !list.moving && !scroll.moving
+                  visible: root.hintsEnabled && focusArea.containsMouse && root.opened && !root.editing && !list.moving && !scroll.moving
                   text: root.words.focusWindowHint
                   delay: 400
                   padding: 0
@@ -483,7 +514,7 @@ Panel {
                   }
                 }
               }
-              Ui.Button {
+              MoveOutButton {
                 id: extractButton
                 anchors.right: parent.right
                 anchors.rightMargin: Style.space(6)
@@ -494,15 +525,17 @@ Panel {
                 iconSize: Style.font.body
                 text: root.words.extractAction
                 bordered: true
-                tooltipText: root.words.extractWindow
+                tooltipText: root.hintsEnabled ? root.words.extractWindow + "\n" + root.words.quickExtractHint : ""
                 foreground: root.accent; accent: root.accent
                 hasCursor: root.selectedIndex === row.index * 2 + 1
                 enabled: !root.hostWidget || !root.hostWidget.transferBusy
                 Accessible.role: Accessible.Button
                 Accessible.name: root.words.extractWindow + " · " + row.appName
+                Accessible.description: root.words.quickExtractHint
                 Accessible.onPressAction: root.openTransfer(row.modelData)
                 onHovered: function(value) { if (value) root.selectedIndex = row.index * 2 + 1; }
                 onClicked: root.openTransfer(row.modelData)
+                onQuickMove: root.quickExtract(row.modelData)
               }
             }
           }
@@ -511,8 +544,8 @@ Panel {
             width: parent.width
             visible: root.canToggle
             text: root.scratchpadState.status === "here" ? root.words.hide : root.words.show
-            tooltipText: root.scratchpadState.status === "here" ? root.words.hideScratchpadHint : root.words.showScratchpadHint
-            Accessible.description: tooltipText
+            tooltipText: root.hintsEnabled ? Accessible.description : ""
+            Accessible.description: root.scratchpadState.status === "here" ? root.words.hideScratchpadHint : root.words.showScratchpadHint
             foreground: root.barForeground
             accent: root.accent
             hasCursor: root.selectedIndex === root.toggleIndex
@@ -613,13 +646,41 @@ Panel {
           }
 
           Text {
+            visible: !!root.hostWidget && root.hostWidget.hintsSaveFailed
             width: parent.width
-            text: root.words.author
+            text: root.words.saveError
             textFormat: Text.PlainText
-            horizontalAlignment: Text.AlignRight
-            color: root.barForeground
-            opacity: 0.65
+            wrapMode: Text.Wrap
+            color: Color.urgent
             font.pixelSize: Style.font.caption
+          }
+
+          Item {
+            width: parent.width
+            height: hintsToggle.height
+            LayoutMirroring.enabled: false
+            HintsToggle {
+              id: hintsToggle
+              anchors.left: parent.left
+              words: root.words
+              hintsEnabled: root.hintsEnabled
+              automatic: !root.hostWidget || root.hostWidget.hints.mode === "auto"
+              daysLeft: root.hostWidget ? root.hostWidget.hints.daysLeft : 7
+              foreground: root.hintsEnabled ? root.accent : Qt.alpha(root.barForeground, 0.65)
+              accent: root.accent
+              hasCursor: root.selectedIndex === root.hintsIndex
+              onHovered: function(value) { if (value) root.selectedIndex = root.hintsIndex; }
+              onClicked: if (root.hostWidget) root.hostWidget.toggleHints()
+            }
+            Text {
+              anchors.right: parent.right
+              anchors.verticalCenter: parent.verticalCenter
+              text: root.words.author
+              textFormat: Text.PlainText
+              color: root.barForeground
+              opacity: 0.65
+              font.pixelSize: Style.font.caption
+            }
           }
         }
       }

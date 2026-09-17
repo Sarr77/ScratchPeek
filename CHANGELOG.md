@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.8.0 — 2026-09-17
+
+- Add a small help toggle opposite the author in the panel footer. Its own hover
+  description is always available, even with other panel hints disabled.
+- Enable hints for the first seven calendar days, showing a daily countdown;
+  persist the start and expiry across restarts and updates. Manual choices last
+  until changed by the user and apply to all monitors.
+- Ctrl+click Move out moves the selected window directly to this monitor's
+  active ordinary workspace. Ordinary clicks still open the destination picker.
+- Shorten the transfer hint to Ctrl+click: to this workspace, and Hide's hint to
+  one sentence describing temporary hiding.
+- Add a compact reminder explicitly naming the scratchpad, using the detected
+  global shortcut. Keep the bar preview and shortcut visible when hints are off.
+- Fix rapid settings writes using the current widget settings after startup
+  hydration, avoiding the host's stale layout snapshot. Translate all new copy
+  into 30 languages and test real Qt clicks, persistence and countdown boundaries.
+
 ## 0.7.3 — 2026-09-17
 
 - Label the add-window picker Add window to scratchpad… in all 30 languages.

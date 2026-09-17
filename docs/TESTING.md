@@ -1,5 +1,27 @@
 # Validation
 
+## 0.8.0 validation — 2026-09-17
+
+- 55 portable checks cover seven-day expiry, each daily countdown boundary,
+  manual overrides, reload preservation, invalid dates, clock rollback after
+  expiry, binding detection, and complete keys/placeholders in all 30 languages.
+- `python3 tools/test_panel_actions.py` sends actual Qt pointer/key events to
+  offscreen controls: ordinary versus Ctrl clicks, hover hints, switching off
+  while the help icon's tooltip remains visible, a live daily countdown, 200%
+  scale, a disabled action, and keyboard activation.
+- The same test mounts two real Widget instances with a scoped in-memory bar
+  API. A stale layout snapshot reproduces rapid-toggle lost updates. Successive
+  changes reach both widgets and saved settings; rejected writes preserve the
+  prior state and report failure. Quickshell's offscreen backend cannot mount
+  native KeyboardPanel windows; those are inspected in the live shell instead.
+- Existing offscreen transfer tests pass. The native two-monitor check confirms
+  rapid on/off changes, persistent manual mode after shell restart, an unchanged
+  first-seen timestamp and preservation of appearance, language and labels.
+- Native visual inspection confirms the help icon at bottom left, author at
+  bottom right, and an explicit scratchpad shortcut beside the status. No new
+  ScratchPeek errors appear in the shell log. Plugin validation and archive CRC
+  checks pass; unrelated existing shell warnings are unchanged.
+
 ## Automated
 
 Run `node --test tests/model.test.cjs`. The suite covers empty/hidden/open states,

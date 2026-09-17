@@ -9,7 +9,7 @@ manifest = json.loads((root / "manifest.json").read_text())
 version = manifest["version"]
 assert all(c.isalnum() or c in ".-" for c in version)
 names = [
-    "manifest.json", "qmldir", "Model.js", "I18n.js", "ScratchState.qml", "Widget.qml",
+    "manifest.json", "qmldir", "Model.js", "I18n.js", "ScratchState.qml", "Widget.qml", "HintsToggle.qml", "MoveOutButton.qml",
     "Transfers.js", "WindowTransfer.qml", "TransferEditor.qml", "Details.qml", "PopupPlacement.js", "ScrollHandle.qml", "LabelsEditor.qml", "ScaleControl.qml", "ScalingEditor.qml", "Appearance.js", "AppearanceEditor.qml", "PresetChip.qml", "HoverTip.qml", "TooltipContent.qml", "README.md", "LICENSE", "CHANGELOG.md", ".gitignore",
 ]
 for directory in ("docs", "tests", "tools", ".github", "vendor"):
