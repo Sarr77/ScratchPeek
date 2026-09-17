@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.1 — 2026-09-17
+
+- Clicking an open dropdown's trigger now closes it instead of reopening it
+  during the same click. Applies to all ScratchPeek searchable dropdowns.
+- Replace the small extraction arrow with a bordered, labeled Move out… button
+  beside each window; the destination-workspace picker remains one click away.
+- Use separate window/workspace search hints instead of Search languages…,
+  translated along with the new action label into all 30 languages.
+- Added an offscreen Qt pointer/keyboard regression test for dropdown dismissal,
+  reopening, filtering, selection and 200% scaling with the popup above its trigger.
+
 ## 0.7.0 — 2026-09-17
 
 - Add windows to the scratchpad through a searchable application/window picker.

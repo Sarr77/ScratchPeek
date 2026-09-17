@@ -49,7 +49,7 @@ Column {
     uiScale: root.hostWidget ? root.hostWidget.uiScale : 1
     label: root.words.destinationWorkspace
     options: root.hostWidget ? root.hostWidget.destinationOptions : []
-    placeholderText: root.words.search
+    placeholderText: root.words.searchWorkspaces
     emptyText: root.words.noMatches
     accent: root.accent
     enabled: !root.busy

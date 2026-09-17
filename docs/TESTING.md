@@ -223,3 +223,20 @@ Implementation references, pinned to the tested compositor version:
 [Lua dispatchers](https://github.com/hyprwm/Hyprland/blob/v0.56.2/src/config/lua/bindings/LuaBindingsDispatchers.cpp),
 [window properties](https://github.com/hyprwm/Hyprland/blob/v0.56.2/src/config/lua/objects/LuaWindow.cpp),
 [group membership API](https://github.com/hyprwm/Hyprland/blob/v0.56.2/src/config/lua/objects/LuaGroup.cpp).
+
+## 0.7.1 validation — 2026-09-17
+
+- Reproduced the reported reopen-on-second-click bug with real Qt mouse events
+  on the unmodified dropdown. `python3 tools/test_dropdown.py` failed before
+  the fix and passes after it. No desktop input is synthesized by this test.
+- The regression test also covers a third click reopening, outside-click and
+  Escape dismissal, typing to filter, Enter selecting exactly once, clearing
+  search on close, and a 200% popup opening above its trigger near the window edge.
+- 51 model checks, all 30 translation catalogs, the transfer controller/editor
+  test and Omarchy's plugin validator pass.
+- The labeled Move out… button was visually checked on the native panel on DP-3.
+  Saved appearance settings were preserved. No new ScratchPeek runtime errors.
+
+Qt's [popup close policy](https://doc.qt.io/qt-6/qml-qtquick-controls-popup.html#closePolicy-prop)
+excludes the trigger (popup parent) from press-outside dismissal. The trigger
+then handles its own click once, while clicks elsewhere continue to dismiss.

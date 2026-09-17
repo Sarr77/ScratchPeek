@@ -461,8 +461,11 @@ Panel {
                 anchors.rightMargin: Style.space(6)
                 anchors.verticalCenter: parent.verticalCenter
                 visible: root.transferSupported
-                width: visible ? Style.space(32) : 0
-                text: "↗"
+                width: visible ? implicitWidth : 0
+                iconText: "↗"
+                iconSize: Style.font.body
+                text: root.words.extractAction
+                bordered: true
                 tooltipText: root.words.extractWindow
                 foreground: root.accent; accent: root.accent
                 hasCursor: root.selectedIndex === row.index * 2 + 1
@@ -496,7 +499,7 @@ Panel {
             showLabel: false
             triggerLabel: root.words.addWindow
             options: root.hostWidget ? root.hostWidget.addWindowOptions : []
-            placeholderText: root.words.search
+            placeholderText: root.words.searchWindows
             emptyText: root.words.noMatches
             foreground: root.barForeground; accent: root.accent
             enabled: !!root.hostWidget && !root.hostWidget.transferBusy

@@ -17,7 +17,7 @@ When you are working inside it, the label says **active here**.
 - Counts all windows, including inactive tabs in Hyprland window groups.
 - Left-click shows or hides the scratchpad on the clicked monitor.
 - Hover lists applications; right-click opens a scrollable list with window titles.
-- Select a window to focus it; use its ↗ button to take it out of the scratchpad.
+- Select a window to focus it; use its **↗ Move out…** button to take it out of the scratchpad.
 - Add windows from a searchable picker. Choose the destination workspace when
   taking a window out. Only the selected tab moves, even in a window group.
 - Up/Down or Tab navigate actions; Left/Right choose focus or extraction on a
@@ -91,7 +91,8 @@ Right-click ScratchPeek to open the window list:
 
 - **Add window…** searches windows on ordinary workspaces by application,
   title or workspace. Select one to send it to the configured scratchpad.
-- **↗**, beside a scratchpad window, opens **Take out of scratchpad…**. Select
+  Click **Add window…** again, press Escape or click outside to close the list.
+- **↗ Move out…**, beside a scratchpad window, opens **Take out of scratchpad…**. Select
   a destination and press **Move**. The picker offers existing numbered and
   named workspaces, plus empty workspaces **1–10**. Existing destinations show
   their monitor; the ordinary workspace on the panel’s monitor is selected first.

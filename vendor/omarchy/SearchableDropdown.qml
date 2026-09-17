@@ -1,5 +1,5 @@
 // Adapted from Omarchy 4.0.4 shell/Ui/SearchableDropdown.qml (MIT). See LICENSE here.
-// ScratchPeek: keep scaled popup menus inside their window.
+// ScratchPeek: keep scaled popups inside their window; trigger clicks toggle once.
 import QtQuick
 import QtQuick.Window
 import "../../PopupPlacement.js" as Placement
@@ -71,7 +71,7 @@ Item {
   readonly property bool popupOpen: popup.opened
   function open() { popup.open() }
   function close() { popup.close() }
-  function toggle() { popup.opened ? popup.close() : popup.open() }
+  function toggle() { popup.visible ? popup.close() : popup.open() }
   function focusTrigger() { trigger.forceActiveFocus() }
 
   signal changed(string value)
@@ -148,7 +148,7 @@ Item {
       Keys.onPressed: function(event) {
         if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter
             || event.key === Qt.Key_Space || event.key === Qt.Key_Down) {
-          popup.opened ? popup.close() : popup.open()
+          root.toggle()
           event.accepted = true
         } else if (event.key === Qt.Key_Escape && popup.opened) {
           popup.close(); event.accepted = true
@@ -185,12 +185,15 @@ Item {
         cursorShape: Qt.PointingHandCursor
         onClicked: {
           trigger.forceActiveFocus()
-          popup.opened ? popup.close() : popup.open()
+          root.toggle()
         }
       }
 
       QQC.Popup {
         id: popup
+        // The trigger is this popup's parent. Do not auto-close on its mouse
+        // press, then let onClicked reopen the popup during the same click.
+        closePolicy: QQC.Popup.CloseOnEscape | QQC.Popup.CloseOnPressOutsideParent
         // Placement.fit already handles transformed window bounds.
         margins: -1
         x: root.placement.x

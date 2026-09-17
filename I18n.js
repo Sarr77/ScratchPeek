@@ -596,3 +596,40 @@ var transferCatalogs = {
 Object.keys(transferCatalogs).forEach(function(code) {
   transferKeys.forEach(function(key,index) { catalogs[code][key] = transferCatalogs[code][index]; });
 });
+
+var transferUiKeys = ["extractAction", "searchWindows", "searchWorkspaces"];
+var transferUiCatalogs = {
+  en: ["Move out…", "Search windows…", "Search workspaces…"],
+  pl: ["Wyciągnij…", "Szukaj okien…", "Szukaj workspace’u…"],
+  de: ["Herausholen…", "Fenster suchen…", "Arbeitsflächen suchen…"],
+  fr: ["Sortir…", "Rechercher une fenêtre…", "Rechercher un espace…"],
+  es: ["Sacar…", "Buscar ventanas…", "Buscar espacios…"],
+  "pt-BR": ["Retirar…", "Pesquisar janelas…", "Pesquisar áreas de trabalho…"],
+  "pt-PT": ["Retirar…", "Pesquisar janelas…", "Pesquisar áreas de trabalho…"],
+  it: ["Estrai…", "Cerca finestre…", "Cerca spazi di lavoro…"],
+  nl: ["Eruithalen…", "Vensters zoeken…", "Werkruimten zoeken…"],
+  sv: ["Ta ut…", "Sök fönster…", "Sök arbetsytor…"],
+  da: ["Tag ud…", "Søg efter vinduer…", "Søg efter arbejdsområder…"],
+  nb: ["Ta ut…", "Søk etter vinduer…", "Søk etter arbeidsområder…"],
+  fi: ["Siirrä pois…", "Etsi ikkunoita…", "Etsi työtiloja…"],
+  cs: ["Vyjmout…", "Hledat okna…", "Hledat plochy…"],
+  sk: ["Vybrať…", "Hľadať okná…", "Hľadať plochy…"],
+  uk: ["Витягти…", "Пошук вікон…", "Пошук робочих просторів…"],
+  ru: ["Извлечь…", "Поиск окон…", "Поиск рабочих пространств…"],
+  tr: ["Çıkar…", "Pencere ara…", "Çalışma alanı ara…"],
+  ro: ["Scoate…", "Caută ferestre…", "Caută spații de lucru…"],
+  hu: ["Kivétel…", "Ablakok keresése…", "Munkaterületek keresése…"],
+  el: ["Εξαγωγή…", "Αναζήτηση παραθύρων…", "Αναζήτηση χώρων εργασίας…"],
+  ar: ["إخراج…", "البحث عن نوافذ…", "البحث عن مساحات العمل…"],
+  hi: ["बाहर निकालें…", "विंडो खोजें…", "कार्यक्षेत्र खोजें…"],
+  id: ["Keluarkan…", "Cari jendela…", "Cari ruang kerja…"],
+  vi: ["Lấy ra…", "Tìm cửa sổ…", "Tìm không gian làm việc…"],
+  th: ["นำออก…", "ค้นหาหน้าต่าง…", "ค้นหาพื้นที่ทำงาน…"],
+  ja: ["取り出す…", "ウィンドウを検索…", "ワークスペースを検索…"],
+  ko: ["꺼내기…", "창 검색…", "작업 공간 검색…"],
+  "zh-CN": ["移出…", "搜索窗口…", "搜索工作区…"],
+  "zh-TW": ["移出…", "搜尋視窗…", "搜尋工作區…"]
+};
+Object.keys(transferUiCatalogs).forEach(function(code) {
+  transferUiKeys.forEach(function(key,index) { catalogs[code][key] = transferUiCatalogs[code][index]; });
+});
