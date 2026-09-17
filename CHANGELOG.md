@@ -6,7 +6,7 @@
   the help icon. Keep keyboard selection visible and functional.
 - Keep the author credit as plain text, without a link or hover action. Use
   “by Sarr” in English.
-- Add automatic daily updates for stable GitHub releases, with a saved panel
+- Add automatic daily updates for stable GitHub releases, with a small saved footer
   switch. Preserve preferences, skip modified/development copies, and validate
   a staged version before atomically installing it. Translate the new controls
   into all 30 languages.

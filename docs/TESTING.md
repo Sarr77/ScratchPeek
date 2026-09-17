@@ -11,7 +11,9 @@
 - The update switch synchronizes across both widgets. The isolated lifecycle
   test preserves a disabled update preference through restart, disable/re-enable,
   removal and reinstall. The native panel shows the switch and plain “by Sarr”
-  credit. The development symlink is skipped without a network request.
+  credit. The switch shares the existing 24-pixel footer row, without its own
+  bordered section. Hover exit and keyboard activation pass at 100% and 200%
+  scale. The development symlink is skipped without a network request.
 - The real QML scheduler with a test launcher coalesces monitor requests,
   respects the next daily deadline, defers while a panel or transfer is active,
   and responds immediately to the saved update switch.

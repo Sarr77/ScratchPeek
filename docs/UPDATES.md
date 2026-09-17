@@ -2,7 +2,7 @@
 
 ScratchPeek checks for a stable release once every 24 hours while the widget is
 running. **Automatic updates** is enabled by default and can be switched off in
-the panel. The choice survives restarts and reinstalls.
+the panel footer. The choice survives restarts and reinstalls.
 
 The first check runs about a minute after startup. An open panel or a window
 transfer postpones starting the check. Both monitors share one schedule, saved

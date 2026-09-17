@@ -35,8 +35,8 @@ Panel {
   readonly property bool editing: editingAppearance || editingLabels || editingScaling || editingTransfer
   readonly property int scalingIndex: appearanceIndex + 1
   readonly property int labelsIndex: scalingIndex + 1
-  readonly property int updatesIndex: labelsIndex + 1
-  readonly property int hintsIndex: updatesIndex + 1
+  readonly property int hintsIndex: labelsIndex + 1
+  readonly property int updatesIndex: hintsIndex + 1
   readonly property bool hintsEnabled: !hostWidget || hostWidget.hints.enabled
   readonly property real logicalContentHeight: editingTransfer ? transferEditor.implicitHeight : (editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight)))
   readonly property int appearanceIndex: languageIndex + 1
@@ -57,10 +57,10 @@ Panel {
       editingScaling = false;
     }
   }
-  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, hintsIndex)
+  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, updatesIndex)
 
   function moveSelection(delta) {
-    selection.move(delta, hintsIndex);
+    selection.move(delta, updatesIndex);
     if (selectedIndex < toggleIndex) {
       list.positionViewAtIndex(Math.floor(selectedIndex / windowActionCount), ListView.Contain);
       scroll.contentY = 0;
@@ -668,26 +668,6 @@ Panel {
             font.pixelSize: Style.font.caption
           }
 
-          Ui.Toggle {
-            id: updatesToggle
-            width: parent.width
-            label: root.words.autoUpdates
-            titleSize: Style.font.body
-            checked: !root.hostWidget || root.hostWidget.autoUpdates
-            foreground: root.barForeground
-            accent: root.accent
-            hasCursor: root.selectedIndex === root.updatesIndex
-            property bool pointerInside: false
-            onHovered: function(value) { pointerInside = value; selection.hover(root.updatesIndex, value); }
-            onClicked: if (root.hostWidget) root.hostWidget.toggleUpdates()
-            PanelHint {
-              hostWidget: root.hostWidget
-              requested: updatesToggle.pointerInside
-              text: root.words.autoUpdatesHint
-              maximumWidth: scroll.width
-            }
-          }
-
           Text {
             visible: !!root.hostWidget && root.hostWidget.updatesSaveFailed
             width: parent.width
@@ -727,10 +707,35 @@ Panel {
               onClicked: if (root.hostWidget) root.hostWidget.toggleHints()
             }
             AuthorCredit {
+              id: authorCredit
               anchors.right: parent.right
               anchors.verticalCenter: parent.verticalCenter
               text: root.words.author
               foreground: root.barForeground
+            }
+            Item {
+              anchors.left: hintsToggle.right
+              anchors.right: authorCredit.left
+              anchors.margins: Style.space(12)
+              height: parent.height
+              UpdateSwitch {
+                id: updatesToggle
+                anchors.centerIn: parent
+                width: Math.min(implicitWidth, parent.width)
+                text: root.words.autoUpdates
+                checked: !root.hostWidget || root.hostWidget.autoUpdates
+                foreground: root.barForeground
+                accent: root.accent
+                hasCursor: root.selectedIndex === root.updatesIndex
+                onHovered: function(value) { selection.hover(root.updatesIndex, value); }
+                onClicked: if (root.hostWidget) root.hostWidget.toggleUpdates()
+                PanelHint {
+                  hostWidget: root.hostWidget
+                  requested: updatesToggle.pointerHovered
+                  text: root.words.autoUpdatesHint
+                  maximumWidth: scroll.width
+                }
+              }
             }
           }
         }

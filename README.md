@@ -60,7 +60,7 @@ restarts, updates, disabling the widget and reinstalling it.
 
 Automatic updates are on by default. While ScratchPeek is running, it checks
 once a day for a newer stable GitHub release and installs it in the background.
-Turn **Automatic updates** off in the panel to keep your current version.
+Turn **Automatic updates** off in the panel footer to keep your current version.
 Your preferences stay saved. Downloads or validation failures leave the installed
 version in place; another check happens the next day.
 

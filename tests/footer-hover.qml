@@ -13,7 +13,7 @@ ShellRoot {
   function check(value, message) { if (!value) throw new Error(message); }
   function point(item, x, y) { events.mouseMove(item,x,y,0,Qt.NoButton,Qt.NoModifier); }
   function hover(item) { point(item,item.width/2,item.height/2); }
-  function gap() { point(footer,footer.width/2,footer.height/2); }
+  function gap() { point(footer,50,footer.height/2); }
   TestEvent { id: events }
   Plugin.PanelSelection { id: selection }
   Window {
@@ -24,14 +24,22 @@ ShellRoot {
       x: 20; y: 100; width: 380; height: 30
       scale: test.uiScale; transformOrigin: Item.TopLeft
       focus: true
-      Keys.onTabPressed: selection.move(1,0)
-      Keys.onReturnPressed: if (selection.index === 0) hints.clicked()
+      Keys.onTabPressed: selection.move(1,1)
+      Keys.onReturnPressed: if (selection.index === 0) hints.clicked(); else if (selection.index === 1) updates.activate()
       Plugin.HintsToggle {
         id: hints
         words: I18n.words("en")
         hasCursor: selection.index === 0
         onHovered: function(value) { selection.hover(0,value); }
         onClicked: test.activations++
+      }
+      Plugin.UpdateSwitch {
+        id: updates
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: I18n.words("en").autoUpdates
+        hasCursor: selection.index === 1
+        onHovered: function(value) { selection.hover(1,value); }
+        onClicked: { checked = !checked; test.activations++; }
       }
       Plugin.AuthorCredit {
         id: author
@@ -66,19 +74,24 @@ ShellRoot {
           test.check(test.activations === 1,"keyboard help activates once");
           events.keyClick(Qt.Key_Tab,Qt.NoModifier,0); break;
         case 6:
-          test.check(hints.hasCursor && !author.activeFocus,"author is skipped by keyboard navigation");
+          test.check(updates.hasCursor && !author.activeFocus,"keyboard reaches updates and skips the plain author credit");
+          events.keyClick(Qt.Key_Return,Qt.NoModifier,0);
+          test.check(test.activations === 2 && !updates.checked,"keyboard toggles updates once");
           selection.hover(0,false);
-          test.check(hints.hasCursor,"pointer leave preserves keyboard selection");
-          test.hover(hints); test.gap(); break;
+          test.check(updates.hasCursor,"pointer leave preserves keyboard selection");
+          test.hover(updates); test.gap(); break;
         case 7:
-          test.check(!hints.hasCursor && !hints.hot,"pointer takes over from keyboard without sticky highlight");
+          test.check(!updates.hasCursor && !updates.hot,"pointer takes over from keyboard without sticky highlight");
           test.uiScale = 2; test.hover(hints); break;
         case 8: test.gap(); break;
         case 9:
           test.check(!hints.hot,"help clears at 200 percent scale");
-          test.hover(author); break;
+          test.hover(updates); break;
         case 10: test.gap(); break;
         case 11:
+          test.check(!updates.hasCursor && !updates.hot,"update switch clears at 200 percent scale");
+          test.hover(author); break;
+        case 12:
           test.check(!author.font.underline && !author.activeFocus,"author remains plain text at 200 percent scale");
           console.info("SCRATCHPEEK_FOOTER_HOVER_PASS"); stop(); Qt.quit();
         }

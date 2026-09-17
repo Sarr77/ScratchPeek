@@ -49,7 +49,7 @@ aktualizację, wyłączenie wtyczki i ponowną instalację.
 
 Automatyczne aktualizacje są domyślnie włączone. Podczas działania wtyczka
 sprawdza raz dziennie, czy na GitHubie jest nowe stabilne wydanie, i instaluje
-je w tle. Przełącznik **Automatyczne aktualizacje** w panelu pozwala je wyłączyć.
+je w tle. Mały przełącznik **Automatyczne aktualizacje** w stopce pozwala je wyłączyć.
 Ustawienia pozostają zapisane. Błąd pobierania lub weryfikacji pozostawia
 dotychczasową wersję; kolejna próba odbędzie się następnego dnia.
 
