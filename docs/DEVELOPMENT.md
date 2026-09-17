@@ -42,6 +42,11 @@ and version; it does not return window titles. `setHintsMode` accepts `on`, `off
 or `auto` (resumes the remaining automatic budget; never resets it). `focusWindow <address>`
 selects a window only if it still belongs to the configured scratchpad.
 
+`visibilityLastFailure` reports the most recent failure's phase, reason and
+elapsed milliseconds during this shell session. It is historical; the separate
+`visibilityError` indicates whether an error is currently displayed. The same
+diagnostic is written to the local Quickshell log, without raw window data.
+
 The two dropdown components in `vendor/omarchy/` are adapted from Omarchy
 4.0.4's UI kit with explicit scaled window bounds and retain its MIT notice.
 Qt Controls popup items use a separate overlay; the implementation follows

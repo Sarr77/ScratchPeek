@@ -17,6 +17,18 @@
 - The real QML scheduler with a test launcher coalesces monitor requests,
   respects the next daily deadline, defers while a panel or transfer is active,
   and responds immediately to the saved update switch.
+- Real Qt input verifies the off confirmation with mouse and keyboard at 100%
+  and 200% scale. Opening, Cancel, Escape and default Enter preserve enabled
+  updates; explicit confirmation saves off on both widgets. Re-enabling takes
+  one click. A rejected settings write leaves updates enabled. All 30 catalogs
+  include the question, warning and confirmation button; the hover remains short.
+- Visibility labels now use “visible here/on” across all 30 catalogs; short,
+  explicit and custom-label fallback checks pass. Custom text is preserved.
+- The reported intermittent visibility error did not recur in the native
+  two-monitor test, including startup, duplicate requests and an open panel.
+  Its original cause remains unconfirmed. New phase/reason/duration diagnostics
+  distinguish malformed replies, changed context and timeouts in controlled
+  tests without logging window titles or raw compositor output.
 - Release downloads are simulated with local repositories in the automated
   tests. No new public release or live replacement of the development checkout
   was performed during these checks.

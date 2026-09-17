@@ -130,7 +130,7 @@ test('reports openness separately on each monitor', () => {
   assert.equal(here.focused, false);
 });
 
-test('open here does not mean the user is working in the scratchpad', () => {
+test('visible here does not mean the user is working in the scratchpad', () => {
   const monitors = [monitor('DP-1', 0, 'special:scratchpad')];
   assert.equal(state([window('0x1')], monitors, 'DP-1', '0x1').focused, true);
   assert.equal(state([window('0x1')], monitors, 'DP-1', '0x2').focused, false);
@@ -234,7 +234,7 @@ test('language menu uses native names, includes auto, and changes its labels', (
 test('localized monitor sentences support reordered placeholders and RTL isolation', () => {
   const s = { status: 'elsewhere', monitor: 'DP-3' };
   assert.equal(model.statusText(s, 'ja'), 'DP-3 に表示中');
-  assert.equal(model.statusText(s, 'pl'), 'otwarty na DP-3');
+  assert.equal(model.statusText(s, 'pl'), 'widoczny na DP-3');
   assert.match(model.statusText(s, 'ar'), /\u2066DP-3\u2069/);
   assert.equal(i18n.format('{language}', {language: '$&'}), '$&');
 });
@@ -301,9 +301,9 @@ test('label presets preserve all six meanings including visible versus focused',
   const states = [
     [{status:'empty',count:0}, 'empty', 'Scratchpad EMPTY'],
     [{status:'hidden',count:4}, 'hidden', 'Scratchpad OFF'],
-    [{status:'here',count:4,focused:false}, 'open here', 'Scratchpad ON'],
+    [{status:'here',count:4,focused:false}, 'visible here', 'Scratchpad ON'],
     [{status:'here',count:4,focused:true}, 'active here', 'Scratchpad ACTIVE'],
-    [{status:'elsewhere',count:4,monitor:'DP-3'}, 'open on DP-3', 'Scratchpad ON · DP-3'],
+    [{status:'elsewhere',count:4,monitor:'DP-3'}, 'visible on DP-3', 'Scratchpad ON · DP-3'],
     [{status:'unknown',count:0}, 'status unknown', 'Scratchpad ?']
   ];
   for (const [s,short,toggle] of states) {

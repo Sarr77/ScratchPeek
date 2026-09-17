@@ -8,12 +8,12 @@
 |---|---|
 | `○ 0 · empty` | No windows in the scratchpad. |
 | `◌ 4 · hidden` | Four windows stored, overlay hidden. |
-| `● 4 · open here` | Overlay visible on this monitor; focus can be elsewhere. |
+| `● 4 · visible here` | Overlay visible on this monitor; focus can be elsewhere. |
 | `● 4 · active here` | A scratchpad window has keyboard focus on this monitor. |
-| `↗ 4 · open on DP-3` | Overlay visible on the named other monitor. |
+| `↗ 4 · visible on DP-3` | Overlay visible on the named other monitor. |
 | `? ? · status unknown` | State is unavailable or the configured name is invalid. |
 
-An empty scratchpad can still be open; in that case the label shows `0 · open here`.
+An empty scratchpad can still be open; in that case the label shows `0 · visible here`.
 Hidden tabs count separately, because switching tabs does not remove windows.
 Visible scratchpads use your theme accent; a focused scratchpad has a stronger
 background. Grouped windows share a small marker and group number in the list.
@@ -141,8 +141,8 @@ details panel, hover tooltip and accessible name:
 
 | Preset | Visible here | Focused here | Hidden |
 |---|---|---|---|
-| Short (default) | open here | active here | hidden |
-| With Scratchpad | Scratchpad: open here | Scratchpad: active here | Scratchpad: hidden |
+| Short (default) | visible here | active here | hidden |
+| With Scratchpad | Scratchpad: visible here | Scratchpad: active here | Scratchpad: hidden |
 | Scratchpad ON / OFF | Scratchpad ON | Scratchpad ACTIVE | Scratchpad OFF |
 | Custom | your text | your text | your text |
 

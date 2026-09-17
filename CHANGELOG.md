@@ -12,6 +12,12 @@
   into all 30 languages.
 - Add full hint-budget coverage across two widgets and cold starts at 50 and
   100 displays. Manual re-enabling remains unlimited.
+- Make the updates switch smaller and dimmer, beside the help icon. Require
+  confirmation before turning updates off, with translated guidance in the dialog.
+- Use “visible here” and “visible on …” for visibility states, with matching
+  translations. Preserve custom labels and the separate active/focused state.
+- Record the phase and reason of a failed visibility action locally, without
+  window titles or raw compositor responses, to help diagnose intermittent errors.
 
 ## 0.10.0 — 2026-09-17
 

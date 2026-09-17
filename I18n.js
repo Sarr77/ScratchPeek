@@ -80,7 +80,7 @@ function options(code, detected) {
 
 var catalogs = {
   en: {
-    empty: "empty", hidden: "hidden", here: "open here", active: "active here", elsewhere: "open on {monitor}", unknown: "status unknown",
+    empty: "empty", hidden: "hidden", here: "visible here", active: "active here", elsewhere: "visible on {monitor}", unknown: "status unknown",
     windows: "Windows", grouped: "tab", unnamed: "Untitled window",
     emptyHelp: "Send a window with Super + Alt + S.\nSuper + S shows and hides the scratchpad.",
     shortcutNote: "Shortcuts refer to Omarchy’s default bindings.", customHelp: "Move a window to this special workspace in Hyprland.",
@@ -91,7 +91,7 @@ var catalogs = {
     saveError: "Language could not be saved. Try again.", compact: "Compact label"
   },
   pl: {
-    empty: "pusty", hidden: "ukryty", here: "otwarty tutaj", active: "aktywny tutaj", elsewhere: "otwarty na {monitor}", unknown: "stan nieznany",
+    empty: "pusty", hidden: "ukryty", here: "widoczny tutaj", active: "aktywny tutaj", elsewhere: "widoczny na {monitor}", unknown: "stan nieznany",
     windows: "Okna", grouped: "zakładka", unnamed: "Okno bez tytułu",
     emptyHelp: "Przenieś okno skrótem Super + Alt + S.\nSuper + S pokazuje i chowa scratchpad.",
     shortcutNote: "Skróty dotyczą domyślnej konfiguracji Omarchy.", customHelp: "Przenieś okno do tego specjalnego pulpitu w Hyprlandzie.",
@@ -102,7 +102,7 @@ var catalogs = {
     saveError: "Nie udało się zapisać języka. Spróbuj ponownie.", compact: "Krótka etykieta"
   },
   de: {
-    empty: "leer", hidden: "verborgen", here: "hier geöffnet", active: "hier aktiv", elsewhere: "geöffnet auf {monitor}", unknown: "Status unbekannt",
+    empty: "leer", hidden: "verborgen", here: "hier sichtbar", active: "hier aktiv", elsewhere: "sichtbar auf {monitor}", unknown: "Status unbekannt",
     windows: "Fenster", grouped: "Tab", unnamed: "Fenster ohne Titel",
     emptyHelp: "Fenster mit Super + Alt + S verschieben.\nSuper + S zeigt und verbirgt den Scratchpad.",
     shortcutNote: "Die Kürzel gelten für die Standardkonfiguration von Omarchy.", customHelp: "Verschiebe ein Fenster auf diesen speziellen Arbeitsbereich in Hyprland.",
@@ -113,7 +113,7 @@ var catalogs = {
     saveError: "Die Sprache konnte nicht gespeichert werden. Versuche es erneut.", compact: "Kompakte Beschriftung"
   },
   fr: {
-    empty: "vide", hidden: "masqué", here: "ouvert ici", active: "actif ici", elsewhere: "ouvert sur {monitor}", unknown: "état inconnu",
+    empty: "vide", hidden: "masqué", here: "visible ici", active: "actif ici", elsewhere: "visible sur {monitor}", unknown: "état inconnu",
     windows: "Fenêtres", grouped: "onglet", unnamed: "Fenêtre sans titre",
     emptyHelp: "Déplacez une fenêtre avec Super + Alt + S.\nSuper + S affiche et masque le scratchpad.",
     shortcutNote: "Ces raccourcis correspondent à la configuration par défaut d’Omarchy.", customHelp: "Déplacez une fenêtre vers cet espace de travail spécial dans Hyprland.",
@@ -124,7 +124,7 @@ var catalogs = {
     saveError: "Impossible d’enregistrer la langue. Réessayez.", compact: "Libellé compact"
   },
   es: {
-    empty: "vacío", hidden: "oculto", here: "abierto aquí", active: "activo aquí", elsewhere: "abierto en {monitor}", unknown: "estado desconocido",
+    empty: "vacío", hidden: "oculto", here: "visible aquí", active: "activo aquí", elsewhere: "visible en {monitor}", unknown: "estado desconocido",
     windows: "Ventanas", grouped: "pestaña", unnamed: "Ventana sin título",
     emptyHelp: "Mueve una ventana con Super + Alt + S.\nSuper + S muestra y oculta el scratchpad.",
     shortcutNote: "Los atajos corresponden a la configuración predeterminada de Omarchy.", customHelp: "Mueve una ventana a este espacio de trabajo especial en Hyprland.",
@@ -135,7 +135,7 @@ var catalogs = {
     saveError: "No se pudo guardar el idioma. Vuelve a intentarlo.", compact: "Etiqueta compacta"
   },
   "pt-BR": {
-    empty: "vazio", hidden: "oculto", here: "aberto aqui", active: "ativo aqui", elsewhere: "aberto em {monitor}", unknown: "estado desconhecido",
+    empty: "vazio", hidden: "oculto", here: "visível aqui", active: "ativo aqui", elsewhere: "visível em {monitor}", unknown: "estado desconhecido",
     windows: "Janelas", grouped: "aba", unnamed: "Janela sem título",
     emptyHelp: "Mova uma janela com Super + Alt + S.\nSuper + S mostra e oculta o scratchpad.",
     shortcutNote: "Os atalhos correspondem à configuração padrão do Omarchy.", customHelp: "Mova uma janela para este espaço de trabalho especial no Hyprland.",
@@ -146,7 +146,7 @@ var catalogs = {
     saveError: "Não foi possível salvar o idioma. Tente novamente.", compact: "Rótulo compacto"
   },
   "pt-PT": {
-    empty: "vazio", hidden: "oculto", here: "aberto aqui", active: "ativo aqui", elsewhere: "aberto em {monitor}", unknown: "estado desconhecido",
+    empty: "vazio", hidden: "oculto", here: "visível aqui", active: "ativo aqui", elsewhere: "visível em {monitor}", unknown: "estado desconhecido",
     windows: "Janelas", grouped: "separador", unnamed: "Janela sem título",
     emptyHelp: "Mova uma janela com Super + Alt + S.\nSuper + S mostra e oculta o scratchpad.",
     shortcutNote: "Os atalhos correspondem à configuração predefinida do Omarchy.", customHelp: "Mova uma janela para este espaço de trabalho especial no Hyprland.",
@@ -157,7 +157,7 @@ var catalogs = {
     saveError: "Não foi possível guardar o idioma. Tente novamente.", compact: "Etiqueta compacta"
   },
   it: {
-    empty: "vuoto", hidden: "nascosto", here: "aperto qui", active: "attivo qui", elsewhere: "aperto su {monitor}", unknown: "stato sconosciuto",
+    empty: "vuoto", hidden: "nascosto", here: "visibile qui", active: "attivo qui", elsewhere: "visibile su {monitor}", unknown: "stato sconosciuto",
     windows: "Finestre", grouped: "scheda", unnamed: "Finestra senza titolo",
     emptyHelp: "Sposta una finestra con Super + Alt + S.\nSuper + S mostra e nasconde lo scratchpad.",
     shortcutNote: "Le scorciatoie si riferiscono alla configurazione predefinita di Omarchy.", customHelp: "Sposta una finestra in questo spazio di lavoro speciale in Hyprland.",
@@ -168,7 +168,7 @@ var catalogs = {
     saveError: "Impossibile salvare la lingua. Riprova.", compact: "Etichetta compatta"
   },
   nl: {
-    empty: "leeg", hidden: "verborgen", here: "hier geopend", active: "hier actief", elsewhere: "geopend op {monitor}", unknown: "status onbekend",
+    empty: "leeg", hidden: "verborgen", here: "hier zichtbaar", active: "hier actief", elsewhere: "zichtbaar op {monitor}", unknown: "status onbekend",
     windows: "Vensters", grouped: "tabblad", unnamed: "Venster zonder titel",
     emptyHelp: "Verplaats een venster met Super + Alt + S.\nSuper + S toont en verbergt het scratchpad.",
     shortcutNote: "De sneltoetsen gelden voor de standaardconfiguratie van Omarchy.", customHelp: "Verplaats een venster naar dit speciale werkblad in Hyprland.",
@@ -179,7 +179,7 @@ var catalogs = {
     saveError: "De taal kon niet worden opgeslagen. Probeer het opnieuw.", compact: "Compact label"
   },
   da: {
-    empty: "tom", hidden: "skjult", here: "åben her", active: "aktiv her", elsewhere: "åben på {monitor}", unknown: "ukendt status",
+    empty: "tom", hidden: "skjult", here: "synlig her", active: "aktiv her", elsewhere: "synlig på {monitor}", unknown: "ukendt status",
     windows: "Vinduer", grouped: "fane", unnamed: "Vindue uden titel",
     emptyHelp: "Flyt et vindue med Super + Alt + S.\nSuper + S viser og skjuler scratchpad.",
     shortcutNote: "Genvejene gælder Omarchys standardopsætning.", customHelp: "Flyt et vindue til dette særlige arbejdsområde i Hyprland.",
@@ -190,7 +190,7 @@ var catalogs = {
     saveError: "Sproget kunne ikke gemmes. Prøv igen.", compact: "Kompakt etiket"
   },
   nb: {
-    empty: "tom", hidden: "skjult", here: "åpen her", active: "aktiv her", elsewhere: "åpen på {monitor}", unknown: "ukjent status",
+    empty: "tom", hidden: "skjult", here: "synlig her", active: "aktiv her", elsewhere: "synlig på {monitor}", unknown: "ukjent status",
     windows: "Vinduer", grouped: "fane", unnamed: "Vindu uten tittel",
     emptyHelp: "Flytt et vindu med Super + Alt + S.\nSuper + S viser og skjuler scratchpad.",
     shortcutNote: "Snarveiene gjelder standardoppsettet i Omarchy.", customHelp: "Flytt et vindu til dette spesielle arbeidsområdet i Hyprland.",
@@ -201,7 +201,7 @@ var catalogs = {
     saveError: "Språket kunne ikke lagres. Prøv igjen.", compact: "Kompakt etikett"
   },
   fi: {
-    empty: "tyhjä", hidden: "piilotettu", here: "avoinna tässä", active: "aktiivinen tässä", elsewhere: "avoinna näytöllä {monitor}", unknown: "tila tuntematon",
+    empty: "tyhjä", hidden: "piilotettu", here: "näkyvissä tässä", active: "aktiivinen tässä", elsewhere: "näkyvissä näytöllä {monitor}", unknown: "tila tuntematon",
     windows: "Ikkunat", grouped: "välilehti", unnamed: "Nimetön ikkuna",
     emptyHelp: "Siirrä ikkuna näppäimillä Super + Alt + S.\nSuper + S näyttää ja piilottaa scratchpadin.",
     shortcutNote: "Pikanäppäimet koskevat Omarchyn oletusasetuksia.", customHelp: "Siirrä ikkuna tähän Hyprlandin erityistyötilaan.",
@@ -212,7 +212,7 @@ var catalogs = {
     saveError: "Kielen tallennus epäonnistui. Yritä uudelleen.", compact: "Tiivis teksti"
   },
   cs: {
-    empty: "prázdný", hidden: "skrytý", here: "otevřený zde", active: "aktivní zde", elsewhere: "otevřený na {monitor}", unknown: "neznámý stav",
+    empty: "prázdný", hidden: "skrytý", here: "viditelný zde", active: "aktivní zde", elsewhere: "viditelný na {monitor}", unknown: "neznámý stav",
     windows: "Okna", grouped: "karta", unnamed: "Okno bez názvu",
     emptyHelp: "Přesuňte okno pomocí Super + Alt + S.\nSuper + S zobrazí a skryje scratchpad.",
     shortcutNote: "Zkratky odpovídají výchozímu nastavení Omarchy.", customHelp: "Přesuňte okno na tuto speciální pracovní plochu v Hyprlandu.",
@@ -223,7 +223,7 @@ var catalogs = {
     saveError: "Jazyk se nepodařilo uložit. Zkuste to znovu.", compact: "Krátký popisek"
   },
   sk: {
-    empty: "prázdny", hidden: "skrytý", here: "otvorený tu", active: "aktívny tu", elsewhere: "otvorený na {monitor}", unknown: "neznámy stav",
+    empty: "prázdny", hidden: "skrytý", here: "viditeľný tu", active: "aktívny tu", elsewhere: "viditeľný na {monitor}", unknown: "neznámy stav",
     windows: "Okná", grouped: "karta", unnamed: "Okno bez názvu",
     emptyHelp: "Presuňte okno pomocou Super + Alt + S.\nSuper + S zobrazí a skryje scratchpad.",
     shortcutNote: "Skratky zodpovedajú predvolenému nastaveniu Omarchy.", customHelp: "Presuňte okno na túto špeciálnu pracovnú plochu v Hyprlande.",
@@ -234,7 +234,7 @@ var catalogs = {
     saveError: "Jazyk sa nepodarilo uložiť. Skúste to znova.", compact: "Krátky popis"
   },
   uk: {
-    empty: "порожній", hidden: "прихований", here: "відкритий тут", active: "активний тут", elsewhere: "відкритий на {monitor}", unknown: "стан невідомий",
+    empty: "порожній", hidden: "прихований", here: "видимий тут", active: "активний тут", elsewhere: "видимий на {monitor}", unknown: "стан невідомий",
     windows: "Вікна", grouped: "вкладка", unnamed: "Вікно без назви",
     emptyHelp: "Перемістіть вікно за допомогою Super + Alt + S.\nSuper + S показує та приховує scratchpad.",
     shortcutNote: "Скорочення відповідають типовим налаштуванням Omarchy.", customHelp: "Перемістіть вікно на цей спеціальний робочий простір у Hyprland.",
@@ -245,7 +245,7 @@ var catalogs = {
     saveError: "Не вдалося зберегти мову. Спробуйте ще раз.", compact: "Короткий підпис"
   },
   ru: {
-    empty: "пустой", hidden: "скрыт", here: "открыт здесь", active: "активен здесь", elsewhere: "открыт на {monitor}", unknown: "состояние неизвестно",
+    empty: "пустой", hidden: "скрыт", here: "виден здесь", active: "активен здесь", elsewhere: "виден на {monitor}", unknown: "состояние неизвестно",
     windows: "Окна", grouped: "вкладка", unnamed: "Окно без названия",
     emptyHelp: "Переместите окно с помощью Super + Alt + S.\nSuper + S показывает и скрывает scratchpad.",
     shortcutNote: "Сочетания клавиш соответствуют стандартным настройкам Omarchy.", customHelp: "Переместите окно на это специальное рабочее пространство в Hyprland.",
@@ -256,7 +256,7 @@ var catalogs = {
     saveError: "Не удалось сохранить язык. Попробуйте ещё раз.", compact: "Короткая подпись"
   },
   tr: {
-    empty: "boş", hidden: "gizli", here: "burada açık", active: "burada etkin", elsewhere: "{monitor} üzerinde açık", unknown: "durum bilinmiyor",
+    empty: "boş", hidden: "gizli", here: "burada görünür", active: "burada etkin", elsewhere: "{monitor} üzerinde görünür", unknown: "durum bilinmiyor",
     windows: "Pencereler", grouped: "sekme", unnamed: "Başlıksız pencere",
     emptyHelp: "Super + Alt + S ile bir pencere taşıyın.\nSuper + S, scratchpad’i gösterir ve gizler.",
     shortcutNote: "Kısayollar Omarchy’nin varsayılan ayarlarına aittir.", customHelp: "Hyprland’deki bu özel çalışma alanına bir pencere taşıyın.",
@@ -267,7 +267,7 @@ var catalogs = {
     saveError: "Dil kaydedilemedi. Tekrar deneyin.", compact: "Kısa etiket"
   },
   ro: {
-    empty: "gol", hidden: "ascuns", here: "deschis aici", active: "activ aici", elsewhere: "deschis pe {monitor}", unknown: "stare necunoscută",
+    empty: "gol", hidden: "ascuns", here: "vizibil aici", active: "activ aici", elsewhere: "vizibil pe {monitor}", unknown: "stare necunoscută",
     windows: "Ferestre", grouped: "filă", unnamed: "Fereastră fără titlu",
     emptyHelp: "Mută o fereastră cu Super + Alt + S.\nSuper + S afișează și ascunde scratchpad-ul.",
     shortcutNote: "Scurtăturile corespund configurației implicite Omarchy.", customHelp: "Mută o fereastră în acest spațiu de lucru special din Hyprland.",
@@ -278,7 +278,7 @@ var catalogs = {
     saveError: "Limba nu a putut fi salvată. Încearcă din nou.", compact: "Etichetă compactă"
   },
   hu: {
-    empty: "üres", hidden: "rejtett", here: "itt nyitva", active: "itt aktív", elsewhere: "megnyitva: {monitor}", unknown: "ismeretlen állapot",
+    empty: "üres", hidden: "rejtett", here: "itt látható", active: "itt aktív", elsewhere: "látható itt: {monitor}", unknown: "ismeretlen állapot",
     windows: "Ablakok", grouped: "lap", unnamed: "Névtelen ablak",
     emptyHelp: "Ablak áthelyezése: Super + Alt + S.\nA Super + S megjeleníti és elrejti a scratchpadet.",
     shortcutNote: "A gyorsbillentyűk az Omarchy alapbeállításaira vonatkoznak.", customHelp: "Helyezz át egy ablakot erre a speciális Hyprland-munkaterületre.",
@@ -289,7 +289,7 @@ var catalogs = {
     saveError: "A nyelvet nem sikerült menteni. Próbáld újra.", compact: "Rövid felirat"
   },
   el: {
-    empty: "κενό", hidden: "κρυφό", here: "ανοιχτό εδώ", active: "ενεργό εδώ", elsewhere: "ανοιχτό στην {monitor}", unknown: "άγνωστη κατάσταση",
+    empty: "κενό", hidden: "κρυφό", here: "ορατό εδώ", active: "ενεργό εδώ", elsewhere: "ορατό στην οθόνη {monitor}", unknown: "άγνωστη κατάσταση",
     windows: "Παράθυρα", grouped: "καρτέλα", unnamed: "Παράθυρο χωρίς τίτλο",
     emptyHelp: "Μετακινήστε ένα παράθυρο με Super + Alt + S.\nΤο Super + S εμφανίζει και κρύβει το scratchpad.",
     shortcutNote: "Οι συντομεύσεις αντιστοιχούν στις προεπιλογές του Omarchy.", customHelp: "Μετακινήστε ένα παράθυρο σε αυτόν τον ειδικό χώρο εργασίας του Hyprland.",
@@ -300,7 +300,7 @@ var catalogs = {
     saveError: "Δεν ήταν δυνατή η αποθήκευση της γλώσσας. Δοκιμάστε ξανά.", compact: "Σύντομη ετικέτα"
   },
   ar: {
-    empty: "فارغ", hidden: "مخفي", here: "مفتوح هنا", active: "نشط هنا", elsewhere: "مفتوح على {monitor}", unknown: "الحالة غير معروفة",
+    empty: "فارغ", hidden: "مخفي", here: "ظاهر هنا", active: "نشط هنا", elsewhere: "ظاهر على {monitor}", unknown: "الحالة غير معروفة",
     windows: "النوافذ", grouped: "علامة تبويب", unnamed: "نافذة بلا عنوان",
     emptyHelp: "انقل نافذة باستخدام ⁦Super + Alt + S⁩.\nيُظهر ⁦Super + S⁩ مساحة Scratchpad ويخفيها.",
     shortcutNote: "تشير الاختصارات إلى إعدادات Omarchy الافتراضية.", customHelp: "انقل نافذة إلى مساحة العمل الخاصة هذه في Hyprland.",
@@ -311,7 +311,7 @@ var catalogs = {
     saveError: "تعذر حفظ اللغة. حاول مجددًا.", compact: "تسمية مختصرة"
   },
   hi: {
-    empty: "खाली", hidden: "छिपा हुआ", here: "यहाँ खुला", active: "यहाँ सक्रिय", elsewhere: "{monitor} पर खुला", unknown: "स्थिति अज्ञात",
+    empty: "खाली", hidden: "छिपा हुआ", here: "यहाँ दिखाई दे रहा है", active: "यहाँ सक्रिय", elsewhere: "{monitor} पर दिखाई दे रहा है", unknown: "स्थिति अज्ञात",
     windows: "विंडो", grouped: "टैब", unnamed: "बिना शीर्षक की विंडो",
     emptyHelp: "Super + Alt + S से विंडो भेजें।\nSuper + S से स्क्रैचपैड दिखाएँ या छिपाएँ।",
     shortcutNote: "ये शॉर्टकट Omarchy की डिफ़ॉल्ट सेटिंग के अनुसार हैं।", customHelp: "Hyprland के इस विशेष कार्यक्षेत्र में एक विंडो भेजें।",
@@ -322,7 +322,7 @@ var catalogs = {
     saveError: "भाषा सहेजी नहीं जा सकी। फिर कोशिश करें।", compact: "छोटा लेबल"
   },
   id: {
-    empty: "kosong", hidden: "tersembunyi", here: "terbuka di sini", active: "aktif di sini", elsewhere: "terbuka di {monitor}", unknown: "status tidak diketahui",
+    empty: "kosong", hidden: "tersembunyi", here: "terlihat di sini", active: "aktif di sini", elsewhere: "terlihat di {monitor}", unknown: "status tidak diketahui",
     windows: "Jendela", grouped: "tab", unnamed: "Jendela tanpa judul",
     emptyHelp: "Pindahkan jendela dengan Super + Alt + S.\nSuper + S menampilkan dan menyembunyikan scratchpad.",
     shortcutNote: "Pintasan mengacu pada pengaturan bawaan Omarchy.", customHelp: "Pindahkan jendela ke ruang kerja khusus ini di Hyprland.",
@@ -333,7 +333,7 @@ var catalogs = {
     saveError: "Bahasa tidak dapat disimpan. Coba lagi.", compact: "Label ringkas"
   },
   vi: {
-    empty: "trống", hidden: "đang ẩn", here: "mở ở đây", active: "đang dùng ở đây", elsewhere: "mở trên {monitor}", unknown: "không rõ trạng thái",
+    empty: "trống", hidden: "đang ẩn", here: "hiển thị ở đây", active: "đang dùng ở đây", elsewhere: "hiển thị trên {monitor}", unknown: "không rõ trạng thái",
     windows: "Cửa sổ", grouped: "thẻ", unnamed: "Cửa sổ không có tiêu đề",
     emptyHelp: "Chuyển cửa sổ bằng Super + Alt + S.\nSuper + S hiện và ẩn scratchpad.",
     shortcutNote: "Các phím tắt theo cấu hình mặc định của Omarchy.", customHelp: "Chuyển cửa sổ vào không gian làm việc đặc biệt này trong Hyprland.",
@@ -344,7 +344,7 @@ var catalogs = {
     saveError: "Không thể lưu ngôn ngữ. Hãy thử lại.", compact: "Nhãn ngắn gọn"
   },
   th: {
-    empty: "ว่าง", hidden: "ซ่อนอยู่", here: "เปิดที่นี่", active: "ใช้งานที่นี่", elsewhere: "เปิดบน {monitor}", unknown: "ไม่ทราบสถานะ",
+    empty: "ว่าง", hidden: "ซ่อนอยู่", here: "แสดงอยู่ที่นี่", active: "ใช้งานที่นี่", elsewhere: "แสดงอยู่บน {monitor}", unknown: "ไม่ทราบสถานะ",
     windows: "หน้าต่าง", grouped: "แท็บ", unnamed: "หน้าต่างไม่มีชื่อ",
     emptyHelp: "ย้ายหน้าต่างด้วย Super + Alt + S\nSuper + S ใช้แสดงและซ่อน scratchpad",
     shortcutNote: "ปุ่มลัดเหล่านี้อ้างอิงการตั้งค่าเริ่มต้นของ Omarchy", customHelp: "ย้ายหน้าต่างไปยังพื้นที่ทำงานพิเศษนี้ใน Hyprland",
@@ -377,7 +377,7 @@ var catalogs = {
     saveError: "언어를 저장할 수 없습니다. 다시 시도하세요.", compact: "짧은 레이블"
   },
   "zh-CN": {
-    empty: "空", hidden: "已隐藏", here: "在此显示", active: "正在此处使用", elsewhere: "在 {monitor} 显示", unknown: "状态未知",
+    empty: "空", hidden: "已隐藏", here: "此处可见", active: "正在此处使用", elsewhere: "在 {monitor} 上可见", unknown: "状态未知",
     windows: "窗口", grouped: "标签页", unnamed: "无标题窗口",
     emptyHelp: "按 Super + Alt + S 移入窗口。\n按 Super + S 显示或隐藏暂存区。",
     shortcutNote: "这些快捷键基于 Omarchy 的默认设置。", customHelp: "将窗口移至 Hyprland 的此特殊工作区。",
@@ -388,7 +388,7 @@ var catalogs = {
     saveError: "无法保存语言，请重试。", compact: "简短标签"
   },
   "zh-TW": {
-    empty: "空", hidden: "已隱藏", here: "在此顯示", active: "正在此處使用", elsewhere: "在 {monitor} 顯示", unknown: "狀態不明",
+    empty: "空", hidden: "已隱藏", here: "此處可見", active: "正在此處使用", elsewhere: "在 {monitor} 上可見", unknown: "狀態不明",
     windows: "視窗", grouped: "分頁", unnamed: "無標題視窗",
     emptyHelp: "按 Super + Alt + S 移入視窗。\n按 Super + S 顯示或隱藏暫存區。",
     shortcutNote: "這些快捷鍵依據 Omarchy 的預設設定。", customHelp: "將視窗移至 Hyprland 的此特殊工作區。",
@@ -399,7 +399,7 @@ var catalogs = {
     saveError: "無法儲存語言，請重試。", compact: "簡短標籤"
   },
   sv: {
-    empty: "tom", hidden: "dold", here: "öppen här", active: "aktiv här", elsewhere: "öppen på {monitor}", unknown: "okänd status",
+    empty: "tom", hidden: "dold", here: "synlig här", active: "aktiv här", elsewhere: "synlig på {monitor}", unknown: "okänd status",
     windows: "Fönster", grouped: "flik", unnamed: "Fönster utan titel",
     emptyHelp: "Flytta ett fönster med Super + Alt + S.\nSuper + S visar och döljer scratchpad.",
     shortcutNote: "Genvägarna gäller Omarchys standardinställningar.", customHelp: "Flytta ett fönster till denna särskilda arbetsyta i Hyprland.",
@@ -922,7 +922,7 @@ Object.keys(settingsErrors).forEach(function(code) { catalogs[code].settingsErro
 var updateWords = {
   "en": [
     "Automatic updates",
-    "Check once a day and install stable releases."
+    "Check once a day to install stable releases."
   ],
   "pl": [
     "Automatyczne aktualizacje",
@@ -1079,3 +1079,161 @@ var updateErrors = {
   "zh-TW": "更新失敗。明天會重試。"
 };
 Object.keys(updateErrors).forEach(function(code) { catalogs[code].updateFailed = updateErrors[code]; });
+
+var updateConfirmationWords = {
+  "en": [
+    "Turn off automatic updates?",
+    "Don't turn this off if you value a stable system",
+    "Turn off"
+  ],
+  "pl": [
+    "Wyłączyć automatyczne aktualizacje?",
+    "Nie wyłączaj tej opcji, jeśli zależy Ci na stabilnym systemie",
+    "Wyłącz"
+  ],
+  "de": [
+    "Automatische Updates ausschalten?",
+    "Schalte dies nicht aus, wenn dir ein stabiles System wichtig ist",
+    "Ausschalten"
+  ],
+  "fr": [
+    "Désactiver les mises à jour automatiques ?",
+    "Ne désactivez pas cette option si vous tenez à la stabilité de votre système",
+    "Désactiver"
+  ],
+  "es": [
+    "¿Desactivar las actualizaciones automáticas?",
+    "No desactives esta opción si valoras la estabilidad del sistema",
+    "Desactivar"
+  ],
+  "pt-BR": [
+    "Desativar as atualizações automáticas?",
+    "Não desative esta opção se você valoriza um sistema estável",
+    "Desativar"
+  ],
+  "pt-PT": [
+    "Desativar as atualizações automáticas?",
+    "Não desative esta opção se valoriza um sistema estável",
+    "Desativar"
+  ],
+  "it": [
+    "Disattivare gli aggiornamenti automatici?",
+    "Non disattivare questa opzione se desideri un sistema stabile",
+    "Disattiva"
+  ],
+  "nl": [
+    "Automatische updates uitschakelen?",
+    "Schakel dit niet uit als je een stabiel systeem belangrijk vindt",
+    "Uitschakelen"
+  ],
+  "sv": [
+    "Stänga av automatiska uppdateringar?",
+    "Stäng inte av detta om du värdesätter ett stabilt system",
+    "Stäng av"
+  ],
+  "da": [
+    "Slå automatiske opdateringer fra?",
+    "Slå ikke dette fra, hvis du værdsætter et stabilt system",
+    "Slå fra"
+  ],
+  "nb": [
+    "Slå av automatiske oppdateringer?",
+    "Ikke slå av dette hvis du verdsetter et stabilt system",
+    "Slå av"
+  ],
+  "fi": [
+    "Poistetaanko automaattiset päivitykset käytöstä?",
+    "Älä poista tätä käytöstä, jos arvostat vakaata järjestelmää",
+    "Poista käytöstä"
+  ],
+  "cs": [
+    "Vypnout automatické aktualizace?",
+    "Tuto možnost nevypínejte, pokud vám záleží na stabilním systému",
+    "Vypnout"
+  ],
+  "sk": [
+    "Vypnúť automatické aktualizácie?",
+    "Túto možnosť nevypínajte, ak vám záleží na stabilnom systéme",
+    "Vypnúť"
+  ],
+  "uk": [
+    "Вимкнути автоматичні оновлення?",
+    "Не вимикайте цю опцію, якщо цінуєте стабільність системи",
+    "Вимкнути"
+  ],
+  "ru": [
+    "Отключить автоматические обновления?",
+    "Не отключайте эту опцию, если цените стабильность системы",
+    "Отключить"
+  ],
+  "tr": [
+    "Otomatik güncellemeler kapatılsın mı?",
+    "Kararlı bir sisteme önem veriyorsanız bunu kapatmayın",
+    "Kapat"
+  ],
+  "ro": [
+    "Dezactivați actualizările automate?",
+    "Nu dezactivați această opțiune dacă apreciați un sistem stabil",
+    "Dezactivează"
+  ],
+  "hu": [
+    "Kikapcsolja az automatikus frissítéseket?",
+    "Ne kapcsolja ki ezt, ha fontos Önnek a stabil rendszer",
+    "Kikapcsolás"
+  ],
+  "el": [
+    "Απενεργοποίηση αυτόματων ενημερώσεων;",
+    "Μην το απενεργοποιήσετε αν εκτιμάτε τη σταθερότητα του συστήματος",
+    "Απενεργοποίηση"
+  ],
+  "ar": [
+    "هل تريد إيقاف التحديثات التلقائية؟",
+    "لا توقف هذا الخيار إذا كنت تهتم باستقرار النظام",
+    "إيقاف"
+  ],
+  "hi": [
+    "अपने आप अपडेट बंद करें?",
+    "अगर आप एक स्थिर सिस्टम चाहते हैं, तो इसे बंद न करें",
+    "बंद करें"
+  ],
+  "id": [
+    "Matikan pembaruan otomatis?",
+    "Jangan matikan opsi ini jika Anda mengutamakan sistem yang stabil",
+    "Matikan"
+  ],
+  "vi": [
+    "Tắt cập nhật tự động?",
+    "Đừng tắt tùy chọn này nếu bạn coi trọng một hệ thống ổn định",
+    "Tắt"
+  ],
+  "th": [
+    "ปิดการอัปเดตอัตโนมัติหรือไม่",
+    "อย่าปิดตัวเลือกนี้หากคุณให้ความสำคัญกับความเสถียรของระบบ",
+    "ปิด"
+  ],
+  "ja": [
+    "自動更新をオフにしますか？",
+    "システムの安定性を重視するなら、オフにしないでください",
+    "オフにする"
+  ],
+  "ko": [
+    "자동 업데이트를 끄시겠습니까?",
+    "안정적인 시스템을 원한다면 이 옵션을 끄지 마세요",
+    "끄기"
+  ],
+  "zh-CN": [
+    "关闭自动更新？",
+    "如果你重视系统稳定性，请勿关闭此选项",
+    "关闭"
+  ],
+  "zh-TW": [
+    "關閉自動更新？",
+    "如果你重視系統穩定性，請勿關閉此選項",
+    "關閉"
+  ]
+};
+Object.keys(updateConfirmationWords).forEach(function(code) {
+  catalogs[code].updatesOffQuestion = updateConfirmationWords[code][0];
+  catalogs[code].updatesOffWarning = updateConfirmationWords[code][1];
+  catalogs[code].turnOffUpdates = updateConfirmationWords[code][2];
+});

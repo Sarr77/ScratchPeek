@@ -6,8 +6,8 @@ Mała wtyczka paska Omarchy. Autor: [Sarr](https://github.com/Sarr77).
 
 ![ScratchPeek — przykładowy widok wskaźnika i listy okien](../preview.png)
 
-ScratchPeek pokazuje liczbę okien i stan: **pusty**, **ukryty**, **otwarty tutaj**,
-**aktywny tutaj** lub **otwarty na innym monitorze**. Każda zakładka liczy się osobno.
+ScratchPeek pokazuje liczbę okien i stan: **pusty**, **ukryty**, **widoczny tutaj**,
+**aktywny tutaj** lub **widoczny na innym monitorze**. Każda zakładka liczy się osobno.
 To scratchpad **okien** pod Super + S, a nie historia skopiowanych tekstów.
 
 ## Instalacja
@@ -49,7 +49,8 @@ aktualizację, wyłączenie wtyczki i ponowną instalację.
 
 Automatyczne aktualizacje są domyślnie włączone. Podczas działania wtyczka
 sprawdza raz dziennie, czy na GitHubie jest nowe stabilne wydanie, i instaluje
-je w tle. Mały przełącznik **Automatyczne aktualizacje** w stopce pozwala je wyłączyć.
+je w tle. Mały przełącznik **Automatyczne aktualizacje** obok **?** w stopce
+pozwala je wyłączyć po potwierdzeniu. Ponowne włączenie wymaga jednego kliknięcia.
 Ustawienia pozostają zapisane. Błąd pobierania lub weryfikacji pozostawia
 dotychczasową wersję; kolejna próba odbędzie się następnego dnia.
 

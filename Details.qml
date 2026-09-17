@@ -55,6 +55,7 @@ Panel {
       editingAppearance = false;
       editingLabels = false;
       editingScaling = false;
+      updateConfirmation.opened = false;
     }
   }
   onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, updatesIndex)
@@ -69,7 +70,7 @@ Panel {
   function activateSelection() {
     if (!hostWidget || selectedIndex < 0) return;
     if (selectedIndex === hintsIndex) hostWidget.toggleHints();
-    else if (selectedIndex === updatesIndex) hostWidget.toggleUpdates();
+    else if (selectedIndex === updatesIndex) requestUpdatesToggle();
     else if (selectedIndex === labelsIndex) openLabels();
     else if (selectedIndex === scalingIndex) openScaling();
     else if (selectedIndex === appearanceIndex) openAppearance();
@@ -80,6 +81,11 @@ Panel {
       var win = scratchpadState.windows[Math.floor(selectedIndex / windowActionCount)];
       if (win) { if (transferSupported && selectedIndex % windowActionCount) openTransfer(win); else hostWidget.focusWindow(win.address); }
     }
+  }
+  function requestUpdatesToggle() {
+    if (!hostWidget) return;
+    if (hostWidget.autoUpdates) updateConfirmation.open();
+    else hostWidget.toggleUpdates();
   }
   function openTransfer(win) {
     if (!hostWidget || hostWidget.transferBusy) return;
@@ -181,7 +187,7 @@ Panel {
       Binding { target: catcher.QQC.Overlay.overlay; property: "transformOrigin"; value: Item.TopLeft; when: catcher.QQC.Overlay.overlay !== null }
       Binding { target: catcher.QQC.Overlay.overlay; property: "scale"; value: root.uiScale; when: catcher.QQC.Overlay.overlay !== null }
       anchors.fill: parent
-      blocked: languagePicker.popupOpen || addPicker.popupOpen || root.editing
+      blocked: languagePicker.popupOpen || addPicker.popupOpen || root.editing || updateConfirmation.opened
       onCloseRequested: root.close()
       onMoveRequested: function(dx, dy) {
         if (dx && root.selectedIndex >= 0 && root.selectedIndex < root.toggleIndex) {
@@ -194,6 +200,7 @@ Panel {
 
       Flickable {
         id: scroll
+        interactive: !updateConfirmation.opened
         // The scrollbar lives in the panel padding, so both content margins
         // stay equal whether scrolling is needed or not.
         width: parent.width / root.uiScale
@@ -716,11 +723,12 @@ Panel {
             Item {
               anchors.left: hintsToggle.right
               anchors.right: authorCredit.left
-              anchors.margins: Style.space(12)
+              anchors.margins: Style.space(8)
               height: parent.height
               UpdateSwitch {
                 id: updatesToggle
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
                 width: Math.min(implicitWidth, parent.width)
                 text: root.words.autoUpdates
                 checked: !root.hostWidget || root.hostWidget.autoUpdates
@@ -728,16 +736,32 @@ Panel {
                 accent: root.accent
                 hasCursor: root.selectedIndex === root.updatesIndex
                 onHovered: function(value) { selection.hover(root.updatesIndex, value); }
-                onClicked: if (root.hostWidget) root.hostWidget.toggleUpdates()
+                onClicked: root.requestUpdatesToggle()
                 PanelHint {
                   hostWidget: root.hostWidget
-                  requested: updatesToggle.pointerHovered
+                  requested: updatesToggle.pointerHovered && !updateConfirmation.opened
                   text: root.words.autoUpdatesHint
                   maximumWidth: scroll.width
                 }
               }
             }
           }
+        }
+      }
+      UpdateConfirmation {
+        id: updateConfirmation
+        width: catcher.width / root.uiScale
+        height: catcher.height / root.uiScale
+        scale: root.uiScale
+        transformOrigin: Item.TopLeft
+        words: root.words
+        rtl: root.rtl
+        foreground: root.barForeground
+        accent: root.accent
+        onCanceled: catcher.forceActiveFocus()
+        onConfirmed: {
+          if (root.hostWidget && root.hostWidget.autoUpdates) root.hostWidget.toggleUpdates();
+          catcher.forceActiveFocus();
         }
       }
     }

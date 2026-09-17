@@ -11,7 +11,7 @@ A small Omarchy bar widget by [Sarr](https://github.com/Sarr77).
 ScratchPeek keeps your scratchpad easy to find. See its windows, bring it to
 this monitor, or move a single window in or out — even when it belongs to a tab group.
 
-- **Know the state.** Empty, hidden, open here, active here, or open on another monitor.
+- **Know the state.** Empty, hidden, visible here, active here, or visible on another monitor.
 - **Find your window.** Preview apps on hover; open the panel for the full list.
 - **Make it yours.** Theme colors, a color picker, presets, readable scaling and your own labels.
 - **Feel at home.** 30 languages, automatic language detection and optional hints.
@@ -60,7 +60,8 @@ restarts, updates, disabling the widget and reinstalling it.
 
 Automatic updates are on by default. While ScratchPeek is running, it checks
 once a day for a newer stable GitHub release and installs it in the background.
-Turn **Automatic updates** off in the panel footer to keep your current version.
+The small **Automatic updates** switch sits beside **?** in the footer.
+Turning it off asks for confirmation; turning it back on takes one click.
 Your preferences stay saved. Downloads or validation failures leave the installed
 version in place; another check happens the next day.
 

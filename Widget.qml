@@ -309,6 +309,7 @@ BarWidget {
           preferencesReady: widget.settingsReady && Local.ScratchState.preferences.ready,
           toggleShortcut: widget.toggleShortcut,
           visibilityBusy: widget.visibilityBusy, visibilityError: widget.visibilityError,
+          visibilityLastFailure: Local.ScratchState.visibility.lastFailure,
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,
           themeAccent: String(widget.themeAccent), themeId: widget.themeId, effectiveBarScale: widget.effectiveBarScale,
           underlineColor: String(widget.underlineColor), opened: widget.opened,

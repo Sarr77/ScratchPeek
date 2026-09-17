@@ -62,6 +62,7 @@ ShellRoot {
 
           suite.start(); suite.answer("not json");
           suite.check(!control.busy && control.error === "visibilityError", "bad IPC data fails closed");
+          suite.check(control.lastFailure.reason === "invalid-reply" && control.lastFailure.phase === "snapshot", "malformed snapshot has a precise diagnostic without raw window data");
           suite.start(); suite.answer([]);
           suite.check(!control.busy, "removed monitor fails closed");
           suite.start(); suite.answer(suite.snapshot("special:scratchpad")); suite.answer("compositor error");
@@ -69,6 +70,7 @@ ShellRoot {
           suite.start(); suite.answer(suite.snapshot("special:scratchpad")); suite.answer("ok");
           suite.answer(suite.snapshot("", "3"));
           suite.check(!control.busy && control.error !== "", "workspace change aborts acknowledgment");
+          suite.check(control.lastFailure.reason === "context-changed" && control.lastFailure.phase === "verify", "changed workspace has a distinct diagnostic");
 
           suite.start(); var oldToken = control.generation; control.fail(); suite.start();
           suite.answer(suite.snapshot("special:scratchpad"), 0, oldToken);
@@ -96,6 +98,7 @@ ShellRoot {
           suite.start(); suite.stage = 1;
         } else if (suite.stage === 1 && !control.busy) {
           suite.check(control.error === "visibilityError", "missing IPC reply times out and unlocks");
+          suite.check(control.lastFailure.reason === "timeout" && control.lastFailure.elapsedMs >= 2500, "timeout records its phase and duration");
           suite.start(); suite.answer(suite.snapshot("special:scratchpad")); suite.answer("ok");
           suite.stage = 2;
         } else if (suite.stage === 2) {

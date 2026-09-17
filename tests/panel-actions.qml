@@ -23,6 +23,14 @@ ShellRoot {
   }
   function hover(item) { events.mouseMove(item,item.width/2,item.height/2,0,Qt.NoButton,Qt.NoModifier); }
   function leave() { events.mouseMove(window.contentItem,810,470,0,Qt.NoButton,Qt.NoModifier); }
+  function findControl(item, name) {
+    if (item.objectName === name) return item;
+    for (var i = 0; i < item.children.length; i++) {
+      var found = findControl(item.children[i], name);
+      if (found) return found;
+    }
+    return null;
+  }
   function visibleTip(item) {
     for (var i = 0; i < item.data.length; i++) {
       var child = item.data[i];
@@ -78,6 +86,29 @@ ShellRoot {
         hintText: I18n.words("en").quickExtractHint
         onClicked: testRoot.normalClicks++
         onQuickMove: testRoot.quickMoves++
+      }
+      Plugin.UpdateSwitch {
+        id: updatesControl
+        x: 220; y: 160
+        text: I18n.words("en").autoUpdates
+        checked: widgetA.autoUpdates
+        onClicked: {
+          if (widgetA.autoUpdates) confirmation.open();
+          else widgetA.toggleUpdates();
+        }
+      }
+    }
+    Plugin.UpdateConfirmation {
+      id: confirmation
+      width: window.width / testRoot.uiScale
+      height: window.height / testRoot.uiScale
+      scale: testRoot.uiScale
+      transformOrigin: Item.TopLeft
+      words: I18n.words("en")
+      onCanceled: updatesControl.forceActiveFocus()
+      onConfirmed: {
+        if (widgetA.autoUpdates) widgetA.toggleUpdates();
+        updatesControl.forceActiveFocus();
       }
     }
   }
@@ -195,6 +226,43 @@ ShellRoot {
           widgetA.toggleUpdates();
           updater.check([widgetA,widgetB], now + 86400);
           testRoot.check(launches === 2, "next day starts one new check when enabled");
+          testRoot.check(I18n.words("en").autoUpdatesHint === "Check once a day to install stable releases.", "hover uses the requested short wording");
+          testRoot.check(confirmation.words.updatesOffWarning === "Don't turn this off if you value a stable system", "warning appears in confirmation only");
+          testRoot.click(updatesControl,Qt.NoModifier); break;
+        case 21:
+          testRoot.check(confirmation.opened && widgetA.autoUpdates && widgetB.autoUpdates, "opening confirmation never disables updates");
+          if (Quickshell.env("SCRATCHPEEK_UPDATE_CONFIRMATION_IMAGE"))
+            confirmation.grabToImage(function(result) { result.saveToFile(Quickshell.env("SCRATCHPEEK_UPDATE_CONFIRMATION_IMAGE")); });
+          events.keyClick(Qt.Key_Escape,Qt.NoModifier,0);
+          testRoot.check(!confirmation.opened && widgetA.autoUpdates, "Escape cancels without saving an off value");
+          updatesControl.forceActiveFocus(); events.keyClick(Qt.Key_Return,Qt.NoModifier,0); break;
+        case 22:
+          testRoot.check(confirmation.opened && widgetA.autoUpdates, "keyboard also requires confirmation");
+          events.keyClick(Qt.Key_Return,Qt.NoModifier,0);
+          testRoot.check(!confirmation.opened && widgetA.autoUpdates, "default Enter cancels rather than turning off");
+          testRoot.click(updatesControl,Qt.NoModifier); break;
+        case 23:
+          events.keyClick(Qt.Key_Tab,Qt.NoModifier,0);
+          events.keyClick(Qt.Key_Return,Qt.NoModifier,0);
+          testRoot.check(!confirmation.opened && !widgetA.autoUpdates && !widgetB.autoUpdates && fakeShell.saved.autoUpdates === false, "explicit keyboard confirmation saves off on both monitors at 200 percent");
+          testRoot.click(updatesControl,Qt.NoModifier);
+          testRoot.check(widgetA.autoUpdates && !confirmation.opened, "enabling needs only one click");
+          testRoot.uiScale = 1;
+          testRoot.click(updatesControl,Qt.NoModifier); break;
+        case 24:
+          testRoot.click(testRoot.findControl(confirmation,"cancelUpdateOff"),Qt.NoModifier);
+          testRoot.check(!confirmation.opened && widgetA.autoUpdates, "Cancel button preserves on");
+          testRoot.click(updatesControl,Qt.NoModifier); break;
+        case 25:
+          testRoot.click(testRoot.findControl(confirmation,"confirmUpdateOff"),Qt.NoModifier);
+          testRoot.check(!confirmation.opened && !widgetA.autoUpdates && fakeShell.saved.autoUpdates === false, "Turn off button confirms with the mouse");
+          testRoot.click(updatesControl,Qt.NoModifier);
+          fakeShell.rejectSave = true;
+          testRoot.click(updatesControl,Qt.NoModifier); break;
+        case 26:
+          testRoot.click(testRoot.findControl(confirmation,"confirmUpdateOff"),Qt.NoModifier);
+          testRoot.check(widgetA.autoUpdates && widgetA.updatesSaveFailed, "failed save cannot disable updates");
+          fakeShell.rejectSave = false;
           console.info("SCRATCHPEEK_PANEL_ACTIONS_PASS"); stop(); Qt.quit(); break;
         }
       } catch (error) { console.error("SCRATCHPEEK_PANEL_ACTIONS_FAIL: " + error); stop(); Qt.quit(); }
