@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.1 — 2026-09-17
+
+- Replace the calendar-based introduction with a persistent budget of 100 actual
+  hover-hint displays. Quick passes and the help icon consume nothing; the last
+  allowed hint remains readable until the pointer leaves.
+- Show remaining views and explain that hints can always be turned on again.
+  Manual activation remains unlimited. Reuse the themed tooltip with wrapping.
+- Shorten the shortcut reminder to just its keys while panel hints are off.
+  Use Ctrl + click: to this workspace, including spaces around the plus sign.
+- Preserve manual choices across the change and update all 30 translations.
+
 ## 0.8.0 — 2026-09-17
 
 - Add a small help toggle opposite the author in the panel footer. Its own hover

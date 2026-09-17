@@ -97,7 +97,7 @@ Right-click ScratchPeek to open the window list:
   a destination and press **Move**. The picker offers existing numbered and
   named workspaces, plus empty workspaces **1–10**. Existing destinations show
   their monitor; the ordinary workspace on the panel’s monitor is selected first.
-- **Ctrl+click Move out** sends the selected window straight to the currently
+- **Ctrl + click Move out** sends the selected window straight to the currently
   active ordinary workspace on the panel’s monitor, without opening the picker.
 - Moves are silent: you stay on the current workspace. To see an extracted
   window, open its destination workspace. The panel’s **Show here / Hide**
@@ -108,12 +108,15 @@ Hovering a window’s icon or name explains that clicking focuses that window or
 tab. The separate **Move out** button opens the destination picker.
 
 The small **?** at the bottom left switches panel hover hints on or off; its own
-hover description always stays available. Hints start enabled for seven calendar
-days, with the remaining days shown in that description, then turn off automatically.
-The timer starts when this feature first runs (also for existing installations).
-Restarting or updating does not reset it. A manual choice is saved across monitors
-and restarts; manually enabled hints stay on until you switch them off yourself.
-The bar's window preview and the shortcut reminder remain available in either mode.
+description always stays available. Automatic hints turn off after the first
+**100 displayed hints**, with the remaining count shown on **?**. A quick pass
+before the tooltip delay consumes nothing, and staying over one hint counts once.
+The 100th hint stays readable until you move away. The help icon itself never
+uses the budget. Counts are shared across monitors and survive restarts/updates.
+Manually enabled hints stay on without a limit until you turn them off yourself.
+You can always turn them on again, including after the automatic budget runs out.
+The bar's window preview remains available; the panel shortcut reminder shows
+only the key combination while hints are off.
 
 Only the selected window moves. Hyprland checks its current workspace and group
 inside one Lua operation, separates that tab if necessary, then moves it by
@@ -315,9 +318,9 @@ omarchy-shell sarr.scratchpeek setHintsMode on
 ```
 
 Use your actual monitor name. `status` returns counts, visibility, and focus for
-each bar monitor, selected/detected language, hint mode/countdown, detected shortcut
+each bar monitor, selected/detected language, hint mode/remaining views, detected shortcut
 and version; it does not return window titles. `setHintsMode` accepts `on`, `off`,
-or `auto` (resumes the original trial; never resets its start). `focusWindow <address>`
+or `auto` (resumes the remaining automatic budget; never resets it). `focusWindow <address>`
 selects a window only if it still belongs to the configured scratchpad.
 
 The two dropdown components in `vendor/omarchy/` are adapted from Omarchy

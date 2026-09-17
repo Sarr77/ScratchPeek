@@ -12,4 +12,6 @@ Widget 1.0 Widget.qml
 WindowTransfer 1.0 WindowTransfer.qml
 TransferEditor 1.0 TransferEditor.qml
 HintsToggle 1.0 HintsToggle.qml
+HintButton 1.0 HintButton.qml
+PanelHint 1.0 PanelHint.qml
 MoveOutButton 1.0 MoveOutButton.qml

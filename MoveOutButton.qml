@@ -1,7 +1,6 @@
 import QtQuick
-import qs.Ui as Ui
 
-Ui.Button {
+HintButton {
   id: root
   signal quickMove()
   // Ui.Button's clicked() has no event argument. Intercept only Ctrl presses;

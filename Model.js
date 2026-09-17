@@ -146,24 +146,14 @@ function mergeSettings(current, values, id) {
   return entry;
 }
 
-// Calendar time, persisted once: restarting or upgrading never starts a new week.
-var hintsWeekMs = 7 * 24 * 60 * 60 * 1000;
-function hintState(settings, now) {
+// Count actual displayed hints, shared and persisted across all monitors.
+var hintsLimit = 100;
+function hintState(settings) {
   settings = settings || {};
   var mode = ["auto", "on", "off"].indexOf(settings.hintsMode) >= 0 ? settings.hintsMode : "auto";
-  var firstSeen = settings.hintsFirstSeenAt;
-  if (!Number.isFinite(firstSeen) || firstSeen <= 0) firstSeen = 0;
-  var expiresAt = firstSeen ? firstSeen + hintsWeekMs : 0;
-  return { mode: mode, firstSeenAt: firstSeen, expiresAt: expiresAt,
-    daysLeft: expiresAt ? Math.max(0, Math.min(7, Math.ceil((expiresAt - now) / (24 * 60 * 60 * 1000)))) : 7,
-    enabled: mode === "on" || (mode === "auto" && (!expiresAt || now < expiresAt)) };
-}
-function hintMaintenance(settings, now) {
-  var state = hintState(settings, now);
-  if (state.mode !== "auto") return {};
-  if (!state.firstSeenAt) return { hintsFirstSeenAt: now };
-  // Persist expiry so a later clock correction cannot turn hints back on.
-  return state.enabled ? {} : { hintsMode: "off" };
+  var used = Number.isFinite(settings.hintsUsed) ? Math.max(0, Math.min(hintsLimit, Math.floor(settings.hintsUsed))) : 0;
+  return { mode: mode, used: used, remaining: hintsLimit - used,
+    enabled: mode === "on" || (mode === "auto" && used < hintsLimit) };
 }
 
 function toggleShortcut(bindings, workspace) {

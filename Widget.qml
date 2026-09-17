@@ -21,23 +21,19 @@ BarWidget {
   readonly property var monitorDiagram: Model.monitorLayout(Local.ScratchState.monitors)
   property bool languageSaveFailed: false
   property bool hintsSaveFailed: false
-  property bool settingsReady: false
-  readonly property var hints: Model.hintState(settings, Local.ScratchState.hintsNow)
+  readonly property var hints: Model.hintState(settings)
   readonly property string toggleShortcut: Model.toggleShortcut(Local.ScratchState.keyBindings, workspaceName)
-  function maintainHints() {
-    if (!settingsReady || !bar) return;
-    var update = Model.hintMaintenance(settings, Date.now());
-    if (Object.keys(update).length) hintsSaveFailed = !persistSettings(update);
+  function recordHintShown() {
+    if (hints.mode !== "auto" || hints.remaining <= 0) return false;
+    hintsSaveFailed = !persistSettings({ hintsUsed: hints.used + 1 });
+    return !hintsSaveFailed;
   }
   function setHintsMode(mode) {
     if (["auto", "on", "off"].indexOf(mode) < 0) return false;
     hintsSaveFailed = !persistSettings({ hintsMode: mode });
-    if (!hintsSaveFailed) maintainHints();
     return !hintsSaveFailed;
   }
-  function toggleHints() { return setHintsMode(Model.hintState(settings, Date.now()).enabled ? "off" : "on"); }
-  onSettingsChanged: if (settingsReady) Qt.callLater(maintainHints)
-  Connections { target: Local.ScratchState; function onHintsNowChanged() { root.maintainHints(); } }
+  function toggleHints() { return setHintsMode(hints.enabled ? "off" : "on"); }
   readonly property var savedAppearance: Appearance.normalize(settings)
   readonly property var appearance: Local.ScratchState.previewOwner !== "" ? Local.ScratchState.previewAppearance : savedAppearance
   readonly property string themeId: Local.ScratchState.themeId
@@ -183,8 +179,6 @@ BarWidget {
     interval: 60
     onTriggered: {
       if (root.bar) root.settings = Model.initialSettings(root.bar.layoutConfig, root.moduleName, root.settings);
-      root.settingsReady = true;
-      root.maintainHints();
     }
   }
   Component.onCompleted: initialSettingsTimer.start()
@@ -263,7 +257,7 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.8.0",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.8.1",
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
           toggleShortcut: widget.toggleShortcut,
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,

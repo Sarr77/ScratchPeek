@@ -19,46 +19,36 @@ const screens = [monitor('DP-1', 0), monitor('DP-3', 1)];
 const state = (clients, monitors = screens, screen = 'DP-1', active = '') =>
   plain(model.summarize(clients, monitors, 'scratchpad', screen, active));
 
-test('hint trial expires at seven calendar days and is not renewed by reloads', () => {
-  const start = Date.UTC(2026, 8, 17), week = 7 * 24 * 60 * 60 * 1000;
-  const settings = plain(model.hintMaintenance({}, start));
-  assert.equal(settings.hintsFirstSeenAt, start);
-  assert.equal(model.hintState(settings, start + week - 1).enabled, true);
-  for (let day = 0; day <= 7; day++) {
-    assert.equal(model.hintState(settings,start + day * 24 * 60 * 60 * 1000).daysLeft,7-day);
+test('automatic hints stop after 100 displays and preserve progress across restarts', () => {
+  for (let used = 0; used <= 100; used++) {
+    const restored = JSON.parse(JSON.stringify({hintsMode:'auto',hintsUsed:used}));
+    const state = model.hintState(restored);
+    assert.equal(state.remaining,100-used);
+    assert.equal(state.enabled,used<100);
   }
-  assert.equal(model.hintState(settings,start-1000).daysLeft,7);
-  assert.equal(model.hintState(settings, start + week).enabled, false);
-  assert.deepEqual(plain(model.hintMaintenance(JSON.parse(JSON.stringify(settings)), start + 1000)), {});
-  const expired = model.mergeSettings(settings, model.hintMaintenance(settings, start + week));
-  assert.equal(expired.hintsMode, 'off');
-  assert.equal(model.hintState(expired, start - 1000).enabled, false, 'clock rollback cannot re-enable expired hints');
+  assert.equal(model.hintState({hintsFirstSeenAt:1}).remaining,100,'old calendar date does not consume hints');
 });
 
-test('manual hint choices persist before and after the trial without changing other preferences', () => {
-  const start = Date.UTC(2026, 8, 17), later = start + 365 * 24 * 60 * 60 * 1000;
-  const original = {id:'sarr.scratchpeek', hintsFirstSeenAt:start, language:'pl', uiScale:1.6,
+test('manual hint choices override the counter without changing other preferences', () => {
+  const original = {id:'sarr.scratchpeek', hintsUsed:100, language:'pl', uiScale:1.6,
     colorMode:'custom',themeColors:{'tokyo-night':'#EF98F5'},customLabels:{active:'My shelf'}};
   for (const mode of ['on','off']) {
     const saved = plain(model.mergeSettings(original, {hintsMode:mode}, original.id));
     const restored = JSON.parse(JSON.stringify(saved));
     assert.deepEqual(restored, {...original,hintsMode:mode});
-    for (const time of [start, later]) {
-      assert.equal(model.hintState(restored,time).enabled, mode === 'on');
-      assert.deepEqual(plain(model.hintMaintenance(restored,time)), {});
-    }
+    assert.equal(model.hintState(restored).enabled,mode==='on');
+    assert.equal(model.hintState(restored).remaining,0);
   }
-  assert.equal(original.hintsMode, undefined);
+  assert.equal(original.hintsMode,undefined);
 });
 
-test('missing or invalid hint settings initialize safely without restarting a valid trial', () => {
-  const now = Date.UTC(2026,8,17);
-  for (const first of [undefined, null, 0, -1, NaN, Infinity, 'yesterday', String(now)]) {
-    const bad = {hintsMode:'invalid',hintsFirstSeenAt:first};
-    assert.equal(model.hintState(bad,now).enabled, true);
-    assert.deepEqual(plain(model.hintMaintenance(bad,now)), {hintsFirstSeenAt:now});
+test('invalid hint counters are safely normalized without exceeding the budget', () => {
+  for (const hintsUsed of [undefined,null,NaN,Infinity,'80',-1]) {
+    assert.equal(model.hintState({hintsUsed}).remaining,100);
   }
-  assert.deepEqual(plain(model.hintMaintenance({hintsFirstSeenAt:now + 1000},now)), {});
+  assert.equal(model.hintState({hintsUsed:1000}).remaining,0);
+  assert.equal(model.hintState({hintsUsed:3.8}).remaining,97);
+  assert.equal(model.hintState({hintsMode:'bad'}).mode,'auto');
 });
 
 test('shortcut reminder follows actual global bindings and hides unknown or unbound actions', () => {

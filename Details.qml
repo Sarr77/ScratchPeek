@@ -324,7 +324,7 @@ Panel {
               y: statusLine.stacked ? statusText.implicitHeight + Style.space(4) : Math.max(0, (statusText.implicitHeight - implicitHeight) / 2)
               width: Math.min(implicitWidth, parent.width)
               visible: !!root.hostWidget && root.hostWidget.toggleShortcut !== ""
-              text: visible ? I18n.format(root.words.shortcutHint, { shortcut: root.hostWidget.toggleShortcut }) : ""
+              text: visible ? (root.hintsEnabled ? I18n.format(root.words.shortcutHint, { shortcut: root.hostWidget.toggleShortcut }) : root.hostWidget.toggleShortcut) : ""
               textFormat: Text.PlainText
               wrapMode: Text.Wrap
               horizontalAlignment: Text.AlignRight
@@ -487,31 +487,11 @@ Panel {
                 cursorShape: Qt.PointingHandCursor
                 onEntered: root.selectedIndex = row.index * root.windowActionCount
                 onClicked: if (root.hostWidget) root.hostWidget.focusWindow(row.modelData.address)
-                QQC.ToolTip {
-                  id: focusTip
-                  visible: root.hintsEnabled && focusArea.containsMouse && root.opened && !root.editing && !list.moving && !scroll.moving
+                PanelHint {
+                  hostWidget: root.hostWidget
+                  requested: focusArea.containsMouse && root.opened && !root.editing && !list.moving && !scroll.moving
                   text: root.words.focusWindowHint
-                  delay: 400
-                  padding: 0
-                  width: Math.min(implicitWidth, scroll.width)
-                  readonly property var tipBorder: Border.localOrSurfaceSpec("tooltip", "border", Color.tooltip.border, Color.tooltip.border, Math.max(1, Style.normalBorderWidth))
-                  background: Ui.BorderSurface {
-                    color: Color.tooltip.background
-                    borderSpec: focusTip.tipBorder
-                    radius: 0
-                  }
-                  contentItem: Text {
-                    text: focusTip.text
-                    textFormat: Text.PlainText
-                    wrapMode: Text.Wrap
-                    color: Color.tooltip.text
-                    font.family: Style.font.family
-                    font.pixelSize: Style.font.bodySmall
-                    leftPadding: Border.left(focusTip.tipBorder) + Style.spacing.controlPaddingX
-                    rightPadding: Border.right(focusTip.tipBorder) + Style.spacing.controlPaddingX
-                    topPadding: Border.top(focusTip.tipBorder) + Style.spacing.controlPaddingY
-                    bottomPadding: Border.bottom(focusTip.tipBorder) + Style.spacing.controlPaddingY
-                  }
+                  maximumWidth: scroll.width
                 }
               }
               MoveOutButton {
@@ -525,7 +505,10 @@ Panel {
                 iconSize: Style.font.body
                 text: root.words.extractAction
                 bordered: true
-                tooltipText: root.hintsEnabled ? root.words.extractWindow + "\n" + root.words.quickExtractHint : ""
+                hostWidget: root.hostWidget
+                hintsAllowed: root.opened && !root.editing && !list.moving && !scroll.moving
+                hintWidth: scroll.width
+                hintText: root.words.extractWindow + "\n" + root.words.quickExtractHint
                 foreground: root.accent; accent: root.accent
                 hasCursor: root.selectedIndex === row.index * 2 + 1
                 enabled: !root.hostWidget || !root.hostWidget.transferBusy
@@ -540,11 +523,14 @@ Panel {
             }
           }
 
-          Ui.Button {
+          HintButton {
             width: parent.width
             visible: root.canToggle
             text: root.scratchpadState.status === "here" ? root.words.hide : root.words.show
-            tooltipText: root.hintsEnabled ? Accessible.description : ""
+            hostWidget: root.hostWidget
+            hintsAllowed: root.opened && !root.editing && !scroll.moving
+            hintWidth: scroll.width
+            hintText: Accessible.description
             Accessible.description: root.scratchpadState.status === "here" ? root.words.hideScratchpadHint : root.words.showScratchpadHint
             foreground: root.barForeground
             accent: root.accent
@@ -665,7 +651,8 @@ Panel {
               words: root.words
               hintsEnabled: root.hintsEnabled
               automatic: !root.hostWidget || root.hostWidget.hints.mode === "auto"
-              daysLeft: root.hostWidget ? root.hostWidget.hints.daysLeft : 7
+              remaining: root.hostWidget ? root.hostWidget.hints.remaining : 100
+              hintWidth: scroll.width
               foreground: root.hintsEnabled ? root.accent : Qt.alpha(root.barForeground, 0.65)
               accent: root.accent
               hasCursor: root.selectedIndex === root.hintsIndex

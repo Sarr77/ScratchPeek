@@ -8,7 +8,8 @@ Ui.Button {
   required property var words
   property bool hintsEnabled: true
   property bool automatic: true
-  property int daysLeft: 7
+  property int remaining: 100
+  property real hintWidth: 400
   text: "?"
   width: Style.space(24)
   height: width
@@ -19,12 +20,21 @@ Ui.Button {
   selected: hintsEnabled
   bordered: true
   // Always explain this switch, even when every other panel hint is disabled.
-  tooltipText: hintsEnabled && automatic
-    ? I18n.format(daysLeft === 1 ? words.hintsAutomaticOne : words.hintsAutomatic, {days: daysLeft})
+  readonly property string helpText: hintsEnabled && automatic
+    ? I18n.format(remaining === 1 ? words.hintsAutomaticOne : words.hintsAutomatic, {remaining: remaining})
     : (hintsEnabled ? words.hintsOn : words.hintsOff)
+  property bool pointerHovered: false
+  Connections { target: root; function onHovered(value) { root.pointerHovered = value; } }
+  PanelHint {
+    hostWidget: null
+    alwaysAvailable: true
+    requested: root.pointerHovered
+    text: root.helpText
+    maximumWidth: root.hintWidth
+  }
   Accessible.role: Accessible.CheckBox
   Accessible.name: words.panelHints
-  Accessible.description: tooltipText
+  Accessible.description: helpText
   Accessible.checkable: true
   Accessible.checked: hintsEnabled
   Accessible.onToggleAction: clicked()

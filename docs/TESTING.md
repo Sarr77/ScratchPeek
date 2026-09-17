@@ -1,5 +1,18 @@
 # Validation
 
+## 0.8.1 validation — 2026-09-17
+
+- 55 model/localization checks pass with count-based onboarding: values 0–100,
+  manual overrides, persisted progress, invalid counts and migration from the
+  unused calendar timestamp. Time no longer controls hint availability.
+- Real Qt hover events verify that brief passes consume nothing, a displayed
+  hint counts once, remaining views update on both widget instances, the 100th
+  hint stays readable, the 101st cannot open, and hovering help never consumes
+  the budget. Manual activation restores hints without resetting the counter.
+- The same offscreen suite retains Ctrl-click routing, 200% scale, keyboard
+  activation, rapid-save and rejected-write checks. Plugin validation and QML
+  syntax/import checks pass.
+
 ## 0.8.0 validation — 2026-09-17
 
 - 55 portable checks cover seven-day expiry, each daily countdown boundary,
