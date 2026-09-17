@@ -257,7 +257,7 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.8.1",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.8.2",
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
           toggleShortcut: widget.toggleShortcut,
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,

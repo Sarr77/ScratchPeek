@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.2 — 2026-09-17
+
+- Clarify automatic hiding in the hover counter description. Put the manual
+  off action and re-enable reminder on separate lines in all 30 languages.
+
 ## 0.8.1 — 2026-09-17
 
 - Replace the calendar-based introduction with a persistent budget of 100 actual
