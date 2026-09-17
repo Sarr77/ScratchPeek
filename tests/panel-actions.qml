@@ -16,6 +16,7 @@ ShellRoot {
   property int hintClicks: 0
   property real uiScale: 1
   property bool budgetPhase: false
+  property var authorUrls: []
   function check(value, message) { if (!value) throw new Error(message); }
   function click(item, modifiers) {
     events.mouseMove(item,item.width/2,item.height/2,0,Qt.NoButton,modifiers);
@@ -78,6 +79,11 @@ ShellRoot {
         hintText: I18n.words("en").quickExtractHint
         onClicked: testRoot.normalClicks++
         onQuickMove: testRoot.quickMoves++
+      }
+      Plugin.AuthorLink {
+        id: author
+        x: 235; y: 160; text: "By Sarr"
+        openUrl: function(url) { testRoot.authorUrls = testRoot.authorUrls.concat([String(url)]); }
       }
     }
   }
@@ -171,6 +177,11 @@ ShellRoot {
           testRoot.hover(move); break;
         case 20:
           testRoot.check(testRoot.visibleTip(move) && widgetA.hints.used === 100, "manual hints show without a budget");
+          testRoot.click(author,Qt.NoModifier);
+          author.forceActiveFocus(); events.keyClick(Qt.Key_Return,Qt.NoModifier,0);
+          testRoot.check(testRoot.authorUrls.length === 2 && testRoot.authorUrls.every(function(url) { return url === "https://github.com/Sarr77"; }), "author link routes mouse and keyboard to the chosen profile");
+          author.enabled = false; author.activate();
+          testRoot.check(testRoot.authorUrls.length === 2, "disabled author link cannot launch");
           console.info("SCRATCHPEEK_PANEL_ACTIONS_PASS"); stop(); Qt.quit(); break;
         }
       } catch (error) { console.error("SCRATCHPEEK_PANEL_ACTIONS_FAIL: " + error); stop(); Qt.quit(); }

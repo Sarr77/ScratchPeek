@@ -21,6 +21,8 @@ BarWidget {
   readonly property var monitorDiagram: Model.monitorLayout(Local.ScratchState.monitors)
   property bool languageSaveFailed: false
   property bool hintsSaveFailed: false
+  property bool settingsReady: false
+  readonly property bool preferencesSaveFailed: Local.ScratchState.preferences.failed
   readonly property var hints: Model.hintState(settings)
   readonly property string toggleShortcut: Model.toggleShortcut(Local.ScratchState.keyBindings, workspaceName)
   function recordHintShown() {
@@ -127,7 +129,8 @@ BarWidget {
     // behind inline writes; using it again here can discard a rapid second click.
     var current = root.settings;
     var entry = Model.mergeSettings(current, values, root.moduleName);
-    if (JSON.stringify(current) === JSON.stringify(entry)) return true;
+    if (JSON.stringify(current) === JSON.stringify(entry)) return Local.ScratchState.preferences.save(entry);
+    entry = Model.stampSettings(entry, Local.ScratchState.preferences.values);
     // The host persists only this plugin entry and preserves other widgets.
     if (!root.bar || !root.bar.shell || typeof root.bar.shell.updateEntryInline !== "function"
         || !root.bar.shell.updateEntryInline(root.moduleName, entry)) {
@@ -135,7 +138,7 @@ BarWidget {
     }
     var widgets = root.bar.moduleWidgets(root.moduleName);
     for (var i = 0; i < widgets.length; i++) widgets[i].settings = entry;
-    return true;
+    return Local.ScratchState.preferences.save(entry);
   }
 
   function previewAppearance(values) { Local.ScratchState.beginPreview(screenName, Appearance.merge(savedAppearance, values)); }
@@ -195,8 +198,22 @@ BarWidget {
     id: initialSettingsTimer
     interval: 60
     onTriggered: {
-      if (root.bar) root.settings = Model.initialSettings(root.bar.layoutConfig, root.moduleName, root.settings);
+      if (!root.bar || root.settingsReady || !Local.ScratchState.preferences.ready) return;
+      var current = Model.initialSettings(root.bar.layoutConfig, root.moduleName, root.settings);
+      var stored = Local.ScratchState.preferences.values;
+      var restored = Model.restoreSettings(stored, current, root.moduleName);
+      if (JSON.stringify(Model.mergeSettings(stored, {}, root.moduleName)) !== JSON.stringify(restored))
+        restored = Model.stampSettings(restored, stored);
+      root.settings = restored;
+      root.settingsReady = true;
+      if (JSON.stringify(current) !== JSON.stringify(restored))
+        root.bar.shell.updateEntryInline(root.moduleName, restored);
+      Local.ScratchState.preferences.save(restored);
     }
+  }
+  Connections {
+    target: Local.ScratchState.preferences
+    function onReadyChanged() { if (Local.ScratchState.preferences.ready) initialSettingsTimer.restart(); }
   }
   Component.onCompleted: initialSettingsTimer.start()
 
@@ -275,8 +292,10 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.9.0",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.10.0",
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
+          preferencesSaveFailed: widget.preferencesSaveFailed,
+          preferencesReady: widget.settingsReady && Local.ScratchState.preferences.ready,
           toggleShortcut: widget.toggleShortcut,
           visibilityBusy: widget.visibilityBusy, visibilityError: widget.visibilityError,
           accent: String(widget.accent), appearance: widget.appearance, savedAppearance: widget.savedAppearance,

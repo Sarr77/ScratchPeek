@@ -1,5 +1,38 @@
 # Validation
 
+## 0.10.0 validation — 2026-09-17
+
+- 61 portable tests pass, including preference migration, revision ordering,
+  interrupted host writes, manual inline edits and all 30 translation catalogs.
+- Real FileView tests verify atomic save, rapid consecutive changes, restoration
+  in a new process, private directory permissions and omission of the placement
+  ID. Invalid JSON stays untouched; a write error preserves the previous file
+  and reports failure.
+- The lifecycle test runs actual Omarchy commands and its installed
+  PluginRegistry in a bubblewrap profile without desktop or network sockets.
+  Its small offscreen host loads the real widget with a scoped settings API.
+  Install, repeated enable, update, restart, disable/re-enable, removal and
+  reinstall pass. Preferences and hint progress restore automatically; unrelated
+  profile settings and the live desktop configuration remain unchanged.
+- Two native shell restarts preserve existing language, appearance, labels,
+  workspace preference and hint progress on both monitors. The shared durable
+  file is readable and neither widget reports a persistence error.
+- Actual Qt pointer/key events verify the author link's selected GitHub
+  destination and disabled state. Appearance-editor and dropdown regression
+  tests pass in temporary state directories.
+- The native visibility regression test passes after the persistence changes:
+  first action after restart, duplicate requests, open keyboard panel and
+  cross-monitor actions. Original window membership and workspaces are preserved.
+- Omarchy manifest validation, source archive CRC/required-file checks and local
+  documentation links pass.
+- Static QML checking still reports dynamic Omarchy host-property and QProcess
+  metadata warnings. These are not presented as a clean static type check.
+
+The isolated lifecycle test is not a complete second desktop session. Native
+checks use the existing two-monitor machine. Translation checks establish
+catalog coverage, not native-speaker review; physical hot-unplug and every
+keyboard/pointer path remain outside the automated coverage.
+
 ## 0.9.0 validation — 2026-09-17
 
 - 60 portable tests pass, including focused-window selection, missing monitors,

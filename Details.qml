@@ -35,6 +35,7 @@ Panel {
   readonly property int scalingIndex: appearanceIndex + 1
   readonly property int labelsIndex: scalingIndex + 1
   readonly property int hintsIndex: labelsIndex + 1
+  readonly property int authorIndex: hintsIndex + 1
   readonly property bool hintsEnabled: !hostWidget || hostWidget.hints.enabled
   readonly property real logicalContentHeight: editingTransfer ? transferEditor.implicitHeight : (editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight)))
   readonly property int appearanceIndex: languageIndex + 1
@@ -55,10 +56,10 @@ Panel {
       editingScaling = false;
     }
   }
-  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, hintsIndex)
+  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, authorIndex)
 
   function moveSelection(delta) {
-    selectedIndex = Math.max(0, Math.min(hintsIndex, selectedIndex + delta));
+    selectedIndex = Math.max(0, Math.min(authorIndex, selectedIndex + delta));
     if (selectedIndex < toggleIndex) {
       list.positionViewAtIndex(Math.floor(selectedIndex / windowActionCount), ListView.Contain);
       scroll.contentY = 0;
@@ -66,7 +67,8 @@ Panel {
   }
   function activateSelection() {
     if (!hostWidget) return;
-    if (selectedIndex === hintsIndex) hostWidget.toggleHints();
+    if (selectedIndex === authorIndex) authorLink.activate();
+    else if (selectedIndex === hintsIndex) hostWidget.toggleHints();
     else if (selectedIndex === labelsIndex) openLabels();
     else if (selectedIndex === scalingIndex) openScaling();
     else if (selectedIndex === appearanceIndex) openAppearance();
@@ -574,6 +576,15 @@ Panel {
           }
           Text {
             width: parent.width
+            visible: !!root.hostWidget && root.hostWidget.preferencesSaveFailed
+            text: root.words.settingsError
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            color: Color.urgent
+            font.pixelSize: Style.font.caption
+          }
+          Text {
+            width: parent.width
             visible: !!root.hostWidget && (root.hostWidget.transferBusy || root.hostWidget.transferError !== "")
             text: visible ? (root.hostWidget.transferBusy ? root.words.movingWindow : root.words[root.hostWidget.transferError]) : ""
             textFormat: Text.PlainText
@@ -672,14 +683,16 @@ Panel {
               onHovered: function(value) { if (value) root.selectedIndex = root.hintsIndex; }
               onClicked: if (root.hostWidget) root.hostWidget.toggleHints()
             }
-            Text {
+            AuthorLink {
+              id: authorLink
               anchors.right: parent.right
               anchors.verticalCenter: parent.verticalCenter
               text: root.words.author
-              textFormat: Text.PlainText
-              color: root.barForeground
-              opacity: 0.65
-              font.pixelSize: Style.font.caption
+              foreground: root.barForeground
+              accent: root.accent
+              hintWidth: scroll.width
+              hasCursor: root.selectedIndex === root.authorIndex
+              onHovered: function(value) { if (value) root.selectedIndex = root.authorIndex; }
             }
           }
         }

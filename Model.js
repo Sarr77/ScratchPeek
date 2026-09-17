@@ -139,6 +139,24 @@ function mergeSettings(current, values, id) {
   return entry;
 }
 
+function settingsRevision(settings) {
+  var value = settings && settings._scratchpeekRevision;
+  return Number.isSafeInteger(value) && value > 0 ? value : 0;
+}
+
+function restoreSettings(saved, inline, id) {
+  // An interrupted host write must not replace the newer durable file. At
+  // equal revisions, explicit edits through Omarchy's bar settings still win.
+  return settingsRevision(saved) > settingsRevision(inline)
+    ? mergeSettings(inline, saved, id) : mergeSettings(saved, inline, id);
+}
+
+function stampSettings(entry, saved) {
+  var result = mergeSettings(entry, {}, entry.id);
+  result._scratchpeekRevision = Math.max(Date.now(), settingsRevision(saved) + 1, settingsRevision(entry) + 1);
+  return result;
+}
+
 // Count actual displayed hints, shared and persisted across all monitors.
 var hintsLimit = 100;
 function hintState(settings) {

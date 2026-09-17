@@ -1,49 +1,58 @@
-# Publishing checklist
+# Publishing ScratchPeek
 
-ScratchPeek is backed up in the private repository
-[Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek). Nothing in this
-checkout automatically makes it public or submits a listing.
+Name **ScratchPeek** · ID **sarr.scratchpeek** · Author **Sarr**
+Repository: [Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek)
 
-1. The chosen name is **ScratchPeek**, ID **sarr.scratchpeek**, author **Sarr**.
-   The GitHub repository owner is **Sarr77**.
-2. Run `node --test tests/model.test.cjs` and `omarchy plugin validate .`.
-3. Complete the live checks in [TESTING.md](TESTING.md).
-4. Review the README, MIT license (author: Sarr), preview, and repository contents.
-5. Push the reviewed source and make the repository public. Remove the private
-   repository notice from both READMEs; their installation URL is already set.
-6. Tag the release `v0.6.1` and attach the source archive if desired.
-7. Submit the repository URL to the directory. Directory review is separate
-   from publishing the source and is controlled by its maintainers.
+## Listing
 
-## Directories
+- Category: **Productivity**
+- Tags: **bar, hyprland, workspaces**
+- Summary: Know what’s in your scratchpad — and where it’s open. See your windows,
+  focus a tab, or move one in or out from the Omarchy bar.
+- Preview: `preview.png` in the repository root. The editable illustration is
+  `docs/preview.svg`; all window names are examples and all artwork is original.
 
-- [Omarchy Plugins](https://plugins.omarchy.org/publish.html), linked by the
-  official Omarchy manual. It requests a public repository, root manifest,
-  README, license, safe installation/removal, and an optional preview.
-  Submit through its [GitHub issue form](https://github.com/omacom/omarchy-plugin-marketplace/issues/new?template=submit-plugin.yml).
-- [Omahub](https://omahub.dev/submit), another community directory. Sign in with
-  GitHub and submit the public repository URL; maintainers approve listings.
+## Release checklist
 
-Requirements checked on 2026-09-16. Recheck before submission.
+1. Run the portable tests and Omarchy manifest validation.
+2. Run the isolated lifecycle and preference tests, plus the relevant Qt and
+   native checks listed in [TESTING.md](TESTING.md).
+3. Review the root README, licenses, preview and source archive.
+4. Commit, tag the release, push and wait for CI. Generate its archive with
+   `python3 tools/package.py`.
+5. Confirm the repository is public and test an unauthenticated installation
+   with `python3 tools/test_lifecycle.py --remote https://github.com/Sarr77/ScratchPeek`.
+6. Publish the GitHub release. Submit the reviewed repository through the
+   [marketplace form](https://github.com/omacom/omarchy-plugin-marketplace/issues/new?template=submit-plugin.yml)
+   or its [CLI submission format](https://github.com/omacom/omarchy-plugin-marketplace/blob/main/SUBMISSION.md).
+7. Check the bot’s validation and baseline reports. Listing requires a maintainer’s
+   approval of the exact submitted commit; a GitHub release alone does not list it.
 
-Generate the source archive with `python3 tools/package.py`. The archive uses an
-explicit list of source/documentation files and excludes local runtime data,
-desktop configuration, and Git metadata. `docs/preview.svg` is an illustrated
-preview with example data, not a screenshot of a user's desktop.
+Requirements checked on 2026-09-17 against the current publication guide and
+submission format. There must be one category and **one to three** allowed tags.
 
-## Suggested listing
+## Notes for reviewers
 
-- **Name:** ScratchPeek
-- **Author:** Sarr
-- **Category:** Compositor / Productivity
-- **Tags:** scratchpad, hyprland, workspaces, multi-monitor, bar-widget
-- **Summary:** Know what is in your scratchpad and where it is open. Live window
-  count, per-monitor state, and a window picker for Omarchy.
-- **Permissions/behavior:** Reads local compositor window metadata, the local theme identity and desktop
-  application icons/names. Only sends focus/toggle requests on explicit user
-  actions. Saves language, appearance and label preferences through the scoped Omarchy settings API.
-  No network, telemetry, storage of window titles, additional processes or privileges.
-- **Languages:** 30 catalogs, automatic detection, manual language picker and Arabic RTL.
-- **Compatibility:** Omarchy Quattro, built-in omarchy-shell bar.
+ScratchPeek is a native Quickshell bar widget, tested on Omarchy 4.0.4 and
+Hyprland 0.56.2. Window transfers require the Lua configuration available in
+Hyprland 0.56+. It has no separate service or installer.
 
-Screenshots used in a public listing must not expose personal window titles.
+It reads local window/monitor metadata, application icons, theme identity and
+scratchpad keybindings. Explicit user actions focus windows, show/hide the
+scratchpad, or move an individually selected window. It uses short-lived
+`hyprctl` commands and creates its own preference directory with `mkdir`.
+No elevated privileges or additional runtime packages are required.
+
+Preferences, including hint progress, are stored atomically in
+`$XDG_STATE_HOME/scratchpeek/preferences.json` (default: `~/.local/state`).
+The scoped Omarchy widget entry mirrors those settings. The durable file remains
+after disable/removal so reinstall can restore it; the README explains how to
+remove it. No window titles are written to disk, and unrelated settings are not
+rewritten by the plugin. The author link opens Sarr’s GitHub profile only when
+activated. There is no telemetry or background network access.
+
+MIT, by Sarr. Adapted Omarchy dropdown controls retain their upstream MIT notice.
+The preview contains fictional examples and no personal desktop information.
+
+Review known limits in [TESTING.md](TESTING.md). Automated catalog checks and
+approval are not a security audit or a guarantee of compatibility with every setup.

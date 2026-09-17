@@ -883,3 +883,37 @@ var visibilityErrors = {
   "zh-TW": "無法確認 Scratchpad 的狀態。請重試。"
 };
 Object.keys(visibilityErrors).forEach(function(code) { catalogs[code].visibilityError = visibilityErrors[code]; });
+
+var settingsErrors = {
+  "en": "Saved settings could not be read or written.",
+  "pl": "Nie udało się odczytać lub zapisać ustawień.",
+  "de": "Gespeicherte Einstellungen konnten nicht gelesen oder geschrieben werden.",
+  "fr": "Impossible de lire ou d’écrire les paramètres enregistrés.",
+  "es": "No se pudieron leer o guardar los ajustes.",
+  "pt-BR": "Não foi possível ler ou salvar as configurações.",
+  "pt-PT": "Não foi possível ler ou guardar as definições.",
+  "it": "Impossibile leggere o salvare le impostazioni.",
+  "nl": "Instellingen konden niet worden gelezen of opgeslagen.",
+  "sv": "Kunde inte läsa eller spara inställningarna.",
+  "da": "Kunne ikke læse eller gemme indstillingerne.",
+  "nb": "Kunne ikke lese eller lagre innstillingene.",
+  "fi": "Asetuksia ei voitu lukea tai tallentaa.",
+  "cs": "Nastavení se nepodařilo načíst nebo uložit.",
+  "sk": "Nastavenia sa nepodarilo načítať alebo uložiť.",
+  "uk": "Не вдалося прочитати або записати налаштування.",
+  "ru": "Не удалось прочитать или сохранить настройки.",
+  "tr": "Ayarlar okunamadı veya kaydedilemedi.",
+  "ro": "Setările nu au putut fi citite sau salvate.",
+  "hu": "Nem sikerült beolvasni vagy menteni a beállításokat.",
+  "el": "Δεν ήταν δυνατή η ανάγνωση ή αποθήκευση των ρυθμίσεων.",
+  "ar": "تعذّرت قراءة الإعدادات المحفوظة أو كتابتها.",
+  "hi": "सेटिंग पढ़ी या सहेजी नहीं जा सकीं।",
+  "id": "Pengaturan tidak dapat dibaca atau disimpan.",
+  "vi": "Không thể đọc hoặc lưu cài đặt.",
+  "th": "อ่านหรือบันทึกการตั้งค่าไม่ได้",
+  "ja": "設定を読み込み、または保存できませんでした。",
+  "ko": "설정을 읽거나 저장할 수 없습니다.",
+  "zh-CN": "无法读取或保存设置。",
+  "zh-TW": "無法讀取或儲存設定。"
+};
+Object.keys(settingsErrors).forEach(function(code) { catalogs[code].settingsError = settingsErrors[code]; });

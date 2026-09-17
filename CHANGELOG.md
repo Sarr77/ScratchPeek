@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.0 — 2026-09-17
+
+- Save preferences and hint progress atomically outside the bar layout. Restore
+  them automatically after disable, restart and reinstall; migrate existing
+  settings and protect newer data from a stale host snapshot. Report read/write
+  errors without overwriting a damaged file.
+- Make the author credit a keyboard-accessible link to Sarr’s GitHub profile,
+  with a subtle hover accent and destination hint.
+- Prepare the first public release with a shorter README, full user guide,
+  refreshed preview, accurate runtime disclosure and isolated lifecycle tests.
+
 ## 0.9.0 — 2026-09-17
 
 - Ctrl + click Add window to scratchpad… immediately adds the focused application

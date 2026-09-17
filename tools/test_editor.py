@@ -18,7 +18,7 @@ with tempfile.TemporaryDirectory(prefix='scratchpeek-editor-') as directory:
         (config / name).symlink_to(shell / name, target_is_directory=True)
     (config / 'ScratchPeek').symlink_to(root, target_is_directory=True)
     shutil.copyfile(root / 'tests/editor.qml', config / 'shell.qml')
-    env = dict(os.environ, QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software',
+    env = dict(os.environ, XDG_STATE_HOME=str(config / 'state'), QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software',
                QT_QUICK_CONTROLS_STYLE='Basic', QT_QPA_PLATFORMTHEME='')
     try:
         result = subprocess.run(['quickshell', '--no-color', '-p', str(config)],

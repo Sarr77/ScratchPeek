@@ -677,3 +677,17 @@ test('empty workspace decisions require a fresh, valid client inventory', () => 
 test('disconnected target monitor remains unknown instead of reporting hidden', () => {
   assert.equal(state([window('0x1')], screens, 'DP-9').status,'unknown');
 });
+
+test('durable settings win over a stale inline snapshot after an interrupted host write', () => {
+  const saved={language:'pl',hintsUsed:80,_scratchpeekRevision:200};
+  assert.equal(model.restoreSettings(saved,{language:'en',hintsUsed:60,_scratchpeekRevision:100},'sarr.scratchpeek').hintsUsed,80);
+  assert.equal(model.restoreSettings(saved,{id:'sarr.scratchpeek'},'sarr.scratchpeek').language,'pl');
+  assert.equal(model.restoreSettings(saved,{language:'de',_scratchpeekRevision:200},'sarr.scratchpeek').language,'de');
+  assert.equal(model.restoreSettings(saved,{language:'fr',_scratchpeekRevision:300},'sarr.scratchpeek').language,'fr');
+  assert.equal(model.restoreSettings({}, {language:'pl'},'sarr.scratchpeek').language,'pl');
+  assert.equal(model.settingsRevision({_scratchpeekRevision:'200'}),0);
+  assert.equal(model.settingsRevision({_scratchpeekRevision:Infinity}),0);
+  const next=model.stampSettings(saved,saved);
+  assert.ok(next._scratchpeekRevision>200);
+  assert.equal(saved._scratchpeekRevision,200);
+});

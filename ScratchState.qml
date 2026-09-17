@@ -9,6 +9,7 @@ import "Appearance.js" as Appearance
 // Bindings are read only at startup/config reload, never by a polling command.
 QtObject {
   id: root
+  property Preferences preferences: Preferences { }
   property var keyBindings: []
   property Process readBindings: Process {
     command: ["hyprctl", "-j", "binds"]
