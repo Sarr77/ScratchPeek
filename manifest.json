@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "sarr.scratchpeek",
   "name": "ScratchPeek",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "author": "Sarr",
   "license": "MIT",
-  "description": "Know what is in your scratchpad and where it is open. A monitor-aware indicator and window list for Omarchy.",
+  "description": "Window list and controls for Omarchy's scratchpad. Switch to a window, choose its workspace, or add another window.",
   "kinds": [
     "bar-widget"
   ],

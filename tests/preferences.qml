@@ -14,7 +14,11 @@ ShellRoot {
       try {
         if (suite.scenario === "corrupt") {
           suite.check(preferences.failed && preferences.readBlocked, "bad JSON reported");
+          suite.check(!preferences.hasSavedValues, "bad JSON is not an empty saved configuration");
           suite.check(!preferences.save({language:"pl"}), "bad file cannot be silently overwritten");
+        } else if (suite.scenario === "empty") {
+          suite.check(preferences.hasSavedValues && !preferences.failed, "empty but valid settings are a saved configuration");
+          suite.check(preferences.save({}), "unchanged empty settings remain valid");
         } else if (suite.scenario === "readonly") {
           suite.check(!preferences.failed && preferences.values.language === "pl", "readable file loaded");
           suite.check(!preferences.save({language:"fr"}) && preferences.failed, "failed write is reported");
@@ -24,8 +28,9 @@ ShellRoot {
             "next process loads the last completed write");
           suite.check(preferences.values.customLabels.active === "My shelf", "custom labels restored");
         } else {
-          suite.check(!preferences.failed, "first start without file works");
+          suite.check(!preferences.failed && !preferences.hasSavedValues, "first start without file works");
           suite.check(preferences.save({id:"sarr.scratchpeek",language:"de",hintsUsed:98}), "first save");
+          suite.check(preferences.hasSavedValues, "first successful write establishes a saved configuration");
           suite.check(preferences.save({id:"sarr.scratchpeek",language:"pl",hintsUsed:99,customLabels:{active:"My shelf"}}), "rapid second save");
         }
         console.info("SCRATCHPEEK_PREFERENCES_PASS"); stop(); Qt.quit();

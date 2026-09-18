@@ -10,6 +10,8 @@ import "Appearance.js" as Appearance
 QtObject {
   id: root
   property Preferences preferences: Preferences { }
+  property var fallbackSettings: null
+  property bool publishingSettings: false
   property Updates updates: Updates { preferences: root.preferences }
   property var keyBindings: []
   property Process readBindings: Process {

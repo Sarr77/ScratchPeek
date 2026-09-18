@@ -1,5 +1,6 @@
 """Real local Git updates and atomic swaps; no network or desktop access."""
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -7,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -22,16 +24,24 @@ class LocalUpdater(updates.Updater):
         super().__init__(home, state)
         self.upstream = upstream
         self.requests = 0
+        self.approval_requests = 0
         self.reloads = 0
-        self.release = {"tag_name": "v0.11.0", "draft": False, "prerelease": False}
+        self.release = {"id": 11, "tag_name": "v0.11.0", "draft": False,
+                        "prerelease": False, "immutable": True}
+        self.catalog = {"stateSchemaVersion": 2, "plugins": []}
 
     def latest(self):
         self.requests += 1
         return self.release
 
     def git(self, directory, *args):
-        args = tuple(str(self.upstream) if part == updates.REPOSITORY else part for part in args)
-        return super().git(directory, *args)
+        if args and args[0] == "fetch":
+            args = tuple(str(self.upstream) if part == updates.REPOSITORY else part for part in args)
+        return super().git(directory, "-c", "protocol.file.allow=always", *args)
+
+    def approval(self):
+        self.approval_requests += 1
+        return updates.approved_commit(self.catalog)
 
     def validate(self, directory):
         if shutil.which("omarchy"):
@@ -67,6 +77,13 @@ class UpdatesTest(unittest.TestCase):
             "accentColor": "#EF98F5"}}))
         self.saved = self.prefs.read_bytes()
         self.write_release("0.11.0")
+        self.target = self.worker.git(self.remote, "rev-parse", "HEAD")
+        self.entry = {"id": updates.PLUGIN_ID, "repo": updates.REPOSITORY,
+                      "sourceType": "community", "repositoryLayout": "root-plugin",
+                      "manifestPath": "manifest.json", "installAvailable": True,
+                      "verificationSnapshotStatus": "verified",
+                      "listingValidatedCommit": self.target, "verificationCommit": self.target}
+        self.worker.catalog["plugins"] = [self.entry]
 
     def write_release(self, value):
         manifest = {"schemaVersion": 1, "id": updates.PLUGIN_ID, "name": "ScratchPeek", "author": "Sarr",
@@ -93,16 +110,20 @@ class UpdatesTest(unittest.TestCase):
         self.assertEqual(self.worker.git(self.worker.plugin, "status", "--porcelain"), "")
         self.assertEqual(self.prefs.read_bytes(), self.saved)
         self.assertEqual(self.worker.reloads, 1)
+        self.assertEqual(self.worker.git(self.worker.plugin, "rev-parse", "HEAD"), self.target)
+        self.assertEqual(self.worker.git(self.worker.plugin, "remote", "get-url", "origin"), updates.REPOSITORY)
+        self.assertEqual(self.worker.approval_requests, 2)
         self.assertFalse(list(self.worker.plugin.parent.parent.glob(".scratchpeek-update-*")))
 
     def test_once_daily_across_new_processes(self):
         self.worker.release["tag_name"] = "v0.10.0"
         self.assertEqual(self.worker.run(now=1000), "current")
         fresh = LocalUpdater(self.worker.home, self.worker.state.parent, self.remote)
+        fresh.catalog = self.worker.catalog
         self.assertEqual(fresh.run(now=1001), "not-due")
         self.assertEqual(fresh.requests, 0)
         self.assertEqual(fresh.run(now=1000 + updates.DAY), "updated")
-        self.assertEqual(fresh.requests, 1)
+        self.assertEqual(fresh.requests, 2)
 
     def test_disabled_survives_a_new_worker(self):
         data = json.loads(self.prefs.read_text())
@@ -218,6 +239,240 @@ class UpdatesTest(unittest.TestCase):
         self.worker.run(now=1000)
         self.assertEqual(self.worker.result.stat().st_mode & 0o777, 0o600)
         self.assertEqual((self.worker.state / "updates.lock").stat().st_mode & 0o777, 0o600)
+
+    def test_mutable_release_is_never_downloaded(self):
+        for value in (False, None, "true", 1):
+            with self.subTest(immutable=value):
+                self.worker.release["immutable"] = value
+                self.worker.result.unlink(missing_ok=True)
+                self.assertEqual(self.worker.run(now=1000), "unverified")
+                self.assertEqual(self.worker.approval_requests, 0)
+                self.assert_unchanged()
+
+    def test_current_or_older_release_does_not_download_catalog(self):
+        for tag in ("v0.10.0", "v0.9.0"):
+            self.worker.release.update(tag_name=tag, immutable=False)
+            self.worker.result.unlink(missing_ok=True)
+            self.assertEqual(self.worker.run(now=1000), "current")
+            self.assertEqual(self.worker.approval_requests, 0)
+            self.assert_unchanged()
+
+    def test_unlisted_unverified_or_wrong_repository_never_installs(self):
+        variants = [[], [self.entry, self.entry]]
+        for field, value in (("repo", "https://github.com/other/ScratchPeek"),
+                             ("sourceType", "official"), ("builtIn", True), ("placeholder", True),
+                             ("repositoryLayout", "suite"), ("manifestPath", "sub/manifest.json"),
+                             ("installAvailable", False), ("verificationSnapshotStatus", "unverified"),
+                             ("verificationCommit", "0" * 40), ("listingValidatedCommit", "main")):
+            variants.append([dict(self.entry, **{field: value})])
+        for entries in variants:
+            with self.subTest(entries=entries):
+                self.worker.catalog["plugins"] = entries
+                self.worker.result.unlink(missing_ok=True)
+                self.assertEqual(self.worker.run(now=1000), "unverified")
+                self.assert_unchanged()
+
+    def test_unknown_catalog_schema_fails_closed(self):
+        for catalog in (None, [], {}, {"stateSchemaVersion": 3, "plugins": [self.entry]},
+                        {"stateSchemaVersion": 2, "plugins": {}}):
+            self.worker.catalog = catalog
+            self.worker.result.unlink(missing_ok=True)
+            self.assertEqual(self.worker.run(now=1000), "failed")
+            self.assert_unchanged()
+
+    def test_unreviewed_head_does_not_override_approved_release(self):
+        (self.remote / "unreviewed.txt").write_text("future work")
+        self.commit(self.remote)
+        self.entry.update(verificationStatus="unverified", verificationCoverage="update-unverified",
+                          upstreamObservedCommit=self.worker.git(self.remote, "rev-parse", "HEAD"))
+        self.assertEqual(self.worker.run(now=1000), "updated")
+        self.assertFalse((self.worker.plugin / "unreviewed.txt").exists())
+        self.assertEqual(self.worker.git(self.worker.plugin, "rev-parse", "HEAD"), self.target)
+
+    def test_moved_tag_cannot_replace_reviewed_code_even_with_same_version(self):
+        (self.remote / "Widget.qml").write_text("unreviewed replacement")
+        self.commit(self.remote)
+        self.worker.git(self.remote, "tag", "-f", "v0.11.0")
+        with patch.object(self.worker, "validate") as validate:
+            self.assertEqual(self.worker.run(now=1000), "unverified")
+            validate.assert_not_called()
+        self.assert_unchanged()
+
+    def test_annotated_release_tag_resolves_to_reviewed_commit(self):
+        self.worker.git(self.remote, "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
+                        "tag", "-fa", "v0.11.0", "-m", "Release")
+        self.assertEqual(self.worker.run(now=1000), "updated")
+
+    def test_revoked_approval_during_download_preserves_old_install(self):
+        def revoke(stage):
+            self.entry["verificationSnapshotStatus"] = "unverified"
+        with patch.object(self.worker, "validate", side_effect=revoke):
+            self.assertEqual(self.worker.run(now=1000), "unverified")
+        self.assert_unchanged()
+
+    def test_new_approved_snapshot_during_download_requires_a_new_check(self):
+        def replace(stage):
+            self.entry.update(listingValidatedCommit="a" * 40, verificationCommit="a" * 40)
+        with patch.object(self.worker, "validate", side_effect=replace):
+            self.assertEqual(self.worker.run(now=1000), "unverified")
+        self.assert_unchanged()
+
+    def test_release_changed_or_withdrawn_during_download_does_not_install(self):
+        for change in ({"id": 99}, {"tag_name": "v0.12.0"}, {"immutable": False},
+                       {"draft": True}, {"prerelease": True}):
+            with self.subTest(change=change):
+                self.worker.result.unlink(missing_ok=True)
+                confirmed = dict(self.worker.release, **change)
+                with patch.object(self.worker, "latest", side_effect=[self.worker.release, confirmed]):
+                    self.assertIn(self.worker.run(now=1000), ("unverified", "failed"))
+                self.assert_unchanged()
+
+    def test_final_authority_failure_never_uses_cached_approval(self):
+        with patch.object(self.worker, "approval", side_effect=[self.target, OSError("offline")]):
+            self.assertEqual(self.worker.run(now=1000), "failed")
+        self.assert_unchanged()
+
+    def test_staged_tampering_is_detected(self):
+        def corrupt(stage):
+            (stage / "Widget.qml").write_text("changed after validation")
+        with patch.object(self.worker, "validate", side_effect=corrupt):
+            self.assertEqual(self.worker.run(now=1000), "failed")
+        self.assert_unchanged()
+
+    def test_hidden_local_modifications_are_preserved(self):
+        for flag in ("--assume-unchanged", "--skip-worktree"):
+            with self.subTest(flag=flag):
+                self.worker.git(self.worker.plugin, "update-index", flag, "Widget.qml")
+                (self.worker.plugin / "Widget.qml").write_text("user modification")
+                self.worker.result.unlink(missing_ok=True)
+                self.assertEqual(self.worker.run(now=1000), "local-changes")
+                self.assertEqual(self.worker.requests, 0)
+                self.assertEqual((self.worker.plugin / "Widget.qml").read_text(), "user modification")
+                self.assert_unchanged()
+
+    def test_symlink_release_never_reaches_validation(self):
+        (self.remote / "external").symlink_to(self.prefs)
+        self.commit(self.remote)
+        target = self.worker.git(self.remote, "rev-parse", "HEAD")
+        self.entry.update(listingValidatedCommit=target, verificationCommit=target)
+        self.worker.git(self.remote, "tag", "-f", "v0.11.0")
+        with patch.object(self.worker, "validate") as validate:
+            self.assertEqual(self.worker.run(now=1000), "failed")
+            validate.assert_not_called()
+        self.assert_unchanged()
+
+    def test_submodule_release_never_reaches_validation(self):
+        self.worker.git(self.remote, "update-index", "--add", "--cacheinfo", "160000", self.target, "dependency")
+        self.worker.git(self.remote, "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
+                        "commit", "-qm", "Gitlink fixture")
+        target = self.worker.git(self.remote, "rev-parse", "HEAD")
+        self.entry.update(listingValidatedCommit=target, verificationCommit=target)
+        self.worker.git(self.remote, "tag", "-f", "v0.11.0")
+        with patch.object(self.worker, "validate") as validate:
+            self.assertEqual(self.worker.run(now=1000), "failed")
+            validate.assert_not_called()
+        self.assert_unchanged()
+
+    def test_checkout_byte_transformation_is_rejected(self):
+        # A clean git diff is insufficient: eol=crlf changes checkout bytes.
+        (self.remote / ".gitattributes").write_text("Widget.qml text eol=crlf\n")
+        self.commit(self.remote)
+        target = self.worker.git(self.remote, "rev-parse", "HEAD")
+        self.entry.update(listingValidatedCommit=target, verificationCommit=target)
+        self.worker.git(self.remote, "tag", "-f", "v0.11.0")
+        self.assertEqual(self.worker.run(now=1000), "failed")
+        self.assert_unchanged()
+
+    def test_local_hooks_and_template_are_not_executed_or_copied(self):
+        marker = self.base / "hook-ran"
+        hook = self.worker.plugin / ".git/hooks/post-checkout"
+        hook.write_text("#!/bin/sh\ntouch '" + str(marker) + "'\n")
+        hook.chmod(0o700)
+        with patch.dict(os.environ, {"GIT_TEMPLATE_DIR": str(self.worker.plugin / ".git")}):
+            self.assertEqual(self.worker.run(now=1000), "updated")
+        self.assertFalse(marker.exists())
+        self.assertFalse((self.worker.plugin / ".git/hooks/post-checkout").exists())
+
+    def test_git_environment_cannot_inject_a_different_directory_or_config(self):
+        with patch.dict(os.environ, {"GIT_DIR": str(self.remote / ".git"),
+                                    "GIT_WORK_TREE": str(self.remote), "GIT_CONFIG_COUNT": "1",
+                                    "GIT_CONFIG_KEY_0": "core.hooksPath", "GIT_CONFIG_VALUE_0": "/bogus"}):
+            self.assertEqual(self.worker.run(now=1000), "updated")
+        self.assertEqual(self.worker.git(self.worker.plugin, "rev-parse", "HEAD"), self.target)
+
+    def test_timeout_stops_command_children_before_cleanup(self):
+        marker = self.base / "child-finished"
+        child = "import time; from pathlib import Path; time.sleep(0.4); Path(" + repr(str(marker)) + ").touch()"
+        parent = "import subprocess,sys,time; subprocess.Popen([sys.executable, '-c', " + repr(child) + "]); time.sleep(10)"
+        with self.assertRaises(subprocess.TimeoutExpired):
+            self.worker.command(sys.executable, "-c", parent, timeout=0.15)
+        time.sleep(0.4)
+        self.assertFalse(marker.exists())
+
+    def test_staged_change_during_final_network_check_is_rejected(self):
+        calls = 0
+        def approval():
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                stage = next(self.worker.plugin.parent.parent.glob(".scratchpeek-update-*/plugin"))
+                (stage / "Widget.qml").write_text("modified during final check")
+            return self.target
+        with patch.object(self.worker, "approval", side_effect=approval):
+            self.assertEqual(self.worker.run(now=1000), "failed")
+        self.assert_unchanged()
+
+    def test_second_update_installs_the_complete_project_and_keeps_preferences(self):
+        self.assertEqual(self.worker.run(now=1000), "updated")
+        for name in self.worker.git(ROOT, "ls-files", "-z").split("\0"):
+            if not name:
+                continue
+            source, destination = ROOT / name, self.remote / name
+            if source.is_file():
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source, destination)
+        self.commit(self.remote)
+        target = self.worker.git(self.remote, "rev-parse", "HEAD")
+        manifest = json.loads((self.remote / "manifest.json").read_text())
+        tag = "v" + manifest["version"]
+        self.worker.git(self.remote, "tag", tag)
+        self.worker.release.update(id=12, tag_name=tag)
+        self.entry.update(listingValidatedCommit=target, verificationCommit=target)
+        self.assertEqual(self.worker.run(now=1000 + updates.DAY), "updated")
+        self.assertEqual(self.worker.git(self.worker.plugin, "rev-parse", "HEAD"), target)
+        for name in ("update.py", "Updates.qml", "manifest.json", "preview.png", "vendor/omarchy/LICENSE"):
+            self.assertEqual((self.worker.plugin / name).read_bytes(), (ROOT / name).read_bytes())
+        self.assertEqual(self.prefs.read_bytes(), self.saved)
+
+
+class MetadataTest(unittest.TestCase):
+    def test_metadata_size_and_json_are_checked(self):
+        for raw in (b"x" * 17, b"not json"):
+            response = io.BytesIO(raw)
+            response.status = 200
+            response.geturl = lambda: updates.RELEASE_URL
+            with patch("urllib.request.OpenerDirector.open", return_value=response):
+                with self.assertRaises(ValueError):
+                    updates.read_json(updates.RELEASE_URL, 16)
+
+    def test_metadata_requests_have_no_auth_and_require_exact_source(self):
+        response = io.BytesIO(b'{"ok":true}')
+        response.status = 200
+        response.geturl = lambda: updates.RELEASE_URL
+        with patch("urllib.request.OpenerDirector.open", return_value=response) as request:
+            self.assertEqual(updates.read_json(updates.RELEASE_URL, 100), {"ok": True})
+        self.assertFalse(request.call_args.args[0].has_header("Authorization"))
+        self.assertEqual(request.call_args.args[0].get_header("Cache-control"), "no-cache")
+
+    def test_redirects_are_rejected(self):
+        handler = updates.NoRedirect()
+        self.assertIsNone(handler.redirect_request(None, None, 302, "Found", {}, "http://example.invalid"))
+        response = io.BytesIO(b"{}")
+        response.status = 200
+        response.geturl = lambda: "https://example.invalid/catalog.json"
+        with patch("urllib.request.OpenerDirector.open", return_value=response):
+            with self.assertRaises(ValueError):
+                updates.read_json(updates.CATALOG_URL, 100)
 
 
 if __name__ == "__main__":

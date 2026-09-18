@@ -1,8 +1,10 @@
 # Languages
 
-ScratchPeek 0.2.0 includes 30 interface catalogs. Product names, application
-names, window titles and monitor identifiers are not translated by ScratchPeek.
-Application names/icons come from installed desktop entries.
+Choose a language in the panel’s **Language** field. You can search by its
+native name or code. The choice is saved and applies to every monitor.
+Select **Automatic** to use the system language.
+
+ScratchPeek has 30 interface translations:
 
 | Code | Native name | Language |
 |---|---|---|
@@ -37,45 +39,44 @@ Application names/icons come from installed desktop entries.
 | zh-CN | 简体中文 | Simplified Chinese |
 | zh-TW | 繁體中文 | Traditional Chinese |
 
-## Detection and persistence
+App names, window titles and monitor names stay as supplied by the system.
+Arabic uses a right-to-left layout, while the monitor diagram keeps its physical
+arrangement. Non-Latin text depends on the installed fonts; ScratchPeek uses
+Qt’s font fallback and does not install fonts.
 
-1. A supported explicit `language` setting takes priority.
-2. `auto`, a missing setting, or an unsupported setting checks `Qt.locale().uiLanguages`
-   in preference order. Unsupported entries are skipped; `C`/`POSIX` selects English.
-3. If no UI preference matches, use `Qt.locale().name`; otherwise use English.
+## Automatic selection
 
-This uses Qt's [ordered UI-language preferences](https://doc.qt.io/qt-6/qml-qtqml-locale.html#uiLanguages-prop),
-not keyboard layout, location, window titles, or a network service. Qt determines
-the system locale when the shell starts. Restart the shell after changing the
-session's locale environment. Returning to **Automatic** recomputes the selection
-from the current shell's Qt locale; detection is never saved as a manual override.
+ScratchPeek first checks Qt’s ordered UI-language preferences, then its locale
+name. The first supported language wins. If none matches, it uses English.
+An unsupported saved language code also falls back to automatic selection.
+`C` and `POSIX` select English.
 
-Codes accept hyphens/underscores, encodings (`de_DE.UTF-8`) and locale modifiers.
-Regional languages such as `es-MX` use their base translation. `pt-BR` uses the
-Brazilian catalog; other Portuguese locales use `pt-PT`. `zh-Hant` and Taiwan,
-Hong Kong or Macao select Traditional Chinese; `zh-Hans`, mainland China and
-Singapore select Simplified Chinese. An explicit script overrides territory.
-The aliases `no` and `in` map to `nb` and `id` respectively.
+Qt reads the session locale when the shell starts. After changing the locale
+environment, restart the shell. Choosing **Automatic** uses the current shell’s
+Qt locale and does not save the detected language as a manual choice.
+See [Qt’s UI-language preferences](https://doc.qt.io/qt-6/qml-qtqml-locale.html#uiLanguages-prop).
 
-The in-panel picker stores canonical codes through Omarchy's scoped
-`updateEntryInline` API. It preserves the plugin's workspace, compact setting
-and future fields. Other plugins are untouched. No first-start dialog is required.
+Regional codes are accepted, including `de_DE.UTF-8`. Most use their base
+language, such as `es-MX` → `es`. The exceptions are:
 
-## Translation maintenance
+- `pt-BR` uses Brazilian Portuguese; other Portuguese locales use `pt-PT`.
+- `zh-Hant`, Taiwan, Hong Kong and Macao use Traditional Chinese. `zh-Hans`,
+  mainland China and Singapore use Simplified Chinese. An explicit script
+  takes priority over the region.
+- `no` maps to `nb`, and `in` maps to `id`.
 
-The UTF-8 catalogs live in `I18n.js`. Add language metadata with a native name,
-then translate every English key. Preserve `{monitor}` and `{language}` placeholders;
-their positions can change. Keep Omarchy's key names (`Super`, `Alt`, `S`) intact.
-Arabic text isolates Latin shortcuts and monitor identifiers to preserve ordering.
+## Editing translations
 
-Tests require every catalog to have every key and the same named placeholders.
-At runtime missing future strings fall back to English. The `Language` recovery
-label remains alongside the translated label so an accidental selection is easy
-to undo. Languages use native names rather than country flags.
+Translations and language names are in [I18n.js](../I18n.js). When adding a
+language, add its code and native name, then translate every English key.
+Preserve the named placeholders in each string and key names such as `Super`
+and `Alt`. Arabic strings use direction markers around Latin shortcuts and
+monitor names to keep them in the correct order.
 
-These initial translations were authored during development and have not all
-been reviewed by native speakers. Linguistic review is part of the publication
-plan; automated completeness checks are not linguistic certification.
+Run `node tests/model.test.cjs` from the repository root to check keys and
+placeholders. Missing strings fall back to English at runtime. The word
+**Language** stays beside the translated field label so users can find it
+after an accidental language change.
 
-Rendering non-Latin scripts depends on the fonts installed on the user's system.
-ScratchPeek uses Qt font fallback and does not install fonts automatically.
+Not all translations have been reviewed by native speakers. The tests check
+completeness, not wording; corrections are welcome.

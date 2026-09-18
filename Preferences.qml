@@ -13,6 +13,8 @@ QtObject {
   property bool failed: false
   property bool readBlocked: false
   property string lastPayload: ""
+  readonly property bool hasSavedValues: lastPayload !== ""
+  property bool writeSucceeded: false
 
   function load(raw) {
     if (ready) return;
@@ -29,11 +31,15 @@ QtObject {
     var next = JSON.parse(JSON.stringify(settings));
     delete next.id;
     var payload = JSON.stringify({version:1,settings:next},null,2) + "\n";
-    if (payload === lastPayload) return true;
+    // A failed FileView write can leave its cache ahead of the file on disk.
+    // Reload it before retrying, and require an actual successful save signal.
+    if (failed) { file.reload(); file.waitForJob(); }
+    if (payload === lastPayload) { failed = false; return true; }
     failed = false;
+    writeSucceeded = false;
     file.setText(payload);
     file.waitForJob();
-    if (failed) return false;
+    if (!writeSucceeded) { failed = true; return false; }
     values = next; lastPayload = payload;
     return true;
   }
@@ -57,5 +63,6 @@ QtObject {
       root.ready = true;
     }
     onSaveFailed: root.failed = true
+    onSaved: root.writeSucceeded = true
   }
 }

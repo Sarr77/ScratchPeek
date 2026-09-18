@@ -1,14 +1,13 @@
 # ScratchPeek
 
-**Zobacz, co masz w scratchpadzie i gdzie jest otwarty.**
+ScratchPeek dodaje listę okien do scratchpada Omarchy, otwieranego zwykle przez
+**Super + S**. Na pasku pokazuje liczbę okien i monitor, na którym scratchpad jest
+otwarty. Z listy możesz przejść do okna, przenieść je na inny workspace albo
+dodać kolejne do scratchpada. Zakładki w grupach okien Hyprlanda są widoczne
+osobno.
 
-Mała wtyczka paska Omarchy. Autor: [Sarr](https://github.com/Sarr77).
-
-![ScratchPeek — przykładowy widok wskaźnika i listy okien](../preview.png)
-
-ScratchPeek pokazuje liczbę okien i stan: **pusty**, **ukryty**, **widoczny tutaj**,
-**aktywny tutaj** lub **widoczny na innym monitorze**. Każda zakładka liczy się osobno.
-To scratchpad **okien** pod Super + S, a nie historia skopiowanych tekstów.
+[English](../README.md) · [Podgląd](../preview.png) ·
+[Instrukcja (EN)](GUIDE.md) · [Historia zmian](../CHANGELOG.md)
 
 ## Instalacja
 
@@ -16,47 +15,53 @@ To scratchpad **okien** pod Super + S, a nie historia skopiowanych tekstów.
 omarchy plugin add https://github.com/Sarr77/ScratchPeek --enable
 ```
 
-Wymagane jest Omarchy Quattro z natywnym paskiem Quickshell. Przenoszenie okien
-wymaga Hyprland 0.56+ z konfiguracją Lua. Testowano na Omarchy 4.0.4 i Hyprland
-0.56.2. Bez dodatkowych pakietów do działania.
+Wtyczka pojawi się po lewej stronie paska. Możesz ją przenieść w edytorze paska
+Omarchy.
 
-## Najważniejsze gesty
+Wymagane jest Omarchy Quattro z paskiem Quickshell. Przenoszenie okien wymaga
+Hyprlanda 0.56+ z konfiguracją Lua. Testowano na Omarchy 4.0.4 i Hyprlandzie
+0.56.2. Nie trzeba instalować dodatkowych pakietów.
 
-| Działanie | Efekt |
+## Obsługa
+
+Kliknij wskaźnik na pasku, żeby pokazać lub schować scratchpad na danym
+monitorze. Prawy przycisk otwiera listę okien i ustawienia.
+
+| W panelu | Działanie |
 | --- | --- |
-| Kliknięcie wskaźnika | Pokaż lub schowaj scratchpad na tym monitorze |
-| Prawy przycisk | Lista okien i ustawienia |
 | Kliknięcie nazwy okna | Przejdź do tego okna lub zakładki |
-| **Wyciągnij** | Wybierz docelowy workspace |
+| **Wyciągnij** | Wybierz workspace, na który przenieść okno |
 | **Ctrl + klik Wyciągnij** | Przenieś na bieżący workspace tego monitora |
 | **Dodaj okno do scratchpada…** | Wybierz okno do dodania |
-| **Ctrl + klik Dodaj okno…** | Od razu dodaj aktywne okno aplikacji |
+| **Ctrl + klik Dodaj okno…** | Dodaj aktywne okno aplikacji |
 
-Przenosi się tylko wybrane okno. Schowanie scratchpada zostawia wszystkie okna w środku.
+Przeniesienie zakładki zostawia pozostałe okna z jej grupy na miejscu.
+Schowanie scratchpada pozostawia jego okna w środku.
 
-## Dopasuj do siebie
+## Ustawienia
 
-W panelu wybierzesz język, kolor, presety, skalę i własne opisy. Zmiany mają
-podgląd na żywo; **Zastosuj** zapisuje, a **Anuluj** przywraca poprzedni wybór.
+W panelu możesz zmienić język, kolory, presety, skalę i opisy.
+Zmiany wyglądu widać podczas edycji. **Zastosuj** je zapisuje,
+a **Anuluj** przywraca poprzednie ustawienia.
 
-**?** włącza i wyłącza podpowiedzi. Początkowo działają przez 100 wyświetleń;
-licznik pokazuje, ile zostało. Zawsze możesz włączyć je ponownie.
-
-Ustawienia i licznik podpowiedzi zapisują się automatycznie. Przetrwają restart,
-aktualizację, wyłączenie wtyczki i ponowną instalację.
+Przycisk **?** włącza i wyłącza podpowiedzi po najechaniu kursorem.
+Początkowo są włączone i chowają się automatycznie po 100 wyświetleniach.
+Możesz je włączyć ponownie w dowolnym momencie. Ustawienia i licznik podpowiedzi
+są zachowywane po restarcie, aktualizacji i ponownej instalacji.
 
 ## Aktualizacje
 
-Automatyczne aktualizacje są domyślnie włączone. Podczas działania wtyczka
-sprawdza raz dziennie, czy na GitHubie jest nowe stabilne wydanie, i instaluje
-je w tle. Mały przełącznik **Automatyczne aktualizacje** obok **?** w stopce
-pozwala je wyłączyć po potwierdzeniu. Ponowne włączenie wymaga jednego kliknięcia.
-Ustawienia pozostają zapisane. Błąd pobierania lub weryfikacji pozostawia
-dotychczasową wersję; kolejna próba odbędzie się następnego dnia.
+Automatyczne aktualizacje są domyślnie włączone. Wtyczka sprawdza je raz dziennie,
+gdy działa. Od wersji 0.11.1 aktualizacja musi pochodzić z niezmiennego wydania
+GitHub, którego dokładny commit został zweryfikowany w katalogu Omarchy.
+Błąd pobierania lub weryfikacji pozostawia zainstalowaną wersję bez zmian.
 
-Dotyczy standardowej instalacji przez `omarchy plugin add`. Kopie robocze
-podłączone linkiem, forki i lokalnie zmieniony kod są pomijane. Wersję 0.10.0
-trzeba jednorazowo zaktualizować ręcznie, aby korzystać z tej funkcji w 0.11.0:
+Mały przełącznik obok **?** pozwala wyłączyć aktualizacje po potwierdzeniu.
+Kopie robocze podłączone linkiem, forki i lokalnie zmieniony kod nie są
+aktualizowane automatycznie. Więcej w [opisie aktualizacji (EN)](UPDATES.md).
+
+Aktualizacja ręczna — potrzebna też przy przejściu z 0.10.0, żeby uzyskać
+automatyczne aktualizacje:
 
 ```sh
 omarchy plugin update sarr.scratchpeek
@@ -68,17 +73,26 @@ omarchy plugin update sarr.scratchpeek
 omarchy plugin remove sarr.scratchpeek
 ```
 
-Okna i workspace’y pozostają bez zmian. Ustawienia zostają na przyszłość
-w `~/.local/state/scratchpeek/preferences.json` (lub pod `$XDG_STATE_HOME/scratchpeek`).
-Jeśli chcesz je również usunąć, skasuj ten plik po odinstalowaniu wtyczki.
+Usunięcie wtyczki pozostawia okna i workspace’y na miejscu. Ustawienia zostają
+w `~/.local/state/scratchpeek/preferences.json` lub pod
+`$XDG_STATE_HOME/scratchpeek`, jeśli ta zmienna jest ustawiona. Jeśli chcesz
+również zresetować preferencje, usuń ten plik po odinstalowaniu wtyczki.
 
-Bez telemetrii i uprawnień administratora. Wtyczka
-odczytuje lokalny stan Hyprlanda i wykonuje wybrane przez Ciebie działania.
-Tytuły okien nie są zapisywane na dysku. Automatyczne aktualizacje korzystają
-z publicznego API GitHuba i repozytorium ScratchPeek; wymagają Pythona 3 i Gita.
-Jak inne wtyczki Omarchy, ScratchPeek działa z uprawnieniami użytkownika.
+## Dane i uprawnienia
 
-[Pełna instrukcja (EN)](GUIDE.md) · [Zgłoś błąd](https://github.com/Sarr77/ScratchPeek/issues) ·
-[Historia zmian](../CHANGELOG.md)
+ScratchPeek odczytuje lokalny stan okien i monitorów, informacje o motywie oraz
+ikony aplikacji. Korzysta z `hyprctl` do odczytu stanu i wykonywania działań
+na oknach. Nie zapisuje tytułów okien na dysku ani nie zmienia skrótów klawiszowych.
 
-MIT · © 2026 Sarr.
+Automatyczne aktualizacje łączą się z GitHubem i katalogiem Omarchy przez
+Pythona 3 i Gita. Terminy i wyniki aktualizacji są zapisywane lokalnie obok
+preferencji. Nie ma telemetrii. Wtyczka działa wewnątrz powłoki Omarchy
+z uprawnieniami użytkownika, bez dostępu administratora.
+
+## Pomoc i rozwój
+
+[Zgłoś błąd](https://github.com/Sarr77/ScratchPeek/issues) ·
+[Praca nad kodem (EN)](DEVELOPMENT.md) · [Testy i ograniczenia (EN)](TESTING.md)
+
+MIT · © 2026 [Sarr](https://github.com/Sarr77).
+Dostosowane kontrolki Omarchy zachowują [swoją licencję MIT](../vendor/omarchy/LICENSE).

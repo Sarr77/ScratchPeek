@@ -169,8 +169,8 @@ ShellRoot {
           widgetB.toggleUpdates();
           testRoot.check(widgetA.autoUpdates && widgetB.autoUpdates && fakeShell.saved.autoUpdates === true, "updates can be enabled again");
           fakeShell.rejectSave = true;
-          testRoot.check(!widgetA.setHintsMode("off") && widgetA.hintsSaveFailed, "save failure reported");
-          testRoot.check(widgetA.hints.mode === "on" && widgetB.hints.mode === "on", "failed save cannot change either monitor");
+          testRoot.check(widgetA.setHintsMode("off") && !widgetA.hintsSaveFailed, "durable save succeeds without the optional host mirror");
+          testRoot.check(widgetA.hints.mode === "off" && widgetB.hints.mode === "off", "both monitors follow the durable choice");
           fakeShell.rejectSave = false;
           widgetA.persistSettings({hintsMode:"auto",hintsUsed:98});
           testRoot.budgetPhase = true;
@@ -265,7 +265,8 @@ ShellRoot {
           testRoot.click(updatesControl,Qt.NoModifier); break;
         case 26:
           testRoot.click(testRoot.findControl(confirmation,"confirmUpdateOff"),Qt.NoModifier);
-          testRoot.check(widgetA.autoUpdates && widgetA.updatesSaveFailed, "failed save cannot disable updates");
+          testRoot.check(!widgetA.autoUpdates && !widgetA.updatesSaveFailed && Plugin.ScratchState.preferences.values.autoUpdates === false,
+            "disabled updates stay saved when the host mirror rejects the write");
           fakeShell.rejectSave = false;
           console.info("SCRATCHPEEK_PANEL_ACTIONS_PASS"); stop(); Qt.quit(); break;
         }

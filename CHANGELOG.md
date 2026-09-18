@@ -1,203 +1,178 @@
 # Changelog
 
+## 0.11.1
+
+- Automatic updates now require an immutable GitHub release and marketplace
+  verification of its exact commit. The updater checks both again before installing.
+- Added checks of downloaded file contents and permissions. Git runs with isolated
+  configuration, and checkouts with hidden local changes are left alone.
+- Pinned GitHub Actions to full commit SHAs.
+- Settings from the panel and Omarchy are saved to disk before controls change.
+  Failed writes keep the saved choice; retrying after a write failure works correctly.
+  Delayed settings from another monitor cannot overwrite a newer choice.
+- If preferences cannot be read or saved on startup, the widget keeps Omarchy's
+  existing settings. A failed edit no longer clears that copy or selects the default scratchpad.
+- Release archives now use an explicit file list, excluding local notes and caches.
+- Simplified editor navigation and rewrote the documentation.
+
 ## 0.11.0 — 2026-09-17
 
-- Clear hover highlights as soon as the pointer leaves a control, including
-  the help icon. Keep keyboard selection visible and functional.
-- Keep the author credit as plain text, without a link or hover action. Use
-  “by Sarr” in English.
-- Add automatic daily updates for stable GitHub releases, with a small saved footer
-  switch. Preserve preferences, skip modified/development copies, and validate
-  a staged version before atomically installing it. Translate the new controls
-  into all 30 languages.
-- Add full hint-budget coverage across two widgets and cold starts at 50 and
-  100 displays. Manual re-enabling remains unlimited.
-- Make the updates switch smaller and dimmer, beside the help icon. Require
-  confirmation before turning updates off, with translated guidance in the dialog.
-- Clarify the update confirmation and fit its full button label. Always name
-  the scratchpad in the bar preview's click description, including with hints off.
-  Remove final full stops from hover descriptions in all 30 languages.
-- Use “visible here” and “visible on …” for visibility states, with matching
-  translations. Preserve custom labels and the separate active/focused state.
-- Record the phase and reason of a failed visibility action locally, without
-  window titles or raw compositor responses, to help diagnose intermittent errors.
+- Added daily automatic updates for stable GitHub releases. Modified and linked
+  development copies are skipped; settings are preserved during installation.
+- Added a small update switch in the footer with confirmation before disabling it.
+- Fixed hover highlights remaining active after the pointer left a footer control.
+- Changed the author credit to plain “by Sarr”, without a link.
+- Added tests of the full 100-hint count across monitors and restarts. Manually
+  enabled hints remain on without a limit.
+- Changed visibility labels to “visible here” and “visible on …”, preserving
+  custom labels and the separate “active here” state.
+- Kept “scratchpad” in the bar preview’s click description even when hints are off.
+  Removed final full stops from hover hints in all 30 languages.
+- Added local diagnostics for show/hide failures, without window titles or raw
+  compositor responses.
 
 ## 0.10.0 — 2026-09-17
 
-- Save preferences and hint progress atomically outside the bar layout. Restore
-  them automatically after disable, restart and reinstall; migrate existing
-  settings and protect newer data from a stale host snapshot. Report read/write
-  errors without overwriting a damaged file.
-- Make the author credit a keyboard-accessible link to Sarr’s GitHub profile,
-  with a subtle hover accent and destination hint.
-- Prepare the first public release with a shorter README, full user guide,
-  refreshed preview, accurate runtime disclosure and isolated lifecycle tests.
+- Moved saved settings and hint counts outside the bar layout so they survive
+  disabling, restarts, removal and reinstalls.
+- Added settings migration, revision checks and read/write error reporting.
+  Damaged settings files are left intact.
+- Made the author credit a keyboard-accessible link to Sarr’s GitHub profile.
+- Prepared the first public release with installation documentation, a preview
+  and tests of the install/update/remove cycle.
 
 ## 0.9.0 — 2026-09-17
 
-- Ctrl + click Add window to scratchpad… immediately adds the focused application
-  window, including when the panel temporarily holds keyboard focus. Ordinary
-  clicks keep the searchable picker. Its new hint follows the shared hint budget.
-- Include “scratchpad” in the bar preview's click description while hints are on;
-  keep the compact wording while off. Translate new messages into all 30 languages.
-- Read live compositor state for each visibility action, including the first
-  action after restart. Use an explicit, idempotent show/hide on the named monitor
-  with Lua Hyprland, instead of two separate focus/toggle commands.
-- Serialize actions across monitors and verify completion. Guard against stale
-  workspace context, disconnected monitors, duplicate invocation, missing replies
-  and timeouts without retrying a toggle. Report failures in the panel.
-- Add deterministic transaction tests and opt-in native checks for restart,
-  cross-monitor visibility, duplicate actions and quick-add of a grouped tab.
+- Added Ctrl + click on **Add window to scratchpad…** to add the focused app.
+  This also works when opening the panel has temporarily taken keyboard focus.
+- Added “scratchpad” to the bar preview’s click description when hints are on.
+- Show/hide actions now read the current state, including the first action after
+  restart. With Lua Hyprland, they explicitly show or hide on the chosen monitor.
+- Prevented overlapping visibility actions and added completion checks. Changed
+  workspaces, missing monitors, duplicate requests and timeouts are handled
+  without automatically repeating a toggle.
+- Added tests for startup visibility, monitor changes and adding a grouped tab.
 
 ## 0.8.2 — 2026-09-17
 
-- Clarify automatic hiding in the hover counter description. Put the manual
-  off action and re-enable reminder on separate lines in all 30 languages.
+- Clarified the remaining-hints description, with separate lines for switching
+  hints off and turning them on again.
 
 ## 0.8.1 — 2026-09-17
 
-- Replace the calendar-based introduction with a persistent budget of 100 actual
-  hover-hint displays. Quick passes and the help icon consume nothing; the last
-  allowed hint remains readable until the pointer leaves.
-- Show remaining views and explain that hints can always be turned on again.
-  Manual activation remains unlimited. Reuse the themed tooltip with wrapping.
-- Shorten the shortcut reminder to just its keys while panel hints are off.
-  Use Ctrl + click: to this workspace, including spaces around the plus sign.
-- Preserve manual choices across the change and update all 30 translations.
+- Replaced the seven-day hint period with a saved count of 100 displays.
+  Passing over a control before its hint opens does not count. The help icon
+  does not use the count, and the last allowed hint stays open until the pointer leaves.
+- Added the remaining count and reminder that hints can be turned on again.
+  Manually enabled hints have no limit; existing manual choices are preserved.
+- Shortened the shortcut reminder to just the keys when hints are off.
+- Changed the move shortcut hint to “Ctrl + click: to this workspace”.
 
 ## 0.8.0 — 2026-09-17
 
-- Add a small help toggle opposite the author in the panel footer. Its own hover
-  description is always available, even with other panel hints disabled.
-- Enable hints for the first seven calendar days, showing a daily countdown;
-  persist the start and expiry across restarts and updates. Manual choices last
-  until changed by the user and apply to all monitors.
-- Ctrl+click Move out moves the selected window directly to this monitor's
-  active ordinary workspace. Ordinary clicks still open the destination picker.
-- Shorten the transfer hint to Ctrl+click: to this workspace, and Hide's hint to
-  one sentence describing temporary hiding.
-- Add a compact reminder explicitly naming the scratchpad, using the detected
-  global shortcut. Keep the bar preview and shortcut visible when hints are off.
-- Fix rapid settings writes using the current widget settings after startup
-  hydration, avoiding the host's stale layout snapshot. Translate all new copy
-  into 30 languages and test real Qt clicks, persistence and countdown boundaries.
+- Added the **?** hint switch in the footer. Its own description is always available.
+- Initially enabled hints for seven days, with a saved countdown and manual override.
+- Added Ctrl + click on **Move out** to use the panel monitor’s current workspace.
+- Shortened the move and hide hints, and added a reminder of the detected
+  scratchpad keybinding.
+- Fixed rapid settings changes being overwritten by an older bar configuration.
+- Added translations and tests for the new controls.
 
 ## 0.7.3 — 2026-09-17
 
-- Label the add-window picker Add window to scratchpad… in all 30 languages.
-- Explain Hide on hover: hides the scratchpad on this monitor while keeping
-  its windows inside. Show here has a corresponding monitor-specific hint.
-- Use compact multiline text and expose visibility hints to accessibility.
+- Renamed the add-window picker to **Add window to scratchpad…**.
+- Added hover descriptions for **Hide** and **Show here**, also available to
+  accessibility tools.
 
 ## 0.7.2 — 2026-09-17
 
-- Remove the ellipsis from the Move out button in all 30 languages; preserve
-  the full extraction tooltip and its ellipsis.
-- Hovering a window's icon/name now explains that clicking focuses that
-  window or tab. The extraction button keeps its separate tooltip and action.
-- Clarify the bar tooltip footer: Right-click: window list and settings.
-- Translate the focus hint into all 30 languages, expose it to accessibility,
-  and wrap it within the panel width. Hide it while scrolling or editing.
+- Removed the ellipsis from **Move out**, keeping it in the longer hover description.
+- Added a hint explaining that clicking a window’s icon or name focuses it.
+  The hint hides while scrolling or editing and is available to accessibility tools.
+- Changed the bar tooltip footer to “Right-click: window list and settings”.
 
 ## 0.7.1 — 2026-09-17
 
-- Clicking an open dropdown's trigger now closes it instead of reopening it
-  during the same click. Applies to all ScratchPeek searchable dropdowns.
-- Replace the small extraction arrow with a bordered, labeled Move out… button
-  beside each window; the destination-workspace picker remains one click away.
-- Use separate window/workspace search hints instead of Search languages…,
-  translated along with the new action label into all 30 languages.
-- Added an offscreen Qt pointer/keyboard regression test for dropdown dismissal,
-  reopening, filtering, selection and 200% scaling with the popup above its trigger.
+- Fixed a second click on an open dropdown reopening it instead of closing it.
+- Replaced the small extraction arrow with a labeled **Move out…** button.
+- Added separate search hints for windows and workspaces.
+- Added dropdown tests for pointer and keyboard input, dismissal, filtering and scaling.
 
 ## 0.7.0 — 2026-09-17
 
-- Add windows to the scratchpad through a searchable application/window picker.
-- Take out a window with its ↗ action and choose a numbered or named workspace;
-  show monitor names and offer empty workspaces 1–10 as destinations.
-- Atomically check live membership and separate only the selected grouped tab
-  before moving it silently, avoiding stale IPC state and focus-based moves.
-- Confirm moves through compositor state, serialize requests across monitors,
-  and report failed/blocked moves. Locked groups stay in place.
-- Compact transfer editor, keyboard actions, scaling and 30-language coverage.
-- Transfers require Hyprland's Lua window/group API (0.56+). Legacy indicator
-  support remains; unsupported transfer controls are hidden.
+- Added a searchable picker for adding windows to the scratchpad.
+- Added window extraction to named or numbered workspaces, including empty
+  workspaces 1–10, with monitor names shown in the destination list.
+- Moving a grouped tab now separates only that tab and leaves the current
+  workspace selected. Locked groups stay in place.
+- Added checks for stale windows, overlapping requests and failed moves.
+- Added the destination editor, keyboard controls and translations in all 30 languages.
+- Transfers require Hyprland 0.56+ with Lua. Older Hyprland versions keep the
+  indicator, with transfer controls hidden.
 
 ## 0.6.1 — 2026-09-16
 
-- Replaced the theme-color shortcut with Restore saved color and its saved HEX.
-  Restores the saved mode/scope for the current theme, including automatic
-  behavior, while preserving preset edits, tooltip style and scaling.
+- Replaced the theme-color shortcut with **Restore saved color**, showing its HEX.
+  It restores the saved color mode and scope without resetting other editor changes.
 - Updated the button label in all 30 languages.
 
 ## 0.6.0 — 2026-09-16
 
-- Adapted color mode: ScratchPeek pink for Tokyo Night, theme accents elsewhere.
-- Exact Omarchy accent and custom colors, scoped to one theme or all themes.
-- Named color presets with preview, rename, recolor and deletion; Apply/Cancel
-  includes preset edits. Previous manual color choices survive upgrades.
-- Picker remains first; additional color settings live in a collapsed section
-  below it. Keyboard focus scrolls controls into view when expanded.
-- New controls translated into all 30 supported languages.
-- Added an offscreen test of the real QML editor with an in-memory settings host.
+- Added Adapted color mode: pink for Tokyo Night, theme accents elsewhere.
+- Added exact theme accents and custom colors for one theme or all themes.
+- Added named color presets with editing and deletion. Preset changes are saved
+  with Apply and discarded with Cancel. Earlier manual colors are preserved.
+- Kept the color picker first, with other color settings in a collapsed section.
+- Added translations and an offscreen appearance-editor test.
 
 ## 0.5.1 — 2026-09-16
 
-- Equal left/right content margins in scrolling panels; the scrollbar remains
-  in the outer padding without reserving an additional inner gutter.
+- Made the left and right margins equal in scrolling panels. The scrollbar
+  uses the outer padding.
 
 ## 0.5.0 — 2026-09-16
 
-- Independent panel/tooltip and bar text scaling from 80% to 200%, with sliders,
-  editable percentages, step buttons, system-size reset and shared live preview.
-- Panels scale controls, icons and typography together, fit the screen and scroll.
-  Bar text respects the existing bar height and reports its effective limit.
-- Appearance updates preserve unedited color, tooltip and scale preferences.
-- The theme-color button displays the actual theme accent HEX.
-- Scaling controls translated in all 30 interface catalogs.
-- Thin accent-colored scrollbars occupy a separate gutter beside the content.
-- Scaled dropdowns choose space above/below and cap their scrollable height.
+- Added separate panel/tooltip and bar-text scaling from 80% to 200%, with
+  sliders, percentage fields, ± buttons, reset and live preview.
+- Panels now fit the screen and scroll. Bar text fits the existing bar height,
+  with the effective size shown in the editor.
+- Preserved other appearance settings when changing scale or color.
+- Added the current theme HEX to the theme-color button.
+- Added themed scrollbars and dropdown placement that accounts for scale.
+- Translated the scaling controls into all 30 languages.
 
 ## 0.4.0 — 2026-09-16
 
-- Full-width underline now uses the selected accent with a 22% white blend,
-  updates during live preview, and needs no global theme or bar source changes.
-- Short, explicit Scratchpad, ON/OFF and custom state descriptions, shared by
-  the bar, panel, hover tooltip and accessible name.
-- Native label editor with six custom state fields, live preview, Apply/Cancel,
-  safe literal placeholders, persistent settings and blank-field fallback.
-- Custom strings survive preset/language changes; controls translated in all
-  30 catalogs. ON/OFF/ACTIVE/EMPTY remain conventional English switch labels.
-- Added 4 px horizontal tooltip padding on each side, retaining content width.
+- Added Short, With Scratchpad, ON/OFF and custom state descriptions for the
+  bar, panel and tooltip.
+- Added six custom text fields with placeholders, live preview, Apply/Cancel
+  and fallback for empty fields. Custom text survives language and preset changes.
+- Made the full-width underline follow the selected accent, using a lighter shade.
+- Added horizontal padding to the tooltip and translated the new controls.
 
 ## 0.3.0 — 2026-09-16
 
-- Full-label open-panel underline using Omarchy's extent hint.
-- Appearance editor with saturation/value palette, hue slider, HEX input,
-  live preview across monitors, Apply, Cancel and return to theme color.
-- Preview is transient; closing the editor without Apply restores saved values.
-- Scoped, passive hover tooltip with spacious/compact styles, application
-  icons, left/start-aligned content and accent-colored border/status.
-- Appearance controls translated in all 30 catalogs.
+- Added the appearance editor with a color palette, hue slider, HEX field,
+  theme-color shortcut and preview across monitors.
+- Added Apply/Cancel. Closing the editor discards unsaved changes.
+- Added Spacious and Compact tooltip styles with app icons and theme colors.
+- Added the full-width panel underline and translated appearance controls.
 
 ## 0.2.0 — 2026-09-16
 
-- 30 complete interface catalogs, including separate Portuguese and Chinese variants.
-- Auto detection on first launch using Qt UI-language preferences, region/script
-  matching, and English fallback. Explicit choices survive updates and restarts.
-- Searchable native-language picker with persistent settings shared by all monitors.
-- RTL layout for Arabic, with monitor positions kept in their physical order.
-- Theme-accent state highlighting, shorter bar text, desktop application icons,
-  grouped window markers, monitor diagram, and author credit in the footer.
-- Keyboard access to language selection, guarded settings updates, and new
-  coverage for locales, catalog completeness, group identity and monitor geometry.
+- Added 30 interface languages, including separate Portuguese and Chinese variants.
+- Added automatic language detection with regional matching and English fallback.
+- Added a searchable language picker with saved choices shared across monitors.
+- Added Arabic right-to-left layout while preserving physical monitor positions.
+- Added theme colors, app icons, group markers, a monitor diagram and author credit.
+- Added keyboard access to language selection and tests for languages, groups
+  and monitor layouts.
 
 ## 0.1.0 — 2026-09-16
 
-Initial release by **Sarr**.
+Initial release by Sarr.
 
-- Scratchpad window count, including inactive grouped tabs.
-- Empty, hidden, open here, active here, and open-on-another-monitor states.
-- Monitor-specific toggle, application tooltip, and keyboard-accessible window list.
-- English/Polish text, compact labels, and support for named special workspaces.
-- Native Quickshell/Hyprland integration with no added processes or network access.
+- Window count, including inactive grouped tabs, and scratchpad visibility states.
+- Show/hide on a chosen monitor, an app preview and a keyboard-accessible window list.
+- English and Polish, compact labels and named special workspaces.
+- Quickshell/Hyprland integration without network requests.

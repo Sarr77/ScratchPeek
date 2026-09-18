@@ -82,7 +82,20 @@ def inside(base):
                            'uiScale':1.25,'barScale':1.1,'customLabels':{'active':'My shelf'}}
             assert run('omarchy-shell','shell','testSave',json.dumps(preferences)) == 'true'
             wait_saved(lambda: saved_entry().get('hintsUsed') == 37)
+            preferences_file = profile / '.local/state/scratchpeek/preferences.json'
+            def stored():
+                return json.loads(preferences_file.read_text())['settings']
+            run('omarchy','bar','set',PLUGIN,'autoUpdates','true','--json')
+            wait_saved(lambda: stored().get('autoUpdates') is True)
+            run('omarchy','bar','set',PLUGIN,'language','de')
+            wait_saved(lambda: stored().get('language') == 'de')
+            run('omarchy','bar','set',PLUGIN,'autoUpdates','false','--json')
+            wait_saved(lambda: stored().get('autoUpdates') is False)
+            wait_saved(lambda: saved_entry().get('_scratchpeekRevision') == stored().get('_scratchpeekRevision'))
             expected = saved_entry()
+            assert expected['language'] == 'de' and expected['autoUpdates'] is False
+            assert stored()['hintsUsed'] == 37, 'Host edits changed the hint count'
+            print('PASS Omarchy bar settings reach the durable file before restart', flush=True)
             run('omarchy','plugin','enable',PLUGIN)
             assert saved_entry() == expected, 'Idempotent enable changed settings'
             stop(); boot()

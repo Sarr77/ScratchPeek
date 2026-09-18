@@ -1,30 +1,51 @@
 #!/usr/bin/env python3
-"""Create a reproducible source archive; never include local desktop data."""
+"""Build a reproducible source archive from the explicit release file list."""
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+import re
+import stat
+import tempfile
 import zipfile
 
-root = Path(__file__).resolve().parents[1]
-manifest = json.loads((root / "manifest.json").read_text())
-version = manifest["version"]
-assert all(c.isalnum() or c in ".-" for c in version)
-names = [
-    "Visibility.js", "ScratchVisibility.qml", "AuthorCredit.qml", "Preferences.qml", "PanelSelection.qml", "preview.png", "Updates.qml", "UpdateSwitch.qml", "UpdateConfirmation.qml", "update.py",
-    "manifest.json", "qmldir", "Model.js", "I18n.js", "ScratchState.qml", "Widget.qml", "HintsToggle.qml", "MoveOutButton.qml", "HintButton.qml", "PanelHint.qml", "AddWindowPicker.qml",
-    "Transfers.js", "WindowTransfer.qml", "TransferEditor.qml", "Details.qml", "PopupPlacement.js", "ScrollHandle.qml", "LabelsEditor.qml", "ScaleControl.qml", "ScalingEditor.qml", "Appearance.js", "AppearanceEditor.qml", "PresetChip.qml", "HoverTip.qml", "TooltipContent.qml", "README.md", "LICENSE", "CHANGELOG.md", ".gitignore",
-]
-for directory in ("docs", "tests", "tools", ".github", "vendor"):
-    names.extend(str(p.relative_to(root)) for p in (root / directory).rglob("*") if p.is_file())
 
-out = root / "dist" / f"ScratchPeek-{version}.zip"
-out.parent.mkdir(exist_ok=True)
-with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
-    for name in sorted(names):
-        source = root / name
-        if source.is_symlink():
-            raise ValueError(f"Refusing symlink: {name}")
-        info = zipfile.ZipInfo(f"scratchpeek/{name}", (2026, 1, 1, 0, 0, 0))
-        info.compress_type = zipfile.ZIP_DEFLATED
-        info.external_attr = 0o100644 << 16
-        archive.writestr(info, source.read_bytes())
-print(out)
+def release_files(root):
+    names = (root / "tools/package-files.txt").read_text().splitlines()
+    if not names or len(names) != len(set(names)):
+        raise ValueError("Release file list is empty or contains duplicates")
+    for name in names:
+        path = PurePosixPath(name)
+        if not name or path.is_absolute() or ".." in path.parts or path.as_posix() != name:
+            raise ValueError(f"Invalid release path: {name}")
+        source = root
+        for part in path.parts:
+            source = source / part
+            if source.is_symlink():
+                raise ValueError(f"Refusing symlink: {name}")
+        if not stat.S_ISREG(source.stat().st_mode):
+            raise ValueError(f"Not a regular file: {name}")
+    return sorted(names)
+
+
+def package(root):
+    root = Path(root).resolve()
+    names = release_files(root)
+    version = json.loads((root / "manifest.json").read_text())["version"]
+    if not isinstance(version, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
+        raise ValueError("Expected a stable X.Y.Z version")
+    out = root / "dist" / f"ScratchPeek-{version}.zip"
+    out.parent.mkdir(exist_ok=True)
+    # Keep a previous archive intact if reading or compressing a file fails.
+    with tempfile.TemporaryDirectory(prefix="package-", dir=out.parent) as staging:
+        temporary = Path(staging) / out.name
+        with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED) as archive:
+            for name in names:
+                info = zipfile.ZipInfo(f"scratchpeek/{name}", (2026, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.external_attr = 0o100644 << 16
+                archive.writestr(info, (root / name).read_bytes())
+        temporary.replace(out)
+    return out
+
+
+if __name__ == "__main__":
+    print(package(Path(__file__).resolve().parents[1]))

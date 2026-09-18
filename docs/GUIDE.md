@@ -1,223 +1,188 @@
-# Using ScratchPeek
+# User guide
 
-[Back to the overview](../README.md)
+[README](../README.md) · [Languages](LANGUAGES.md) · [Updates](UPDATES.md)
 
-## Reading the indicator
+## The bar indicator
 
 | Label | Meaning |
-|---|---|
-| `○ 0 · empty` | No windows in the scratchpad. |
-| `◌ 4 · hidden` | Four windows stored, overlay hidden. |
-| `● 4 · visible here` | Overlay visible on this monitor; focus can be elsewhere. |
-| `● 4 · active here` | A scratchpad window has keyboard focus on this monitor. |
-| `↗ 4 · visible on DP-3` | Overlay visible on the named other monitor. |
-| `? ? · status unknown` | State is unavailable or the configured name is invalid. |
+| --- | --- |
+| `○ 0 · empty` | The scratchpad has no windows |
+| `◌ 4 · hidden` | It contains four windows and is hidden |
+| `● 4 · visible here` | It is visible on this monitor; keyboard focus may be elsewhere |
+| `● 4 · active here` | One of its windows has keyboard focus on this monitor |
+| `↗ 4 · visible on DP-3` | It is visible on the named monitor |
+| `? ? · status unknown` | Its state could not be read, or its configured name is invalid |
 
-An empty scratchpad can still be open; in that case the label shows `0 · visible here`.
-Hidden tabs count separately, because switching tabs does not remove windows.
-Visible scratchpads use your theme accent; a focused scratchpad has a stronger
-background. Grouped windows share a small marker and group number in the list.
-The monitor diagram preserves physical positions even in an RTL interface.
+An empty scratchpad can still be visible. Tabs in Hyprland window groups count
+as separate windows, including tabs hidden behind another tab. Group members
+have a shared marker and group number in the list.
 
-Clicking a label for an empty, hidden scratchpad opens help instead of displaying
-an empty overlay. Clicking a window in the details panel follows that window;
-use **Show here** to bring the scratchpad to the panel's monitor instead.
+Click the indicator to show or hide the scratchpad on that monitor. Clicking
+an empty, hidden scratchpad opens the panel with help. Right-click opens the
+window list and settings. Hovering shows a preview of the window list.
 
-Each visibility action reads the current compositor state before releasing the
-panel's keyboard focus. On Lua Hyprland it explicitly shows or hides on the
-named monitor, without a separate monitor-focus toggle. Repeating that operation
-cannot reverse it. Requests are serialized across monitors until the compositor
-confirms the result and a brief transition guard ends. A changed workspace,
-missing monitor or failed reply stops the action and shows an error; there is
-no automatic toggle retry. Legacy Hyprland uses a fresh read after focusing the
-monitor but cannot provide the same atomic workspace guard.
+**Show here** brings the scratchpad to the panel’s monitor. Clicking a window’s
+name instead takes you to that window. Hiding the scratchpad leaves its windows
+inside. If the current state cannot be confirmed, the panel shows an error
+instead of repeatedly trying to toggle it.
 
-## Moving windows
+## Adding and moving windows
 
-Right-click ScratchPeek to open the window list:
+**Add window to scratchpad…** opens a searchable list of windows on ordinary
+workspaces. Search by app, title or workspace, then select a window. Click the
+button again, press Escape or click outside the list to close it.
 
-- **Add window to scratchpad…** searches windows on ordinary workspaces by application,
-  title or workspace. Select one to send it to the configured scratchpad.
-  Click **Add window to scratchpad…** again, press Escape or click outside to close the list.
-- **Ctrl + click Add window to scratchpad…** adds the focused application window
-  immediately. If opening the panel took keyboard focus, it uses the application
-  that was focused just before opening, provided it is still on a visible ordinary
-  workspace. An unavailable window produces a message instead of selecting another.
-- **↗ Move out**, beside a scratchpad window, opens **Take out of scratchpad…**. Select
-  a destination and press **Move**. The picker offers existing numbered and
-  named workspaces, plus empty workspaces **1–10**. Existing destinations show
-  their monitor; the ordinary workspace on the panel’s monitor is selected first.
-- **Ctrl + click Move out** sends the selected window straight to the currently
-  active ordinary workspace on the panel’s monitor, without opening the picker.
-- Moves are silent: you stay on the current workspace. To see an extracted
-  window, open its destination workspace. The panel’s **Show here / Hide**
-  action continues to control the whole scratchpad overlay. Its hover hint
-  explains the action; hiding keeps the windows inside the scratchpad.
+**Ctrl + click Add window to scratchpad…** adds the focused application window
+immediately. If the panel has taken focus, ScratchPeek uses the application
+that was focused before the panel opened, provided it is still on a visible
+ordinary workspace. If that window is unavailable, the panel shows a message.
 
-Hovering a window’s icon or name explains that clicking focuses that window or
-tab. The separate **Move out** button opens the destination picker.
+**Move out**, beside each window, opens the workspace picker. Select a
+destination and press **Move**. The list includes existing named and numbered
+workspaces, plus empty workspaces 1–10. The current workspace on the panel’s
+monitor is selected initially. **Ctrl + click Move out** uses that workspace
+without opening the picker.
 
-The small **?** at the bottom left switches panel hover hints on or off; its own
-description always stays available. Automatic hints turn off after the first
-**100 displayed hints**, with the remaining count shown on **?**. A quick pass
-before the tooltip delay consumes nothing, and staying over one hint counts once.
-The 100th hint stays readable until you move away. The help icon itself never
-uses the budget. Counts are shared across monitors and survive restarts/updates.
-Manually enabled hints stay on without a limit until you turn them off yourself.
-You can always turn them on again, including after the automatic budget runs out.
-The bar's window preview remains available; the panel shortcut reminder shows
-only the key combination while hints are off. The bar preview always says
-**Click: show / hide scratchpad here**, regardless of the hint setting.
+Moving a window does not switch your current workspace. To see the moved
+window, open its destination workspace. Only the selected tab moves; its group
+members stay where they are. Locked groups are left in place. A closed window
+or a rejected move produces an error in the panel.
 
-Only the selected window moves. Hyprland checks its current workspace and group
-inside one Lua operation, separates that tab if necessary, then moves it by
-address. A locked group is left alone. The app waits for compositor confirmation
-and reports an unavailable/blocked window instead of moving the whole group.
-No applications are closed, no keybindings are changed, and other special
-workspaces are excluded from the add picker. All controls support the 30 UI languages.
+Moving windows requires Hyprland 0.56+ with Lua configuration. Transfer controls
+are hidden when that API is unavailable.
 
-## Settings
+## Hover hints
 
-Right-click → **Scale** changes panel/tooltip size and bar text independently.
-Both controls accept **80–200%**, through a slider, ± buttons or a percentage
-field; **100%** follows Omarchy's current font and display settings. The panel's
-text, buttons, icons, inputs and dropdowns scale together. The panel fits the
-screen and scrolls when necessary. Thin accent-colored scrollbars have their
-own gutter, so they do not cover buttons or text. Bar text fits the bar's existing height;
-if that limits the requested size, the editor shows the effective percentage.
-Changes preview across monitors. **Apply** saves, while **Cancel**, Escape or
-closing the panel restores the saved sizes. Scaling preserves colors and labels.
+The **?** button at the bottom left switches panel hints on or off. Its own
+hover description is always available.
 
-Right-click the indicator and choose **Appearance** to edit the highlight color.
-The panel starts with the saturation/value palette, hue slider and HEX field.
-These update the preview on every monitor immediately. HEX accepts `#RGB` or
-`#RRGGBB` (the `#` is optional). Invalid values cannot be applied.
+Hints start enabled for 100 displays. Hover over **?** to see how many remain.
+Passing over a control before its hint appears does not count. Staying over
+one hint counts once, and the help button does not use the count. The count
+is shared across monitors and saved between sessions.
 
-**Restore saved color**, below the HEX field, previews the last applied color
-for the current theme and displays its HEX. It restores the saved color mode
-and scope, so an automatic choice continues to follow themes. Preset edits,
-tooltip style and scaling are preserved. It also recovers from invalid HEX input.
-The button does not save or close the editor.
+After 100 displays, hints turn off. Turning them on yourself keeps them on
+until you switch them off again. The bar’s window preview remains available
+in either mode. With hints off, the panel’s shortcut reminder shows just the
+keys, usually **Super + S**.
 
-**Color presets**, below the picker, is collapsed every time the editor opens.
-Expand it for three modes:
+## Appearance
 
-- **Adapted (default):** ScratchPeek pink `#EF98F5` for the exact `tokyo-night`
-  theme ID; every other theme uses its own accent. Wallpaper and color similarity
-  do not determine this exception. Unknown theme IDs use the Omarchy accent.
-- **Omarchy accent:** the exact accent supplied by the current theme, including
-  Tokyo Night's blue `#7AA2F7`.
-- **Custom:** a HEX color chosen using the picker or a saved preset.
+Open **Appearance** to change the highlight color. Use the color palette,
+hue slider or HEX field. HEX accepts `#RGB` and `#RRGGBB`, with or without `#`.
+Changes preview on every monitor. Invalid HEX values cannot be applied.
 
-**Use for → Only [theme]** stores an independent choice for this theme. Themes
-without a saved choice use Adapted. **All themes** applies the selected mode
-across themes and temporarily overrides individual choices without deleting
-them. Return to Only [theme] to reactivate them. The default scope is Only [theme].
-If the theme ID is unavailable, only All themes can be selected.
+**Restore saved color** previews the last saved color for the current theme.
+It also restores whether that color follows the theme. It leaves your draft
+presets, tooltip style and scale alone, and does not save or close the editor.
 
-The built-in **ScratchPeek pink** swatch is always available. **Save color** adds
-one of up to 24 named presets. Select a swatch to preview it; **Edit preset** can
-rename it, update it to the picker's current color, or delete it. Names are plain
-text, unique without regard to case and limited to 40 characters. Deleting a
-preset keeps the currently selected color. Presets are reusable across themes;
-applying one honors the selected scope.
+Expand **Color presets** below the picker to choose a color mode:
 
-**Apply** saves colors, scope and preset edits together. **Cancel**, Escape or
-closing the panel discards all these edits. Existing manual HEX colors remain
-global during upgrades; existing explicit theme-color settings keep following
-the exact Omarchy accent. Choose Adapted to opt into the new behavior.
+| Mode | Color used |
+| --- | --- |
+| **Adapted** (default) | Pink `#EF98F5` for Tokyo Night; the theme’s accent for other themes |
+| **Omarchy accent** | The theme’s own accent, including Tokyo Night’s blue `#7AA2F7` |
+| **Custom** | The color selected in the picker or a saved preset |
 
-The same editor previews two hover-tooltip styles: **Spacious** (icons, rounded
-corners, more spacing) and **Compact** (shorter rows, fewer decorations).
-Tooltip backgrounds follow the Omarchy theme, while their border and status
-use the chosen accent. The tooltip is passive and never takes keyboard focus.
-The open-panel underline spans the entire label and uses a lighter version of
-the chosen accent (22% white blend), including during live preview. Tooltip
-content has an extra 4 px of padding on each horizontal side.
+The Tokyo Night choice is based on its `tokyo-night` theme ID. If the theme
+cannot be identified, ScratchPeek uses Omarchy’s accent.
 
-Right-click → **Labels and text** selects the descriptions used in the bar,
-details panel, hover tooltip and accessible name:
+**Use for → Only [theme]** saves a choice for the current theme. Themes without
+a saved choice use Adapted. **All themes** applies the chosen mode everywhere.
+It keeps your individual theme choices, so returning to Only [theme] restores
+them. If the theme cannot be identified, only All themes is available.
+
+**Save color** stores a named preset. You can keep up to 24, with names of up
+to 40 characters. Names must be unique, ignoring case. Select a preset to
+preview it; **Edit preset** lets you rename it, replace its color with the
+current picker color, or delete it. Deleting a preset does not change the
+selected color. The built-in **ScratchPeek pink** swatch is always available.
+
+**Tooltip style** changes the bar’s window preview: **Spacious** uses more
+spacing and icons; **Compact** uses shorter rows. Both follow the current theme
+and chosen highlight color.
+
+**Apply** saves your changes. **Cancel**, Escape or closing the panel discards
+them. Color presets are saved together with the other appearance settings.
+When upgrading from older versions, existing manual colors and explicit theme
+colors are preserved; select Adapted if you want the current default behavior.
+
+## Scale
+
+Open **Scale** to adjust the panel and tooltip separately from the bar text.
+Both accept 80–200%, using a slider, ± buttons or a percentage field. At 100%,
+they follow Omarchy’s font and display settings.
+
+The panel scrolls when its content does not fit. Bar text is limited by the
+bar’s height; the editor shows the effective percentage if it cannot fit the
+requested size. Changes preview across monitors. **Apply** saves them;
+**Cancel**, Escape or closing the panel restores the saved scale.
+
+## Labels and text
+
+This editor changes state descriptions in the bar, panel and tooltip:
 
 | Preset | Visible here | Focused here | Hidden |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Short (default) | visible here | active here | hidden |
 | With Scratchpad | Scratchpad: visible here | Scratchpad: active here | Scratchpad: hidden |
 | Scratchpad ON / OFF | Scratchpad ON | Scratchpad ACTIVE | Scratchpad OFF |
 | Custom | your text | your text | your text |
 
-Custom has separate fields for empty, hidden, visible here, focused here,
-visible elsewhere, and unknown. Blank fields fall back to **With Scratchpad**.
-Use `{monitor}`, `{count}` and `{workspace}` to insert live values, for example
-`My shelf: {count} @ {monitor}`. Text is limited to 100 characters per field and
-rendered literally. Custom text stays as written when switching interface
-languages or presets. All standard presets are translated; ON/OFF/ACTIVE/EMPTY
-are intentionally conventional English labels. The symbol and count remain on
-the bar; compact and vertical bars show descriptions in the panel and tooltip.
-**Apply** saves across monitors; **Cancel**, Escape or dismissal discards the preview.
+Custom has a field for each state: empty, hidden, visible here, active here,
+visible elsewhere and unknown. An empty field uses **With Scratchpad** instead.
+Each field accepts up to 100 characters, displayed as plain text.
 
-Right-click the indicator and use **Language** at the bottom of the panel.
-Search by a language's native name or code. Changes apply on every monitor
-immediately and are saved in the plugin's Omarchy entry. **Automatic** restores
-system-language detection. Existing explicit choices are preserved on upgrade.
+Use `{monitor}`, `{count}` and `{workspace}` to include current values, for
+example `My shelf: {count} @ {monitor}`. Changing language or label preset
+preserves your custom text. Standard descriptions are translated; the
+ON/OFF/ACTIVE/EMPTY labels stay in English.
 
-Change the existing entry in `~/.config/omarchy/shell.json`:
+The symbol and window count remain on the bar. Compact and vertical bars show
+the full description in the panel and tooltip. **Apply** saves your edits;
+**Cancel**, Escape or closing the panel discards them.
 
-```json
-{
-  "id": "sarr.scratchpeek",
-  "workspace": "scratchpad",
-  "language": "auto",
-  "compact": false,
-  "accentColor": "",
-  "colorMode": "adaptive",
-  "colorScope": "theme",
-  "themeColors": {},
-  "colorPresets": [],
-  "tooltipStyle": "panel",
-  "labelStyle": "short",
-  "customLabels": {},
-  "uiScale": 1,
-  "barScale": 1
-}
-```
+## Language
 
-- `workspace`: the name without `special:`; letters, digits, `.`, `_`, and `-`.
-- `language`: `auto` (default) or a code from [Languages](LANGUAGES.md).
-  A missing setting on first start behaves exactly like `auto`.
-- `compact`: a state symbol and count instead of a sentence. Vertical bars use
-  two lines automatically. The tooltip always explains the full state.
-- `colorMode`: `adaptive`, `theme` or `custom`; used when `colorScope` is `all`.
-- `colorScope`: `theme` (default) or `all`. Theme scope uses the matching
-  `themeColors` entry, falling back to Adapted for themes without an entry.
-- `accentColor`: global custom HEX, used by `colorMode: custom` with scope `all`.
-- `themeColors`: map from stable theme IDs to `{ "mode": "custom", "color": "#EF98F5" }`
-  (or `mode: adaptive` / `theme`). Manage these in the editor.
-- `colorPresets`: saved `{ "id": "preset-1", "name": "My pink", "color": "#EF98F5" }`
-  swatches. The editor manages IDs and validates unique names.
-- `tooltipStyle`: `panel` (spacious) or `compact`.
-- `uiScale`: panel and tooltip multiplier from `0.8` to `2`, default `1`.
-- `barScale`: requested bar text multiplier from `0.8` to `2`, default `1`.
-  The displayed size is capped by the available bar height.
-- `labelStyle`: `short` (default), `explicit`, `switch`, or `custom`.
-- `customLabels`: optional `empty`, `hidden`, `here`, `active`, `elsewhere`,
-  `unknown` strings. Edit these in **Labels and text**.
+Use **Language** in the panel to search by native language name or code.
+The choice applies to every monitor and is saved immediately. **Automatic**
+uses the system language reported by Qt. See [Languages](LANGUAGES.md) for the
+supported languages and detection rules.
 
-The plugin does not change keybindings. The panel reads the active global binding
-for the shortcut reminder (normally **Super + S · show / hide scratchpad**).
-It recognizes Omarchy's **Toggle scratchpad** Lua binding and legacy
-`togglespecialworkspace` bindings; unrecognized or unbound shortcuts are hidden.
+Arabic uses a right-to-left layout. The monitor diagram keeps the monitors’
+physical positions.
 
+## Custom scratchpads and compact labels
 
-## Saved preferences
+Omarchy’s bar settings expose two options outside the panel:
 
-ScratchPeek keeps an atomic settings file in
-`$XDG_STATE_HOME/scratchpeek/preferences.json`, defaulting to
-`~/.local/state/scratchpeek/preferences.json`. It is shared across monitors and
-loaded automatically. Existing inline preferences migrate on first start.
-The file survives disable/removal so enabling or reinstalling restores it.
-It contains preferences only, never window titles. Read/write failures appear
-in the panel; a malformed existing file is left intact.
+- `workspace`: the special workspace name, without `special:`. Use 1–80 letters,
+  digits or the characters `.`, `_` and `-`. The default is `scratchpad`.
+- `compact`: show only the state symbol and count on the bar. Vertical bars
+  use two lines automatically.
 
-The bar entry mirrors this file. A revision marker prevents an older, unfinished
-host write from replacing newer saved preferences after a restart. Use the panel
-for normal configuration.
+The panel reads your existing scratchpad keybinding for its shortcut reminder.
+It recognizes Omarchy’s Lua binding and the older `togglespecialworkspace`
+binding. If neither is found, the reminder is hidden. ScratchPeek does not
+change keybindings.
+
+## Saved settings
+
+Settings are saved in `~/.local/state/scratchpeek/preferences.json`, or under
+`$XDG_STATE_HOME/scratchpeek` when that variable is set. The file is shared
+across monitors and loaded at startup. It contains preferences and the hint
+count, not window titles.
+
+Omarchy’s bar entry keeps a copy. Changes from the panel or Omarchy’s bar settings
+are saved to the preference file before taking effect. A failed write leaves the
+previous choice active. Older bar copies cannot replace newer saved settings.
+Existing bar settings are imported on first use.
+
+Settings survive disabling, removal and reinstalling. Read or write errors
+appear in the panel. If the preference file cannot be read or created at startup,
+the widget keeps Omarchy's existing settings and leaves automatic updates blocked.
+A damaged file is left intact. After fixing a read error or damaged file, restart
+the shell. A failed write can be retried without a restart once writing is possible.
+
+For normal changes, use the panel. The [README](../README.md#removal) explains
+how to remove saved settings.

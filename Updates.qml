@@ -12,7 +12,7 @@ QtObject {
   property string status: ""
   property bool runtimeAvailable: Quickshell.env("QT_QPA_PLATFORM") !== "offscreen"
   property var launch: function() {
-    Quickshell.execDetached(["python3", decodeURIComponent(Qt.resolvedUrl("update.py").toString().replace(/^file:\/\//, ""))]);
+    Quickshell.execDetached(["python3", "-I", "-B", decodeURIComponent(Qt.resolvedUrl("update.py").toString().replace(/^file:\/\//, ""))]);
   }
   readonly property bool enabled: preferences.ready && !preferences.failed && preferences.values.autoUpdates !== false
   property FileView state: FileView {

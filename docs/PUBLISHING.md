@@ -1,65 +1,58 @@
-# Publishing ScratchPeek
+# Publishing
 
-Name **ScratchPeek** · ID **sarr.scratchpeek** · Author **Sarr**
-Repository: [Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek)
+ScratchPeek’s plugin ID is `sarr.scratchpeek`. The author is **Sarr**, and the
+repository is [Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek).
 
-## Listing
+## Marketplace description
 
 - Category: **Productivity**
 - Tags: **bar, hyprland, workspaces**
-- Summary: Know what’s in your scratchpad — and where it’s open. See your windows,
-  focus a tab, or move one in or out from the Omarchy bar.
-- Preview: `preview.png` in the repository root. The editable illustration is
-  `docs/preview.svg`; all window names are examples and all artwork is original.
+- Description: A window list for Omarchy’s scratchpad. Switch to a window or tab,
+  move it to a workspace, or add another window to the scratchpad.
+- Preview: [preview.png](../preview.png), with its source in
+  [docs/preview.svg](preview.svg). It is an illustration using example windows.
 
-## Release checklist
+## Release steps
 
-1. Run the portable tests and Omarchy manifest validation.
-2. Run the isolated lifecycle and preference tests, plus the relevant Qt and
-   native checks listed in [TESTING.md](TESTING.md).
-3. Review the root README, licenses, preview and source archive.
-4. Prepare the commit and archive locally with `python3 tools/package.py`.
-   Show Sarr the complete diff, exact commit, release title, text, assets and
-   destinations. Get explicit approval of those exact details before any push,
-   tag, release or listing change. Do not add generated release notes.
-5. Confirm the repository is public and test an unauthenticated installation
-   with `python3 tools/test_lifecycle.py --remote https://github.com/Sarr77/ScratchPeek`.
-6. Publish only the approved GitHub release, with a matching `vX.Y.Z` tag and
-   manifest version. Stable releases become eligible for automatic installation;
-   drafts and prereleases do not. Submit the approved repository through the
-   [marketplace form](https://github.com/omacom/omarchy-plugin-marketplace/issues/new?template=submit-plugin.yml)
-   or its [CLI submission format](https://github.com/omacom/omarchy-plugin-marketplace/blob/main/SUBMISSION.md).
-7. Check the bot’s validation and baseline reports. Listing requires a maintainer’s
-   approval of the exact submitted commit; a GitHub release alone does not list it.
+1. Run the checks in [Testing](TESTING.md), including Omarchy’s manifest
+   validator and the install/update/reinstall test.
+2. Check the version, changelog, README, preview and licenses. Review
+   `tools/package-files.txt`, then build the archive with `python3 -B tools/package.py`.
+3. Push the release commit and check its GitHub CI results. Test the public
+   source with `python3 -B tools/test_lifecycle.py --remote https://github.com/Sarr77/ScratchPeek`.
+4. Submit that exact commit for marketplace verification. For an initial listing,
+   use the [submission form](https://github.com/omacom/omarchy-plugin-marketplace/issues/new?template=submit-plugin.yml)
+   or [CLI submission format](https://github.com/omacom/omarchy-plugin-marketplace/blob/main/SUBMISSION.md).
+   Update an existing pending submission instead of opening another.
+   For a listed plugin, use **Verify and publish a newer upstream commit**.
+5. Wait until the exact commit is approved and appears as verified in the catalog.
+6. Enable GitHub release immutability before publishing the release. Its
+   `vX.Y.Z` tag must point to the verified commit and match the manifest version.
+   Add the archive to a draft release before publishing it.
+7. Check that the release API reports `immutable: true` and that the tag resolves
+   to the catalog’s verified SHA.
 
-Requirements checked on 2026-09-17 against the current publication guide and
-submission format. There must be one category and **one to three** allowed tags.
+This order matters for users still on 0.11.0: their updater follows GitHub
+releases without checking the marketplace. Publish the corrective release only
+after its marketplace review. Later versions also need a verified catalog
+snapshot before automatic updates can install them. See [Updates](UPDATES.md).
 
-## Notes for reviewers
+## Runtime details
 
-ScratchPeek is a native Quickshell bar widget, tested on Omarchy 4.0.4 and
-Hyprland 0.56.2. Window transfers require the Lua configuration available in
-Hyprland 0.56+. It has no persistent service or separate installer.
+ScratchPeek runs inside Omarchy’s Quickshell process. It reads local window and
+monitor state, app icons, the theme and scratchpad keybindings. It uses `hyprctl`
+for state checks and window actions, and `mkdir` for its settings directory.
+It needs no administrator access or additional runtime packages.
 
-It reads local window/monitor metadata, application icons, theme identity and
-scratchpad keybindings. Explicit user actions focus windows, show/hide the
-scratchpad, or move an individually selected window. It uses short-lived
-`hyprctl` commands and creates its own preference directory with `mkdir`.
-No elevated privileges or additional runtime packages are required.
+Settings are saved outside the plugin directory and kept after removal.
+The [README](../README.md#removal) explains where they are and how to delete them.
+Window titles are not saved. There is no telemetry or persistent background service.
 
-Preferences, including hint progress, are stored atomically in
-`$XDG_STATE_HOME/scratchpeek/preferences.json` (default: `~/.local/state`).
-The scoped Omarchy widget entry mirrors those settings. The durable file remains
-after disable/removal so reinstall can restore it; the README explains how to
-remove it. No window titles are written to disk, and unrelated settings are not
-rewritten by the plugin. Automatic updates are enabled by default, can be
-disabled in the panel, and contact GitHub's public release API and this
-repository once per day while the widget runs. A short-lived Python/Git worker
-stages a stable release, validates it and atomically exchanges the installed
-directory. Update timestamps/results are local. There is no telemetry.
+Automatic updates are enabled by default and can be disabled in the panel.
+They use Python and Git, contact GitHub and the official Omarchy catalog, and
+store check times and results locally. [Updates](UPDATES.md) documents the
+verification and installation steps.
 
-MIT, by Sarr. Adapted Omarchy dropdown controls retain their upstream MIT notice.
-The preview contains fictional examples and no personal desktop information.
-
-Review known limits in [TESTING.md](TESTING.md). Automated catalog checks and
-approval are not a security audit or a guarantee of compatibility with every setup.
+The plugin is MIT licensed. Adapted Omarchy controls retain their
+[upstream MIT notice](../vendor/omarchy/LICENSE). Tested versions and known
+limits are listed in [Testing](TESTING.md).

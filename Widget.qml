@@ -13,8 +13,15 @@ import "Transfers.js" as Transfers
 BarWidget {
   id: root
   moduleName: "sarr.scratchpeek"
-  readonly property string workspaceName: String(setting("workspace", "scratchpad"))
-  readonly property string languageSetting: String(setting("language", "auto"))
+  readonly property var effectiveSettings: !settingsReady ? settings
+    : (Local.ScratchState.preferences.hasSavedValues
+      ? Local.ScratchState.preferences.values : Local.ScratchState.fallbackSettings)
+  function preference(name, fallback) {
+    var value = effectiveSettings ? effectiveSettings[name] : undefined;
+    return value === undefined || value === null ? fallback : value;
+  }
+  readonly property string workspaceName: String(preference("workspace", "scratchpad"))
+  readonly property string languageSetting: String(preference("language", "auto"))
   readonly property string detectedLanguage: I18n.language("auto", Qt.locale().uiLanguages, Qt.locale().name)
   readonly property string language: I18n.language(languageSetting, Qt.locale().uiLanguages, Qt.locale().name)
   readonly property var words: Model.words(language)
@@ -22,12 +29,12 @@ BarWidget {
   property bool languageSaveFailed: false
   property bool hintsSaveFailed: false
   property bool updatesSaveFailed: false
-  readonly property bool autoUpdates: setting("autoUpdates", true) !== false
+  readonly property bool autoUpdates: preference("autoUpdates", true) !== false
   readonly property string updateStatus: Local.ScratchState.updates.status
   function toggleUpdates() { updatesSaveFailed = !persistSettings({autoUpdates: !autoUpdates}); }
   property bool settingsReady: false
   readonly property bool preferencesSaveFailed: Local.ScratchState.preferences.failed
-  readonly property var hints: Model.hintState(settings)
+  readonly property var hints: Model.hintState(effectiveSettings)
   readonly property string toggleShortcut: Model.toggleShortcut(Local.ScratchState.keyBindings, workspaceName)
   function recordHintShown() {
     if (hints.mode !== "auto" || hints.remaining <= 0) return false;
@@ -40,7 +47,7 @@ BarWidget {
     return !hintsSaveFailed;
   }
   function toggleHints() { return setHintsMode(hints.enabled ? "off" : "on"); }
-  readonly property var savedAppearance: Appearance.normalize(settings)
+  readonly property var savedAppearance: Appearance.normalize(effectiveSettings)
   readonly property var appearance: Local.ScratchState.previewOwner !== "" ? Local.ScratchState.previewAppearance : savedAppearance
   readonly property string themeId: Local.ScratchState.themeId
   readonly property color accent: Appearance.resolve(appearance, themeId, String(Color.accent))
@@ -53,7 +60,7 @@ BarWidget {
   FontMetrics { id: barMetrics; font.family: root.bar ? root.bar.fontFamily : "monospace"; font.pixelSize: root.requestedBarFont }
   readonly property color underlineColor: Qt.rgba(accent.r + (1-accent.r)*0.22,
     accent.g + (1-accent.g)*0.22, accent.b + (1-accent.b)*0.22, 1)
-  readonly property var savedLabels: Model.normalizeLabels(settings)
+  readonly property var savedLabels: Model.normalizeLabels(effectiveSettings)
   readonly property var labels: Local.ScratchState.labelsPreviewOwner !== "" ? Local.ScratchState.previewLabels : savedLabels
   readonly property string statusDescription: Model.statusText(scratchpadState, language, labels, workspaceName)
   readonly property real openPanelIndicatorWidth: button.labelWidth
@@ -129,20 +136,40 @@ BarWidget {
   }
 
   function persistSettings(values) {
-    // Hydrate from layoutConfig once at startup. Its detached snapshot can lag
-    // behind inline writes; using it again here can discard a rapid second click.
-    var current = root.settings;
+    if (!settingsReady) return false;
+    var current = Model.mergeSettings(effectiveSettings, {}, root.moduleName);
     var entry = Model.mergeSettings(current, values, root.moduleName);
-    if (JSON.stringify(current) === JSON.stringify(entry)) return Local.ScratchState.preferences.save(entry);
-    entry = Model.stampSettings(entry, Local.ScratchState.preferences.values);
-    // The host persists only this plugin entry and preserves other widgets.
-    if (!root.bar || !root.bar.shell || typeof root.bar.shell.updateEntryInline !== "function"
-        || !root.bar.shell.updateEntryInline(root.moduleName, entry)) {
-      return false;
-    }
-    var widgets = root.bar.moduleWidgets(root.moduleName);
-    for (var i = 0; i < widgets.length; i++) widgets[i].settings = entry;
-    return Local.ScratchState.preferences.save(entry);
+    if (JSON.stringify(current) !== JSON.stringify(entry))
+      entry = Model.stampSettings(entry, Local.ScratchState.preferences.values);
+    // The worker reads this file too. Never publish an unsaved choice to the UI.
+    if (!Local.ScratchState.preferences.save(entry)) return false;
+    publishSettings(entry);
+    return true;
+  }
+
+  onSettingsChanged: {
+    if (!settingsReady || Local.ScratchState.publishingSettings) return;
+    var saved = Model.mergeSettings(effectiveSettings, {}, root.moduleName);
+    if (JSON.stringify(settings) === JSON.stringify(saved)) return;
+    // Omarchy also changes settings in place, without recreating the widget.
+    // A delayed host copy must not undo a newer choice from either monitor.
+    var incoming = Model.restoreSettings(saved, settings, root.moduleName);
+    if (!persistSettings(incoming)) publishSettings(saved);
+  }
+
+  function publishSettings(entry) {
+    // Omarchy keeps a mirror; its API's false result can also mean "unchanged".
+    // A stale mirror is reconciled from the durable revision on the next load.
+    Local.ScratchState.publishingSettings = true;
+    try {
+      try {
+        if (root.bar && root.bar.shell && typeof root.bar.shell.updateEntryInline === "function")
+          root.bar.shell.updateEntryInline(root.moduleName, entry);
+      } catch (error) { console.warn("ScratchPeek: bar settings mirror unavailable"); }
+      root.settings = entry;
+      var widgets = root.bar ? root.bar.moduleWidgets(root.moduleName) : [];
+      for (var i = 0; i < widgets.length; i++) widgets[i].settings = entry;
+    } finally { Local.ScratchState.publishingSettings = false; }
   }
 
   function previewAppearance(values) { Local.ScratchState.beginPreview(screenName, Appearance.merge(savedAppearance, values)); }
@@ -194,10 +221,8 @@ BarWidget {
   implicitHeight: button.implicitHeight
   onBarChanged: { injectPanel(); initialSettingsTimer.restart(); }
 
-  // Omarchy 4.0.4 updates live settings in place, but a plugin code reload can
-  // reinject an older ModuleSlot.entry. The detached current layout snapshot
-  // is authoritative at startup. Wait until both host injections have settled;
-  // ordinary subsequent inline changes continue to use the settings property.
+  // Wait for host injection, then reconcile its layout snapshot with the durable
+  // revision. A code reload can otherwise reinject an older ModuleSlot.entry.
   Timer {
     id: initialSettingsTimer
     interval: 60
@@ -206,13 +231,21 @@ BarWidget {
       var current = Model.initialSettings(root.bar.layoutConfig, root.moduleName, root.settings);
       var stored = Local.ScratchState.preferences.values;
       var restored = Model.restoreSettings(stored, current, root.moduleName);
+      // A missing or unreadable file is not an empty saved configuration.
+      // Keep the original host entry for every monitor until a save succeeds.
+      if (!Local.ScratchState.preferences.hasSavedValues) {
+        if (Local.ScratchState.fallbackSettings === null)
+          Local.ScratchState.fallbackSettings = JSON.parse(JSON.stringify(restored));
+        restored = Local.ScratchState.fallbackSettings;
+      }
       if (JSON.stringify(Model.mergeSettings(stored, {}, root.moduleName)) !== JSON.stringify(restored))
         restored = Model.stampSettings(restored, stored);
-      root.settings = restored;
+      var saved = Local.ScratchState.preferences.save(restored);
+      root.settings = saved ? restored : Model.mergeSettings(
+        Local.ScratchState.preferences.hasSavedValues ? stored : Local.ScratchState.fallbackSettings,
+        {}, root.moduleName);
       root.settingsReady = true;
-      if (JSON.stringify(current) !== JSON.stringify(restored))
-        root.bar.shell.updateEntryInline(root.moduleName, restored);
-      Local.ScratchState.preferences.save(restored);
+      if (saved) root.publishSettings(restored);
     }
   }
   Connections {
@@ -244,7 +277,7 @@ BarWidget {
     anchors.fill: parent
     bar: root.bar
     fontSize: root.effectiveBarFont
-    text: Model.label(root.scratchpadState, root.language, root.setting("compact", false), root.vertical, root.labels, root.workspaceName)
+    text: Model.label(root.scratchpadState, root.language, root.preference("compact", false), root.vertical, root.labels, root.workspaceName)
     // A local popup supplies styled contents without changing other bar tooltips.
     tooltipText: ""
     pressable: !root.visibilityBusy
@@ -302,7 +335,7 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.11.0",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.11.1",
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
           autoUpdates: widget.autoUpdates, updateStatus: widget.updateStatus, updatesSaveFailed: widget.updatesSaveFailed,
           preferencesSaveFailed: widget.preferencesSaveFailed,

@@ -1,112 +1,96 @@
 # ScratchPeek
 
-**Know what’s in your scratchpad — and where it’s open.**
+ScratchPeek adds a window list to Omarchy’s scratchpad, usually opened with
+**Super + S**. The bar shows how many windows are in it and which monitor it’s
+open on. From the list, you can switch to a window, move it to another workspace,
+or add a window to the scratchpad. Individual tabs in Hyprland window groups
+are listed separately.
 
-A small Omarchy bar widget by [Sarr](https://github.com/Sarr77).
+[Polski](docs/README.pl.md) · [Preview](preview.png) ·
+[User guide](docs/GUIDE.md) · [Changelog](CHANGELOG.md)
 
-![ScratchPeek: scratchpad status, window list and move controls. Illustrated with example windows.](preview.png)
-
-[Polski](docs/README.pl.md) · [User guide](docs/GUIDE.md) · [Changelog](CHANGELOG.md)
-
-ScratchPeek keeps your scratchpad easy to find. See its windows, bring it to
-this monitor, or move a single window in or out — even when it belongs to a tab group.
-
-- **Know the state.** Empty, hidden, visible here, active here, or visible on another monitor.
-- **Find your window.** Preview apps on hover; open the panel for the full list.
-- **Make it yours.** Theme colors, a color picker, presets, readable scaling and your own labels.
-- **Feel at home.** 30 languages, automatic language detection and optional hints.
-
-This is the **window scratchpad** normally opened with **Super + S**, not clipboard history.
-
-## Install
+## Installation
 
 ```sh
 omarchy plugin add https://github.com/Sarr77/ScratchPeek --enable
 ```
 
-The widget appears on the left of the bar. Move it with Omarchy’s bar editor.
-Built for **Omarchy Quattro** with its native Quickshell bar. Tested on Omarchy
-4.0.4 and Hyprland 0.56.2. Window transfers require Hyprland 0.56+ with Lua
-configuration. No extra runtime packages are needed.
+The widget appears on the left of the bar. You can move it with Omarchy’s bar
+editor.
 
-## A few useful gestures
+Requires Omarchy Quattro with the Quickshell bar. Moving windows requires
+Hyprland 0.56+ with Lua configuration. Tested on Omarchy 4.0.4 and Hyprland
+0.56.2; no additional runtime packages are needed.
 
-| Action | What happens |
+## Using it
+
+Click the bar indicator to show or hide the scratchpad on that monitor.
+Right-click it to open the window list and settings.
+
+| In the panel | Action |
 | --- | --- |
-| Click the bar indicator | Show or hide the scratchpad on this monitor |
-| Right-click the indicator | Open the window list and settings |
-| Click a window’s name | Focus that window or tab |
-| **Move out** | Choose its destination workspace |
+| Click a window’s name | Switch to that window or tab |
+| **Move out** | Choose a workspace to move the window to |
 | **Ctrl + click Move out** | Move it to this monitor’s current workspace |
-| **Add window to scratchpad…** | Pick a window to add |
-| **Ctrl + click Add window…** | Add the focused application window immediately |
+| **Add window to scratchpad…** | Choose a window to add |
+| **Ctrl + click Add window…** | Add the focused application window |
 
-Only the selected window moves. Hiding the scratchpad keeps its windows inside.
-Keyboard navigation, named workspaces and monitor behavior are covered in the
-[user guide](docs/GUIDE.md).
+Moving a tab leaves the other windows in its group where they are.
+Hiding the scratchpad leaves its windows inside.
 
-## Make it comfortable
+## Settings
 
-Right-click → **Appearance**, **Scale**, **Labels and text**, or the language picker.
-Changes preview live; **Apply** saves and **Cancel** restores your saved choice.
+The panel has controls for language, colors, presets, scale and labels.
+Appearance changes preview as you edit them. **Apply** saves them;
+**Cancel** restores the previous settings.
 
-The small **?** switches panel hints on or off. They start enabled for the first
-100 displayed hints, with a remaining count. You can always turn them on again.
-
-Your preferences and hint progress are saved automatically. They survive
-restarts, updates, disabling the widget and reinstalling it.
+The **?** button switches hover hints on or off. They start enabled and hide
+automatically after 100 displays. You can turn them back on at any time.
+Settings and the hint count are kept through restarts, updates and reinstalls.
 
 ## Updates
 
-Automatic updates are on by default. While ScratchPeek is running, it checks
-once a day for a newer stable GitHub release and installs it in the background.
-The small **Automatic updates** switch sits beside **?** in the footer.
-Turning it off asks for confirmation; turning it back on takes one click.
-Your preferences stay saved. Downloads or validation failures leave the installed
-version in place; another check happens the next day.
+Automatic updates are enabled by default and checked once a day while the
+widget is running. From 0.11.1, an update must be an immutable GitHub release
+whose exact commit has been verified in the Omarchy marketplace. If a download
+or verification fails, the installed version stays in place.
 
-This works with the normal `omarchy plugin add` installation. Linked development
-copies, forks and locally modified checkouts are skipped. Users of 0.10.0 need
-one manual update to get this feature in 0.11.0:
+You can disable updates using the small switch beside **?**; this asks for
+confirmation. Linked development copies, forks and locally modified code are
+not updated automatically. See [update details](docs/UPDATES.md).
+
+To update manually, or to get automatic updates when upgrading from 0.10.0:
 
 ```sh
 omarchy plugin update sarr.scratchpeek
 ```
 
-See [how updates work](docs/UPDATES.md) for the release and marketplace details.
-
-## Remove
+## Removal
 
 ```sh
 omarchy plugin remove sarr.scratchpeek
 ```
 
-Your windows and workspaces stay where they are. Preferences are kept for a
-future reinstall in `~/.local/state/scratchpeek/preferences.json`, or under
-`$XDG_STATE_HOME/scratchpeek` when that variable is set. Delete that file after
-removing the plugin if you also want to forget its preferences.
+Removing the widget leaves your windows and workspaces as they are. Settings
+are kept in `~/.local/state/scratchpeek/preferences.json`, or under
+`$XDG_STATE_HOME/scratchpeek` if set. Delete that file after removal if you
+also want to reset your preferences.
 
-## What it accesses
+## Data and permissions
 
-ScratchPeek reads local window metadata, monitor state, theme information and
-application icons. Window titles stay in memory and appear as plain text.
-User actions can focus windows, show/hide the scratchpad or move a chosen window.
+ScratchPeek reads local window and monitor state, theme information and app
+icons. It uses `hyprctl` to read state and carry out window actions. Window
+titles are not saved to disk. It does not change your keybindings.
 
-It runs short-lived `hyprctl` commands for current state and explicit actions,
-and `mkdir` to prepare its preference directory. Settings use an atomic local
-file and Omarchy’s scoped widget settings API. It does not rewrite unrelated
-settings or change keybindings.
-
-Automatic updates contact GitHub's public API and this plugin's repository,
-using Python 3 and Git already included in Omarchy. Update timing and results
-are saved locally alongside preferences. Turning updates off stops future checks.
-No telemetry, additional daemon or elevated privileges.
-Like other Omarchy plugins, ScratchPeek runs inside the shell with your user permissions.
+Automatic updates contact GitHub and the Omarchy marketplace using Python 3
+and Git. Update times and results are stored locally alongside preferences.
+There is no telemetry. The plugin runs inside Omarchy’s shell with your user
+permissions and does not need administrator access.
 
 ## Help and development
 
 [Report a bug](https://github.com/Sarr77/ScratchPeek/issues) ·
-[Development and tests](docs/DEVELOPMENT.md) · [Validation notes](docs/TESTING.md)
+[Development](docs/DEVELOPMENT.md) · [Tests and limitations](docs/TESTING.md)
 
-MIT · © 2026 [Sarr](https://github.com/Sarr77). Adapted Omarchy controls retain
-[their MIT notice](vendor/omarchy/LICENSE).
+MIT · © 2026 [Sarr](https://github.com/Sarr77).
+Adapted Omarchy controls retain [their MIT notice](vendor/omarchy/LICENSE).

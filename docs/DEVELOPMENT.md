@@ -1,29 +1,58 @@
 # Development
 
-```bash
-node --test tests/model.test.cjs
+ScratchPeek is a Quickshell bar widget. Its QML uses Omarchy’s UI components and
+Hyprland integration. The automatic updater is a separate Python process started
+by the widget.
+
+## Code layout
+
+| Files | Responsibility |
+| --- | --- |
+| `Widget.qml`, `Details.qml` | Bar indicator, panel and editor navigation |
+| `ScratchState.qml` | Shared window/monitor state and previews across monitors |
+| `Model.js`, `Appearance.js` | State labels, settings and color calculations |
+| `ScratchVisibility.qml`, `Visibility.js` | Show/hide requests and confirmation |
+| `WindowTransfer.qml`, `Transfers.js`, `TransferEditor.qml` | Moving a selected window and choosing its destination |
+| `Preferences.qml` | Reading and writing the saved settings file |
+| `Updates.qml`, `update.py` | Daily schedule, release checks and installation |
+| `I18n.js` | Languages and translations |
+| `vendor/omarchy/` | Adapted dropdown controls with their upstream license |
+
+Window membership, scratchpad visibility and keyboard focus are separate states.
+A window can belong to a hidden scratchpad, and a visible scratchpad may not have
+focus. Keep those distinctions when changing the indicator or window actions.
+
+Settings from the panel and Omarchy go through `Widget.persistSettings`.
+The interface reads saved preferences, so a failed write cannot make an unsaved
+choice appear active. Omarchy’s bar entry keeps a copy. Revision checks reject
+older copies at startup and during use; publishing a copy back to Omarchy does
+not trigger another save.
+
+`Preferences.hasSavedValues` distinguishes a valid saved file, including empty
+settings, from a file that could not be read or created. Until a valid file is
+available, widgets share a snapshot of the initial Omarchy entry. Failed edits
+restore that snapshot; the updater stays blocked. A successful retry saves the
+whole entry, including fields the edit did not change.
+
+## Running checks
+
+```sh
+node tests/model.test.cjs
+python3 -B tests/test_updates.py
+python3 -B tests/test_package.py
 omarchy plugin validate .
 ```
 
-Run `python3 tools/test_editor.py` on an Omarchy machine for an offscreen test of
-the real QML editor with an in-memory settings host. It never edits desktop settings.
-`python3 tools/test_panel_actions.py` checks hover hints, Ctrl-click routing and
-rapid preference changes on two widget instances, also without changing the desktop.
+Node is needed only for tests. The Qt integration scripts also need Quickshell
+and the installed Omarchy UI kit. See [Testing](TESTING.md) for the scripts,
+what they check and which ones interact with the desktop.
 
-`python3 tools/test_footer_hover.py` checks hover exit and keyboard selection at
-100% and 200% scale. `python3 tools/test_hint_budget.py` displays 100 delayed hints
-across two widgets, with cold starts at 50 and 100; it takes about a minute and
-uses a temporary preference file.
+## IPC commands
 
-Node is needed only for tests. If a recent Node release reports only the test
-file, `node tests/model.test.cjs` prints all individual checks.
-See [TESTING.md](TESTING.md) for compositor and
-visual checks. Contributions should preserve the distinction between scratchpad
-membership, overlay visibility, and keyboard focus.
+These commands work while the widget is running. Replace `DP-1` with your
+monitor’s name:
 
-Optional IPC for scripts and reproducible checks:
-
-```bash
+```sh
 omarchy-shell sarr.scratchpeek status
 omarchy-shell sarr.scratchpeek showDetails DP-1
 omarchy-shell sarr.scratchpeek closeDetails
@@ -36,44 +65,34 @@ omarchy-shell sarr.scratchpeek setLanguage auto
 omarchy-shell sarr.scratchpeek setHintsMode on
 ```
 
-Use your actual monitor name. `status` returns counts, visibility, and focus for
-each bar monitor, selected/detected language, hint mode/remaining views, detected shortcut
-and version; it does not return window titles. `setHintsMode` accepts `on`, `off`,
-or `auto` (resumes the remaining automatic budget; never resets it). `focusWindow <address>`
-selects a window only if it still belongs to the configured scratchpad.
+`status` returns JSON for each monitor: window count, visibility, focus, settings,
+hint count, update state and version. It does not include window titles.
+`setHintsMode` accepts `on`, `off` or `auto`. Returning to `auto` uses the remaining
+count; it does not reset it. `focusWindow <address>` focuses a window only while
+it still belongs to the configured scratchpad.
 
-`visibilityLastFailure` reports the most recent failure's phase, reason and
-elapsed milliseconds during this shell session. It is historical; the separate
-`visibilityError` indicates whether an error is currently displayed. The same
-diagnostic is written to the local Quickshell log, without raw window data.
+For visibility errors, `visibilityError` is the currently displayed error.
+`visibilityLastFailure` is the last failure in this shell session, including
+its phase, reason and elapsed time. That diagnostic is also written to the
+Quickshell log, without window titles or raw compositor output.
 
-The two dropdown components in `vendor/omarchy/` are adapted from Omarchy
-4.0.4's UI kit with explicit scaled window bounds and retain its MIT notice.
-Qt Controls popup items use a separate overlay; the implementation follows
-[Qt's popup scaling guidance](https://doc.qt.io/qt-6/qml-qtquick-controls-popup.html#popup-sizing).
+## Dropdowns and scaling
 
+The dropdowns in `vendor/omarchy/` are adapted from Omarchy 4.0.4. Their changes
+keep popups within the window when the panel is scaled. Qt Controls puts popups
+in a separate overlay, so that overlay needs the panel’s scale too. See
+[Qt’s popup sizing documentation](https://doc.qt.io/qt-6/qml-qtquick-controls-popup.html#popup-sizing).
+Keep the [upstream MIT notice](../vendor/omarchy/LICENSE).
 
-## Release checks
+## Building a source archive
 
-`python3 tools/test_preferences.py` checks atomic file writes, restoration in a
-new process, malformed files and write failures in a temporary state directory.
-`python3 tools/test_live_preferences.py` checks existing settings across two
-native shell restarts without changing their values.
+```sh
+python3 -B tools/package.py
+```
 
-`python3 tools/test_lifecycle.py` uses bubblewrap, actual Omarchy commands and
-the installed PluginRegistry in a private profile. It checks install, update,
-restart, disable/re-enable, removal and automatic preference restoration after
-reinstall. Desktop sockets and the network are unavailable inside the namespace.
-`--remote https://github.com/Sarr77/ScratchPeek` also checks an unauthenticated
-public clone before the isolated lifecycle test.
+The output is `dist/ScratchPeek-<version>.zip`. It contains only files listed in
+`tools/package-files.txt`. Update that list when adding or removing release files.
+Missing files and symlinks stop the build. Local notes and caches are not included.
 
-Offscreen tests redirect `XDG_STATE_HOME` into their temporary directory.
-Tests prefixed `test_live_` interact with the current compositor and restore
-the original window layout; run them only in a suitable desktop session.
-
-`AuthorCredit.qml` displays the author as plain text, without a link or hover action.
-
-`python3 tests/test_updates.py` tests release updates with local Git repositories
-and temporary profiles, without network or desktop access. It uses the actual
-Omarchy validator when available. [UPDATES.md](UPDATES.md) describes scheduling,
-staging and the boundary between GitHub releases and marketplace verification.
+[Updates](UPDATES.md) describes the updater. [Publishing](PUBLISHING.md) covers
+release and marketplace steps.

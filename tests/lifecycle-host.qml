@@ -15,6 +15,10 @@ ShellRoot {
     var entries = config.bar.layout.left.concat(config.bar.layout.center, config.bar.layout.right);
     return entries.filter(function(e) { return e.id === root.pluginId; })[0] || null;
   }
+  onPluginEntryChanged: Qt.callLater(injectSettings)
+  function injectSettings() {
+    if (widget.item && root.pluginEntry) widget.item.settings = root.pluginEntry;
+  }
   FileView {
     id: saved
     path: Quickshell.env("HOME") + "/.config/omarchy/shell.json"

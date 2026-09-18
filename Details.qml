@@ -27,34 +27,22 @@ Panel {
   readonly property int languageIndex: addIndex + (transferSupported ? 1 : 0)
   property alias selectedIndex: selection.index
   PanelSelection { id: selection }
-  property bool editingAppearance: false
-  property bool editingLabels: false
-  property bool editingScaling: false
-  property bool editingTransfer: false
+  property Item activeEditor: null
   readonly property real uiScale: hostWidget ? hostWidget.uiScale : 1
-  readonly property bool editing: editingAppearance || editingLabels || editingScaling || editingTransfer
+  readonly property bool editing: activeEditor !== null
   readonly property int scalingIndex: appearanceIndex + 1
   readonly property int labelsIndex: scalingIndex + 1
   readonly property int hintsIndex: labelsIndex + 1
   readonly property int updatesIndex: hintsIndex + 1
   readonly property bool hintsEnabled: !hostWidget || hostWidget.hints.enabled
-  readonly property real logicalContentHeight: editingTransfer ? transferEditor.implicitHeight : (editingScaling ? scalingEditor.implicitHeight : (editingLabels ? labelsEditor.implicitHeight : (editingAppearance ? appearanceEditor.implicitHeight : content.implicitHeight)))
+  readonly property real logicalContentHeight: activeEditor ? activeEditor.implicitHeight : content.implicitHeight
   readonly property int appearanceIndex: languageIndex + 1
   readonly property color accent: hostWidget ? hostWidget.accent : Color.accent
 
   onOpenedChanged: {
     if (opened) { selection.reset(); scroll.contentY = 0; if (hostWidget) hostWidget.clearTransferError(); }
     else {
-      languagePicker.close();
-      addPicker.close();
-      transferEditor.closePicker();
-      editingTransfer = false;
-      appearanceEditor.closePickers();
-      if (root.hostWidget) { root.hostWidget.cancelAppearance(); root.hostWidget.cancelLabels(); }
-      labelsEditor.closePicker();
-      editingAppearance = false;
-      editingLabels = false;
-      editingScaling = false;
+      closeEditors();
       updateConfirmation.opened = false;
     }
   }
@@ -89,16 +77,7 @@ Panel {
   }
   function openTransfer(win) {
     if (!hostWidget || hostWidget.transferBusy) return;
-    hostWidget.cancelAppearance();
-    hostWidget.cancelLabels();
-    appearanceEditor.closePickers();
-    labelsEditor.closePicker();
-    editingAppearance = false;
-    editingLabels = false;
-    editingScaling = false;
-    editingTransfer = true;
-    scroll.contentY = 0;
-    transferEditor.begin(win);
+    showEditor(transferEditor, win);
   }
   function quickExtract(win) {
     if (!hostWidget || hostWidget.transferBusy) return;
@@ -119,45 +98,34 @@ Panel {
     languagePicker.open();
   }
 
-  function openAppearance() {
-    if (!hostWidget) return;
+  function closeEditors() {
+    languagePicker.close();
+    addPicker.close();
     transferEditor.closePicker();
-    editingTransfer = false;
-    hostWidget.cancelLabels();
-    editingLabels = false;
-    hostWidget.cancelAppearance();
-    editingScaling = false;
-    editingAppearance = true;
-    scroll.contentY = 0;
-    appearanceEditor.begin();
+    appearanceEditor.closePickers();
+    labelsEditor.closePicker();
+    if (hostWidget) { hostWidget.cancelAppearance(); hostWidget.cancelLabels(); }
+    activeEditor = null;
   }
 
-  function openLabels() {
+  function showEditor(editor, value) {
     if (!hostWidget) return;
-    transferEditor.closePicker();
-    editingTransfer = false;
-    hostWidget.cancelAppearance();
-    appearanceEditor.closePickers();
-    editingAppearance = false;
-    editingScaling = false;
-    editingLabels = true;
+    closeEditors();
+    activeEditor = editor;
     scroll.contentY = 0;
-    labelsEditor.begin();
+    editor.begin(value);
   }
 
-  function openScaling() {
-    if (!hostWidget) return;
-    transferEditor.closePicker();
-    editingTransfer = false;
-    hostWidget.cancelLabels();
-    hostWidget.cancelAppearance();
-    appearanceEditor.closePickers();
-    editingAppearance = false;
-    editingLabels = false;
-    editingScaling = true;
-    scroll.contentY = 0;
-    scalingEditor.begin();
+  function finishEditor(index, atTop) {
+    closeEditors();
+    selectedIndex = index;
+    scroll.contentY = atTop ? 0 : Math.max(0, content.implicitHeight - scroll.height);
+    catcher.forceActiveFocus();
   }
+
+  function openAppearance() { showEditor(appearanceEditor); }
+  function openLabels() { showEditor(labelsEditor); }
+  function openScaling() { showEditor(scalingEditor); }
 
   function ensureVisible(item) {
     var position = item.mapToItem(scroll.contentItem, 0, 0);
@@ -224,64 +192,43 @@ Panel {
           id: transferEditor
           width: scroll.width
           hostWidget: root.hostWidget
-          visible: root.editingTransfer
+          visible: root.activeEditor === transferEditor
           LayoutMirroring.enabled: root.rtl
           LayoutMirroring.childrenInherit: true
-          onFinished: {
-            closePicker();
-            root.editingTransfer = false;
-            root.selectedIndex = Math.min(root.selectedIndex, root.hintsIndex);
-            scroll.contentY = 0;
-            catcher.forceActiveFocus();
-          }
+          onFinished: root.finishEditor(Math.min(root.selectedIndex, root.hintsIndex), true)
         }
 
         AppearanceEditor {
           id: appearanceEditor
           width: scroll.width
           hostWidget: root.hostWidget
-          visible: root.editingAppearance
+          visible: root.activeEditor === appearanceEditor
           LayoutMirroring.enabled: root.rtl
           LayoutMirroring.childrenInherit: true
           onEnsureVisible: function(item) { root.ensureVisible(item); }
-          onFinished: {
-            root.editingAppearance = false;
-            root.selectedIndex = root.appearanceIndex;
-            scroll.contentY = Math.max(0, content.implicitHeight - scroll.height);
-            catcher.forceActiveFocus();
-          }
+          onFinished: root.finishEditor(root.appearanceIndex, false)
         }
 
         LabelsEditor {
           id: labelsEditor
           width: scroll.width
           hostWidget: root.hostWidget
-          visible: root.editingLabels
+          visible: root.activeEditor === labelsEditor
           LayoutMirroring.enabled: root.rtl
           LayoutMirroring.childrenInherit: true
           onEnsureVisible: function(item) { root.ensureVisible(item); }
-          onFinished: {
-            root.editingLabels = false;
-            root.selectedIndex = root.labelsIndex;
-            scroll.contentY = Math.max(0, content.implicitHeight - scroll.height);
-            catcher.forceActiveFocus();
-          }
+          onFinished: root.finishEditor(root.labelsIndex, false)
         }
 
         ScalingEditor {
           id: scalingEditor
           width: scroll.width
           hostWidget: root.hostWidget
-          visible: root.editingScaling
+          visible: root.activeEditor === scalingEditor
           LayoutMirroring.enabled: root.rtl
           LayoutMirroring.childrenInherit: true
           onEnsureVisible: function(item) { root.ensureVisible(item); }
-          onFinished: {
-            root.editingScaling = false;
-            root.selectedIndex = root.scalingIndex;
-            scroll.contentY = Math.max(0, content.implicitHeight - scroll.height);
-            catcher.forceActiveFocus();
-          }
+          onFinished: root.finishEditor(root.scalingIndex, false)
         }
 
         Column {
