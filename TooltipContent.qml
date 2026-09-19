@@ -23,7 +23,7 @@ Rectangle {
   radius: Style.space(compact ? 2 : 8)
   color: Color.popups.background
   border.width: 1
-  border.color: Qt.alpha(root.accent, 0.65)
+  border.color: root.accent
 
   Column {
     id: contents

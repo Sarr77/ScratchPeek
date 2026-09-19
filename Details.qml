@@ -149,7 +149,7 @@ Panel {
     contentHeight: panel.fittedContentHeight(root.logicalContentHeight * root.uiScale)
     // Qt Controls reparents dropdown popups to the overlay, outside the scaled
     // content tree. Give this panel window's overlay the same transform.
-    borderSpec: Border.flat(root.accent, Math.max(1, Style.space(2)))
+    borderSpec: Border.flat(root.accent, 1)
 
     PanelKeyCatcher {
       id: catcher
