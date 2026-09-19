@@ -18,6 +18,7 @@ PanelHint 1.0 PanelHint.qml
 MoveOutButton 1.0 MoveOutButton.qml
 AddWindowPicker 1.0 AddWindowPicker.qml
 AuthorCredit 1.0 AuthorCredit.qml
+VersionLabel 1.0 VersionLabel.qml
 Updates 1.0 Updates.qml
 UpdateSwitch 1.0 UpdateSwitch.qml
 UpdateConfirmation 1.0 UpdateConfirmation.qml

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Exercise footer hover and keyboard selection without native desktop input."""
+import json
 import os
 from pathlib import Path
 import shutil
@@ -14,6 +15,7 @@ with tempfile.TemporaryDirectory(prefix='scratchpeek-footer-hover-') as director
     (config / 'ScratchPeek').symlink_to(root, target_is_directory=True)
     shutil.copyfile(root / 'tests/footer-hover.qml', config / 'shell.qml')
     env = dict(os.environ, XDG_STATE_HOME=str(config / 'state'), QT_QPA_PLATFORM='offscreen',
+               SCRATCHPEEK_EXPECTED_VERSION=json.loads((root / 'manifest.json').read_text())['version'],
                QT_QUICK_BACKEND='software', QT_QUICK_CONTROLS_STYLE='Basic', QT_QPA_PLATFORMTHEME='')
     result = subprocess.run(['quickshell', '--no-color', '-p', str(config)],
                             env=env, text=True, capture_output=True, timeout=15)

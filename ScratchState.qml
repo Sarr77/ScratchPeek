@@ -9,6 +9,19 @@ import "Appearance.js" as Appearance
 // Bindings are read only at startup/config reload, never by a polling command.
 QtObject {
   id: root
+  // Read once for this loaded instance; a pending update must not change its label.
+  readonly property string version: {
+    try {
+      var manifest = JSON.parse(releaseManifest.text());
+      return manifest.id === "sarr.scratchpeek" && typeof manifest.version === "string"
+        ? manifest.version : "";
+    } catch (error) { return ""; }
+  }
+  property FileView releaseManifest: FileView {
+    path: Qt.resolvedUrl("manifest.json")
+    blockLoading: true
+    printErrors: false
+  }
   property Preferences preferences: Preferences { }
   property var fallbackSettings: null
   property bool publishingSettings: false

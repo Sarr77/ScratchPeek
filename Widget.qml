@@ -13,6 +13,7 @@ import "Transfers.js" as Transfers
 BarWidget {
   id: root
   moduleName: "sarr.scratchpeek"
+  readonly property string version: Local.ScratchState.version
   readonly property var effectiveSettings: !settingsReady ? settings
     : (Local.ScratchState.preferences.hasSavedValues
       ? Local.ScratchState.preferences.values : Local.ScratchState.fallbackSettings)
@@ -335,7 +336,7 @@ BarWidget {
         return { screen: widget.screenName, status: widget.scratchpadState.status,
           count: widget.scratchpadState.count, focused: widget.scratchpadState.focused,
           openOn: widget.scratchpadState.monitor, language: widget.language, languageSetting: widget.languageSetting,
-          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: "0.11.1",
+          detectedLanguage: widget.detectedLanguage, workspace: widget.workspaceName, version: widget.version,
           hints: widget.hints, hintsSaveFailed: widget.hintsSaveFailed,
           autoUpdates: widget.autoUpdates, updateStatus: widget.updateStatus, updatesSaveFailed: widget.updatesSaveFailed,
           preferencesSaveFailed: widget.preferencesSaveFailed,

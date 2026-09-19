@@ -35,7 +35,7 @@ ShellRoot {
       }
       Plugin.UpdateSwitch {
         id: updates
-        anchors.horizontalCenter: parent.horizontalCenter
+        x: 60
         text: I18n.words("en").autoUpdates
         hasCursor: selection.index === 1
         onHovered: function(value) { selection.hover(1,value); }
@@ -45,6 +45,12 @@ ShellRoot {
         id: author
         anchors.right: parent.right
         text: I18n.words("en").author
+      }
+      Plugin.VersionLabel {
+        id: version
+        anchors.right: author.left
+        anchors.rightMargin: 10
+        version: Plugin.ScratchState.version
       }
     }
   }
@@ -93,6 +99,22 @@ ShellRoot {
           test.hover(author); break;
         case 12:
           test.check(!author.font.underline && !author.activeFocus,"author remains plain text at 200 percent scale");
+          test.check(version.version === Quickshell.env("SCRATCHPEEK_EXPECTED_VERSION"),"version comes from the installed manifest");
+          footer.forceActiveFocus();
+          Quickshell.clipboardText = "before";
+          test.hover(version);
+          events.mouseClick(version,version.width/2,version.height/2,Qt.LeftButton,Qt.NoModifier,0);
+          test.check(Quickshell.clipboardText === version.version,"click copies only the version number");
+          test.gap(); break;
+        case 13:
+          test.check(!version.hot,"version hover clears inside the footer");
+          version.forceActiveFocus();
+          Quickshell.clipboardText = "before";
+          events.keyClick(Qt.Key_Space,Qt.NoModifier,0);
+          test.check(Quickshell.clipboardText === version.version,"Space copies the version");
+          Quickshell.clipboardText = "before";
+          events.keyClick(Qt.Key_Return,Qt.NoModifier,0);
+          test.check(Quickshell.clipboardText === version.version,"Enter copies the version");
           console.info("SCRATCHPEEK_FOOTER_HOVER_PASS"); stop(); Qt.quit();
         }
       } catch (error) { console.error("SCRATCHPEEK_FOOTER_HOVER_FAIL: " + error); stop(); Qt.quit(); }

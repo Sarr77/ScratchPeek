@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "sarr.scratchpeek",
   "name": "ScratchPeek",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "author": "Sarr",
   "license": "MIT",
   "description": "Window list and controls for Omarchy's scratchpad. Switch to a window, choose its workspace, or add another window.",

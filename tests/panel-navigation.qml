@@ -38,6 +38,12 @@ ShellRoot {
       stop();
       try {
         panel.open();
+        panel.selectedIndex = panel.updatesIndex;
+        panel.moveSelection(1);
+        suite.check(panel.selectedIndex === panel.versionIndex, "keyboard reaches the version after updates");
+        Quickshell.clipboardText = "before";
+        panel.activateSelection();
+        suite.check(Quickshell.clipboardText === widget.version && !!widget.version, "panel keyboard action copies the loaded version");
         var before = JSON.stringify(widget.savedAppearance);
         panel.openAppearance();
         suite.assertEditor(Plugin.AppearanceEditor);

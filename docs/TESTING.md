@@ -21,7 +21,7 @@ tests and checks the manifest entry points.
 | `tests/test_package.py` | Archive contents, repeatable output, missing files, invalid paths and symlinks |
 | `tools/test_preferences.py` | Panel and host settings, failed writes and retries, startup with corrupt or inaccessible preferences, restarts, stale copies and repeated host notifications |
 | `tools/test_panel_actions.py` | Hover hints, Ctrl-click, rapid settings changes, update timing and disable confirmation |
-| `tools/test_footer_hover.py` | Pointer exit and keyboard selection at 100% and 200% scale |
+| `tools/test_footer_hover.py` | Pointer exit and keyboard selection at 100% and 200% scale, manifest version and copying it |
 | `tools/test_hint_budget.py` | 100 displayed hints across two widgets, with restarts at 50 and 100 |
 | `tools/test_dropdown.py` | Opening, closing, search, keyboard selection and scaled placement |
 | `tools/test_editor.py` | Color presets, Apply/Cancel, saved colors, theme changes and failed saves |

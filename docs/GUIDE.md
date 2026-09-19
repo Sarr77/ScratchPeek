@@ -168,6 +168,10 @@ change keybindings.
 
 ## Saved settings
 
+The panel footer shows the loaded version. Click the version
+number to copy it, or select it with Tab and press Enter or Space. It stays
+visible when hover hints are off.
+
 Settings are saved in `~/.local/state/scratchpeek/preferences.json`, or under
 `$XDG_STATE_HOME/scratchpeek` when that variable is set. The file is shared
 across monitors and loaded at startup. It contains preferences and the hint

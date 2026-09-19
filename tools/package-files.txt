@@ -32,6 +32,7 @@ UpdateConfirmation.qml
 UpdateSwitch.qml
 Updates.qml
 Visibility.js
+VersionLabel.qml
 Widget.qml
 WindowTransfer.qml
 docs/DEVELOPMENT.md

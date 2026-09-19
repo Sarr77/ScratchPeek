@@ -34,6 +34,8 @@ Panel {
   readonly property int labelsIndex: scalingIndex + 1
   readonly property int hintsIndex: labelsIndex + 1
   readonly property int updatesIndex: hintsIndex + 1
+  readonly property int versionIndex: updatesIndex + 1
+  readonly property int lastIndex: hostWidget && hostWidget.version ? versionIndex : updatesIndex
   readonly property bool hintsEnabled: !hostWidget || hostWidget.hints.enabled
   readonly property real logicalContentHeight: activeEditor ? activeEditor.implicitHeight : content.implicitHeight
   readonly property int appearanceIndex: languageIndex + 1
@@ -46,10 +48,10 @@ Panel {
       updateConfirmation.opened = false;
     }
   }
-  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, updatesIndex)
+  onLanguageIndexChanged: selectedIndex = Math.min(selectedIndex, lastIndex)
 
   function moveSelection(delta) {
-    selection.move(delta, updatesIndex);
+    selection.move(delta, lastIndex);
     if (selectedIndex < toggleIndex) {
       list.positionViewAtIndex(Math.floor(selectedIndex / windowActionCount), ListView.Contain);
       scroll.contentY = 0;
@@ -58,6 +60,7 @@ Panel {
   function activateSelection() {
     if (!hostWidget || selectedIndex < 0) return;
     if (selectedIndex === hintsIndex) hostWidget.toggleHints();
+    else if (selectedIndex === versionIndex) versionLabel.copy();
     else if (selectedIndex === updatesIndex) requestUpdatesToggle();
     else if (selectedIndex === labelsIndex) openLabels();
     else if (selectedIndex === scalingIndex) openScaling();
@@ -660,23 +663,35 @@ Panel {
               onHovered: function(value) { selection.hover(root.hintsIndex, value); }
               onClicked: if (root.hostWidget) root.hostWidget.toggleHints()
             }
-            AuthorCredit {
-              id: authorCredit
+            Row {
+              id: releaseCredit
               anchors.right: parent.right
               anchors.verticalCenter: parent.verticalCenter
-              text: root.words.author
-              foreground: root.barForeground
+              spacing: Style.space(5)
+              VersionLabel {
+                id: versionLabel
+                version: root.hostWidget ? root.hostWidget.version : ""
+                visible: !!version
+                foreground: root.barForeground
+                accent: root.accent
+                hasCursor: root.selectedIndex === root.versionIndex
+                onHovered: function(value) { selection.hover(root.versionIndex, value); }
+              }
+              AuthorCredit {
+                text: (versionLabel.visible ? "· " : "") + root.words.author
+                foreground: root.barForeground
+              }
             }
             Item {
               anchors.left: hintsToggle.right
-              anchors.right: authorCredit.left
+              anchors.right: releaseCredit.left
               anchors.margins: Style.space(8)
               height: parent.height
               UpdateSwitch {
                 id: updatesToggle
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                width: Math.min(implicitWidth, parent.width)
+                width: Math.max(0, Math.min(implicitWidth, parent.width))
                 text: root.words.autoUpdates
                 checked: !root.hostWidget || root.hostWidget.autoUpdates
                 foreground: root.barForeground
