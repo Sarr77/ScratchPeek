@@ -10,7 +10,9 @@ repository is [Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek).
 - Description: A window list for Omarchy’s scratchpad. Switch to a window or tab,
   move it to a workspace, or add another window to the scratchpad.
 - Preview: [preview.png](../preview.png), with its source in
-  [docs/preview.svg](preview.svg). It is an illustration using example windows.
+  [docs/preview.svg](preview.svg) and the [panel image](preview-panel.png).
+  The graphic uses example windows. The previous PNG and SVG are kept for
+  [comparison](previews/README.md).
 
 ## Release steps
 

@@ -9,6 +9,8 @@ are listed separately.
 [Polski](docs/README.pl.md) · [Preview](preview.png) ·
 [User guide](docs/GUIDE.md) · [Changelog](CHANGELOG.md)
 
+![ScratchPeek bar indicator and window list](preview.png)
+
 ## Installation
 
 ```sh

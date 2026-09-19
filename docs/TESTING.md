@@ -58,7 +58,8 @@ separately from other window automation:
 
 They restore the affected layout and focus. Check panel placement, keyboard
 navigation, scaling and dropdowns on both monitors as well. The repository’s
-preview image is an illustration, not a screenshot from these tests.
+preview uses example windows and a separately rendered panel; it does not
+document these live checks.
 
 ## What these tests do not cover
 

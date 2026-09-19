@@ -42,8 +42,12 @@ docs/PUBLISHING.md
 docs/README.pl.md
 docs/TESTING.md
 docs/UPDATES.md
+docs/preview-panel.png
 docs/preview.png
 docs/preview.svg
+docs/previews/README.md
+docs/previews/preview-before-0.11.2.png
+docs/previews/preview-before-0.11.2.svg
 manifest.json
 preview.png
 qmldir

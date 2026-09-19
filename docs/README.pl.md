@@ -9,6 +9,8 @@ osobno.
 [English](../README.md) · [Podgląd](../preview.png) ·
 [Instrukcja (EN)](GUIDE.md) · [Historia zmian](../CHANGELOG.md)
 
+![Wskaźnik na pasku i lista okien ScratchPeek](../preview.png)
+
 ## Instalacja
 
 ```sh
