@@ -15,6 +15,8 @@ ShellRoot {
   property int step: 0
   property int selections: 0
   property int quickAdds: 0
+  property int plainSelections: 0
+  property int plainPass: 0
   property string selected: ""
   property real uiScale: 1
   function check(value,message) { if (!value) throw new Error(message); }
@@ -23,6 +25,18 @@ ShellRoot {
   }
   function controlClick() {
     events.mouseClick(picker,picker.width/2,picker.height/2,Qt.LeftButton,Qt.ControlModifier,0);
+  }
+  function clickPlain() {
+    events.mouseClick(plainPicker,plainPicker.width/2,plainPicker.height-plainPicker.rowHeight/2,Qt.LeftButton,Qt.NoModifier,0);
+  }
+  function popupFor(item) {
+    for (var i=0; i<item.data.length; i++)
+      if (item.data[i] instanceof QQC.Popup) return item.data[i];
+    for (var j=0; j<item.children.length; j++) {
+      var found=popupFor(item.children[j]);
+      if (found) return found;
+    }
+    return null;
   }
   function hintVisible() {
     for (var i=0; i<picker.data.length; i++) {
@@ -65,7 +79,17 @@ ShellRoot {
       Choice.SearchableDropdown {
         id: genericPicker
         width: parent.width; y: 100; showLabel: false
+        uiScale: testRoot.uiScale
         options: ["English", "Polski"]
+      }
+      Choice.Dropdown {
+        id: plainPicker
+        width: parent.width; y: 200
+        uiScale: testRoot.uiScale
+        label: "Tooltip style"
+        value: "panel"
+        options: [{value:"panel",label:"Spacious"},{value:"compact",label:"Compact"}]
+        onChanged: testRoot.plainSelections++
       }
     }
   }
@@ -139,6 +163,63 @@ ShellRoot {
         case 21:
           testRoot.check(!testRoot.hintVisible() && host.hints.used===100,"new hint obeys the exhausted automatic budget");
           testRoot.check(testRoot.quickAdds===2 && testRoot.selections===1,"hover hints do not transfer windows");
+          interval=100; break;
+        case 22:
+          testRoot.uiScale=testRoot.plainPass ? 2 : 1;
+          content.y=testRoot.plainPass ? window.height-(plainPicker.y+plainPicker.height)*2-20 : 20;
+          testRoot.plainSelections=0; plainPicker.value="panel";
+          testRoot.clickPlain(); break;
+        case 23:
+          testRoot.check(plainPicker.popupOpen,"plain dropdown opens");
+          testRoot.check(!testRoot.plainPass || plainPicker.placement.y<0,"200% plain dropdown fits above trigger");
+          events.mousePress(plainPicker,plainPicker.width/2,plainPicker.height-plainPicker.rowHeight/2,Qt.LeftButton,Qt.NoModifier,0);
+          testRoot.check(plainPicker.popupOpen,"press on trigger must not dismiss before click");
+          events.mouseRelease(plainPicker,plainPicker.width/2,plainPicker.height-plainPicker.rowHeight/2,Qt.LeftButton,Qt.NoModifier,0); break;
+        case 24:
+          testRoot.check(!plainPicker.popupOpen && testRoot.plainSelections===0,"second plain click closes without selecting");
+          testRoot.clickPlain(); break;
+        case 25:
+          testRoot.check(plainPicker.popupOpen,"plain dropdown reopens");
+          events.mouseClick(window.contentItem,810,720,Qt.LeftButton,Qt.NoModifier,0); break;
+        case 26:
+          testRoot.check(!plainPicker.popupOpen,"outside click closes plain dropdown");
+          testRoot.clickPlain(); break;
+        case 27:
+          testRoot.check(plainPicker.popupOpen,"plain dropdown open before Escape");
+          events.keyClick(Qt.Key_Escape,Qt.NoModifier,0); break;
+        case 28:
+          testRoot.check(!plainPicker.popupOpen,"Escape closes plain dropdown");
+          events.keyClick(Qt.Key_Space,Qt.NoModifier,0); break;
+        case 29:
+          testRoot.check(plainPicker.popupOpen,"focus returns to trigger and Space reopens");
+          events.keyClick(Qt.Key_Down,Qt.NoModifier,0);
+          events.keyClick(Qt.Key_Return,Qt.NoModifier,0); break;
+        case 30:
+          testRoot.check(!plainPicker.popupOpen && plainPicker.value==="compact" && testRoot.plainSelections===1,"keyboard selects exactly once");
+          testRoot.clickPlain(); break;
+        case 31:
+          var row=testRoot.popupFor(plainPicker).contentItem.itemAtIndex(0);
+          testRoot.check(row!==null,"first plain option is visible");
+          events.mouseMove(row,row.width/2,row.height/2,0,Qt.NoButton,Qt.NoModifier);
+          events.mouseClick(row,row.width/2,row.height/2,Qt.LeftButton,Qt.NoModifier,0); break;
+        case 32:
+          testRoot.check(!plainPicker.popupOpen && plainPicker.value==="panel" && testRoot.plainSelections===2,"pointer selects exactly once");
+          testRoot.clickPlain(); break;
+        case 33:
+          events.mouseClick(genericPicker,genericPicker.width/2,genericPicker.height/2,Qt.LeftButton,Qt.NoModifier,0); break;
+        case 34:
+          testRoot.check(!plainPicker.popupOpen && genericPicker.popupOpen,"clicking another dropdown switches menus");
+          genericPicker.close(); plainPicker.enabled=false;
+          testRoot.clickPlain(); break;
+        case 35:
+          testRoot.check(!plainPicker.popupOpen,"disabled dropdown cannot open");
+          plainPicker.enabled=true; testRoot.clickPlain(); break;
+        case 36:
+          testRoot.check(plainPicker.popupOpen,"re-enabled dropdown opens");
+          testRoot.clickPlain(); testRoot.clickPlain(); testRoot.clickPlain(); break;
+        case 37:
+          testRoot.check(!plainPicker.popupOpen && testRoot.plainSelections===2,"rapid trigger clicks toggle without changing selection");
+          if (testRoot.plainPass++===0) { testRoot.step=22; break; }
           console.info("SCRATCHPEEK_DROPDOWN_PASS"); stop(); Qt.quit(); break;
         }
       } catch (error) { console.error("SCRATCHPEEK_DROPDOWN_FAIL: "+error); stop(); Qt.quit(); }

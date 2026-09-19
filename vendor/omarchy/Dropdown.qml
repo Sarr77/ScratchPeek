@@ -1,5 +1,5 @@
 // Adapted from Omarchy 4.0.4 shell/Ui/Dropdown.qml (MIT). See LICENSE here.
-// ScratchPeek: keep scaled popup menus inside their window.
+// ScratchPeek: keep scaled popups inside their window; trigger clicks toggle once.
 import QtQuick
 import QtQuick.Window
 import "../../PopupPlacement.js" as Placement
@@ -67,7 +67,7 @@ Item {
   readonly property bool popupOpen: popup.opened
   function open() { popup.open() }
   function close() { popup.close() }
-  function toggle() { popup.opened ? popup.close() : popup.open() }
+  function toggle() { popup.visible ? popup.close() : popup.open() }
 
   signal changed(string value)
   signal hovered(bool isHovered)
@@ -125,7 +125,7 @@ Item {
       Keys.onPressed: function(event) {
         if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter
             || event.key === Qt.Key_Space || event.key === Qt.Key_Down) {
-          popup.opened ? popup.close() : popup.open()
+          root.toggle()
           event.accepted = true
         } else if (event.key === Qt.Key_Escape && popup.opened) {
           popup.close(); event.accepted = true
@@ -162,12 +162,15 @@ Item {
         cursorShape: Qt.PointingHandCursor
         onClicked: {
           trigger.forceActiveFocus()
-          popup.opened ? popup.close() : popup.open()
+          root.toggle()
         }
       }
 
       Popup {
         id: popup
+        // Let the trigger handle its own click, without an earlier dismissal
+        // on press that would make the same click reopen the list.
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
         // Placement.fit already handles transformed window bounds.
         margins: -1
         x: root.placement.x

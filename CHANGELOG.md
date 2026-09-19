@@ -5,6 +5,7 @@
 - Added the loaded version in the panel footer. Click it to copy
   the version number, or select it with the keyboard and press Enter or Space.
 - The panel and status command now read the version from the same manifest.
+- Fixed settings dropdowns reopening when clicked again.
 
 ## 0.11.1
 
