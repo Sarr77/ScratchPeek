@@ -7,8 +7,9 @@ repository is [Sarr77/ScratchPeek](https://github.com/Sarr77/ScratchPeek).
 
 - Category: **Productivity**
 - Tags: **bar, hyprland, workspaces**
-- Description: A window list for Omarchy’s scratchpad. Switch to a window or tab,
-  move it to a workspace, or add another window to the scratchpad.
+- Description: Window list and controls for Omarchy's scratchpad. Switch to a window,
+  choose its workspace, or add another window. Keep Omarchy's look and workflow,
+  without adding a macOS-style dock, Launchpad, Mission Control, or a Windows-style desktop.
 - Preview: [preview.png](../preview.png), with its source in
   [docs/preview.svg](preview.svg) and the [panel image](preview-panel.png).
   The graphic uses example windows. The previous PNG and SVG are kept for

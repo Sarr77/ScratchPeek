@@ -48,6 +48,8 @@ docs/preview.svg
 docs/previews/README.md
 docs/previews/preview-before-0.11.2.png
 docs/previews/preview-before-0.11.2.svg
+docs/previews/preview-before-tokyo-night.png
+docs/previews/preview-before-tokyo-night.svg
 manifest.json
 preview.png
 qmldir
