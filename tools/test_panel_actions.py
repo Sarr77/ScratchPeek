@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Exercise hint switching and Ctrl-click routing without desktop input."""
+import json
 import os
 from pathlib import Path
 import shutil
@@ -14,6 +15,9 @@ with tempfile.TemporaryDirectory(prefix='scratchpeek-panel-actions-') as directo
         (config / name).symlink_to(shell / name, target_is_directory=True)
     (config / 'ScratchPeek').symlink_to(root, target_is_directory=True)
     shutil.copyfile(root / 'tests/panel-actions.qml', config / 'shell.qml')
+    state = config / 'state' / 'scratchpeek'
+    state.mkdir(parents=True)
+    (state / 'updates.json').write_text(json.dumps({'lastCheck': 1000, 'nextCheck': 87400, 'status': 'current'}))
     env = dict(os.environ, XDG_STATE_HOME=str(config / 'state'), QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software',
                QT_QUICK_CONTROLS_STYLE='Basic', QT_QPA_PLATFORMTHEME='')
     try:

@@ -11,6 +11,11 @@ are listed separately.
 
 ![ScratchPeek bar indicator and window list](preview.png)
 
+[WindowPeek](https://plugins.omarchy.org/plugin.html?id=sarr.windowpeek) lets you
+search, preview and switch to windows across workspaces and monitors, including
+individual tabs in Hyprland groups. You can also move windows between workspaces
+or into the scratchpad.
+
 ## Installation
 
 ```sh
@@ -52,10 +57,11 @@ Settings and the hint count are kept through restarts, updates and reinstalls.
 
 ## Updates
 
-Automatic updates are enabled by default and checked once a day while the
-widget is running. From 0.11.1, an update must be an immutable GitHub release
-whose exact commit has been verified in the Omarchy marketplace. If a download
-or verification fails, the installed version stays in place.
+Automatic updates are enabled by default. ScratchPeek checks every 6 hours
+while running, and on startup if it hasn't checked yet that day. From 0.11.1,
+an update must be an immutable GitHub release whose exact commit has been
+verified in the Omarchy marketplace. If a download or verification fails,
+the installed version stays in place.
 
 You can disable updates using the small switch beside **?**; this asks for
 confirmation. Linked development copies, forks and locally modified code are

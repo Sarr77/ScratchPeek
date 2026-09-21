@@ -115,15 +115,55 @@ class UpdatesTest(unittest.TestCase):
         self.assertEqual(self.worker.approval_requests, 2)
         self.assertFalse(list(self.worker.plugin.parent.parent.glob(".scratchpeek-update-*")))
 
-    def test_once_daily_across_new_processes(self):
+    def test_every_six_hours_across_new_processes(self):
         self.worker.release["tag_name"] = "v0.10.0"
         self.assertEqual(self.worker.run(now=1000), "current")
+        self.assertEqual(json.loads(self.worker.result.read_text())["nextCheck"], 1000 + 6 * 3600)
         fresh = LocalUpdater(self.worker.home, self.worker.state.parent, self.remote)
         fresh.catalog = self.worker.catalog
         self.assertEqual(fresh.run(now=1001), "not-due")
+        self.assertEqual(fresh.run(now=1000 + 6 * 3600 - 1), "not-due")
         self.assertEqual(fresh.requests, 0)
-        self.assertEqual(fresh.run(now=1000 + updates.DAY), "updated")
+        self.assertEqual(fresh.run(now=1000 + 6 * 3600), "updated")
         self.assertEqual(fresh.requests, 2)
+
+    def test_daily_deadline_is_shortened_without_repeating_a_recent_check(self):
+        self.worker.release["tag_name"] = "v0.10.0"
+        self.worker.result.write_text(json.dumps({"lastCheck": 1000, "nextCheck": 1000 + 86400, "status": "current"}))
+        self.assertEqual(self.worker.run(now=1001), "not-due")
+        self.assertEqual(self.worker.run(now=1000 + 6 * 3600 - 1), "not-due")
+        self.assertEqual(self.worker.requests, 0)
+        self.assertEqual(self.worker.run(now=1000 + 6 * 3600), "current")
+        self.assertEqual(self.worker.requests, 1)
+
+    def test_startup_checks_a_new_local_day_only_once_across_processes(self):
+        previous = int(time.mktime((2026, 9, 20, 23, 30, 0, 0, 0, -1)))
+        morning = int(time.mktime((2026, 9, 21, 0, 30, 0, 0, 0, -1)))
+        self.worker.release["tag_name"] = "v0.10.0"
+        self.assertEqual(self.worker.run(now=previous), "current")
+        self.assertEqual(self.worker.run(now=morning), "not-due")
+        self.assertEqual(self.worker.run(now=morning, startup=True), "current")
+        self.assertEqual(self.worker.requests, 2)
+        fresh = LocalUpdater(self.worker.home, self.worker.state.parent, self.remote)
+        self.assertEqual(fresh.run(now=morning + 60, startup=True), "not-due")
+        self.assertEqual(fresh.requests, 0)
+        self.assertEqual(json.loads(fresh.result.read_text())["nextCheck"], morning + 6 * 3600)
+
+    def test_startup_respects_a_regular_check_already_made_that_day(self):
+        morning = int(time.mktime((2026, 9, 21, 8, 0, 0, 0, 0, -1)))
+        self.worker.release["tag_name"] = "v0.10.0"
+        self.assertEqual(self.worker.run(now=morning), "current")
+        self.assertEqual(self.worker.run(now=morning + 3600, startup=True), "not-due")
+        self.assertEqual(self.worker.requests, 1)
+
+    def test_missed_checks_do_not_accumulate(self):
+        self.worker.release["tag_name"] = "v0.10.0"
+        self.assertEqual(self.worker.run(now=1000), "current")
+        resumed = 1000 + 3 * 86400
+        self.assertEqual(self.worker.run(now=resumed, startup=True), "current")
+        self.assertEqual(self.worker.run(now=resumed + 60, startup=True), "not-due")
+        self.assertEqual(self.worker.requests, 2)
+        self.assertEqual(json.loads(self.worker.result.read_text())["nextCheck"], resumed + 6 * 3600)
 
     def test_disabled_survives_a_new_worker(self):
         data = json.loads(self.prefs.read_text())
@@ -153,10 +193,15 @@ class UpdatesTest(unittest.TestCase):
             self.assertEqual(self.worker.run(now=1000), "busy")
             self.assertEqual(self.worker.requests, 0)
 
-    def test_offline_keeps_old_version_and_waits_until_tomorrow(self):
-        with patch.object(self.worker, "latest", side_effect=OSError("offline")):
-            self.assertEqual(self.worker.run(now=1000), "failed")
-        self.assertEqual(self.worker.run(now=1001), "not-due")
+    def test_offline_keeps_old_version_and_waits_six_hours(self):
+        morning = int(time.mktime((2026, 9, 21, 8, 0, 0, 0, 0, -1)))
+        with patch.object(self.worker, "latest", side_effect=OSError("offline")) as latest:
+            self.assertEqual(self.worker.run(now=morning, startup=True), "failed")
+            self.assertEqual(self.worker.run(now=morning + 1, startup=True), "not-due")
+            self.assertEqual(self.worker.run(now=morning + 6 * 3600 - 1), "not-due")
+            self.assertEqual(latest.call_count, 1)
+            self.assertEqual(self.worker.run(now=morning + 6 * 3600), "failed")
+            self.assertEqual(latest.call_count, 2)
         self.assert_unchanged()
 
     def test_draft_prerelease_bad_tags_and_malformed_responses_are_rejected(self):
@@ -438,7 +483,7 @@ class UpdatesTest(unittest.TestCase):
         self.worker.git(self.remote, "tag", tag)
         self.worker.release.update(id=12, tag_name=tag)
         self.entry.update(listingValidatedCommit=target, verificationCommit=target)
-        self.assertEqual(self.worker.run(now=1000 + updates.DAY), "updated")
+        self.assertEqual(self.worker.run(now=1000 + updates.CHECK_INTERVAL), "updated")
         self.assertEqual(self.worker.git(self.worker.plugin, "rev-parse", "HEAD"), target)
         for name in ("update.py", "Updates.qml", "manifest.json", "preview.png", "vendor/omarchy/LICENSE"):
             self.assertEqual((self.worker.plugin / name).read_bytes(), (ROOT / name).read_bytes())

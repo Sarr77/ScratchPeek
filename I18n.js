@@ -922,123 +922,123 @@ Object.keys(settingsErrors).forEach(function(code) { catalogs[code].settingsErro
 var updateWords = {
   "en": [
     "Automatic updates",
-    "Check once a day to install stable releases"
+    "Check every 6 hours to install stable releases"
   ],
   "pl": [
     "Automatyczne aktualizacje",
-    "Sprawdzaj raz dziennie i instaluj stabilne wydania"
+    "Sprawdzaj co 6 godzin i instaluj stabilne wydania"
   ],
   "de": [
     "Automatische Updates",
-    "Einmal täglich prüfen und stabile Versionen installieren"
+    "Alle 6 Stunden prüfen und stabile Versionen installieren"
   ],
   "fr": [
     "Mises à jour automatiques",
-    "Vérifier chaque jour et installer les versions stables"
+    "Vérifier toutes les 6 heures et installer les versions stables"
   ],
   "es": [
     "Actualizaciones automáticas",
-    "Buscar una vez al día e instalar versiones estables"
+    "Buscar cada 6 horas e instalar versiones estables"
   ],
   "pt-BR": [
     "Atualizações automáticas",
-    "Verificar uma vez por dia e instalar versões estáveis"
+    "Verificar a cada 6 horas e instalar versões estáveis"
   ],
   "pt-PT": [
     "Atualizações automáticas",
-    "Verificar uma vez por dia e instalar versões estáveis"
+    "Verificar a cada 6 horas e instalar versões estáveis"
   ],
   "it": [
     "Aggiornamenti automatici",
-    "Controlla una volta al giorno e installa le versioni stabili"
+    "Controlla ogni 6 ore e installa le versioni stabili"
   ],
   "nl": [
     "Automatische updates",
-    "Controleer dagelijks en installeer stabiele versies"
+    "Controleer elke 6 uur en installeer stabiele versies"
   ],
   "sv": [
     "Automatiska uppdateringar",
-    "Sök en gång om dagen och installera stabila versioner"
+    "Sök var 6:e timme och installera stabila versioner"
   ],
   "da": [
     "Automatiske opdateringer",
-    "Søg én gang om dagen, og installér stabile versioner"
+    "Søg hver 6. time, og installér stabile versioner"
   ],
   "nb": [
     "Automatiske oppdateringer",
-    "Sjekk én gang om dagen og installer stabile versjoner"
+    "Sjekk hver 6. time og installer stabile versjoner"
   ],
   "fi": [
     "Automaattiset päivitykset",
-    "Tarkista kerran päivässä ja asenna vakaat julkaisut"
+    "Tarkista 6 tunnin välein ja asenna vakaat julkaisut"
   ],
   "cs": [
     "Automatické aktualizace",
-    "Kontrolovat jednou denně a instalovat stabilní verze"
+    "Kontrolovat každých 6 hodin a instalovat stabilní verze"
   ],
   "sk": [
     "Automatické aktualizácie",
-    "Kontrolovať raz denne a inštalovať stabilné verzie"
+    "Kontrolovať každých 6 hodín a inštalovať stabilné verzie"
   ],
   "uk": [
     "Автоматичні оновлення",
-    "Перевіряти раз на день і встановлювати стабільні версії"
+    "Перевіряти кожні 6 годин і встановлювати стабільні версії"
   ],
   "ru": [
     "Автоматические обновления",
-    "Проверять раз в день и устанавливать стабильные версии"
+    "Проверять каждые 6 часов и устанавливать стабильные версии"
   ],
   "tr": [
     "Otomatik güncellemeler",
-    "Günde bir kez kontrol et ve kararlı sürümleri yükle"
+    "Her 6 saatte bir kontrol et ve kararlı sürümleri yükle"
   ],
   "ro": [
     "Actualizări automate",
-    "Verifică o dată pe zi și instalează versiunile stabile"
+    "Verifică la fiecare 6 ore și instalează versiunile stabile"
   ],
   "hu": [
     "Automatikus frissítések",
-    "Napi egyszeri ellenőrzés és stabil kiadások telepítése"
+    "Ellenőrzés 6 óránként és stabil kiadások telepítése"
   ],
   "el": [
     "Αυτόματες ενημερώσεις",
-    "Έλεγχος μία φορά την ημέρα και εγκατάσταση σταθερών εκδόσεων"
+    "Έλεγχος κάθε 6 ώρες και εγκατάσταση σταθερών εκδόσεων"
   ],
   "ar": [
     "التحديثات التلقائية",
-    "التحقق مرة يوميًا وتثبيت الإصدارات المستقرة"
+    "التحقق كل 6 ساعات وتثبيت الإصدارات المستقرة"
   ],
   "hi": [
     "अपने आप अपडेट",
-    "दिन में एक बार जाँचें और स्थिर संस्करण इंस्टॉल करें"
+    "हर 6 घंटे में जाँचें और स्थिर संस्करण इंस्टॉल करें"
   ],
   "id": [
     "Pembaruan otomatis",
-    "Periksa sekali sehari dan pasang rilis stabil"
+    "Periksa setiap 6 jam dan pasang rilis stabil"
   ],
   "vi": [
     "Cập nhật tự động",
-    "Kiểm tra mỗi ngày một lần và cài đặt bản phát hành ổn định"
+    "Kiểm tra mỗi 6 giờ và cài đặt bản phát hành ổn định"
   ],
   "th": [
     "อัปเดตอัตโนมัติ",
-    "ตรวจสอบวันละครั้งและติดตั้งรุ่นเสถียร"
+    "ตรวจสอบทุก 6 ชั่วโมงและติดตั้งรุ่นเสถียร"
   ],
   "ja": [
     "自動更新",
-    "1日1回確認し、安定版をインストールします"
+    "6時間ごとに確認し、安定版をインストールします"
   ],
   "ko": [
     "자동 업데이트",
-    "하루에 한 번 확인하고 안정 버전을 설치합니다"
+    "6시간마다 확인하고 안정 버전을 설치합니다"
   ],
   "zh-CN": [
     "自动更新",
-    "每天检查一次并安装稳定版本"
+    "每6小时检查一次并安装稳定版本"
   ],
   "zh-TW": [
     "自動更新",
-    "每天檢查一次並安裝穩定版本"
+    "每6小時檢查一次並安裝穩定版本"
   ]
 };
 Object.keys(updateWords).forEach(function(code) {
@@ -1047,36 +1047,36 @@ Object.keys(updateWords).forEach(function(code) {
 });
 
 var updateErrors = {
-  "en": "Update failed. We’ll try again tomorrow.",
-  "pl": "Aktualizacja się nie udała. Spróbujemy ponownie jutro.",
-  "de": "Update fehlgeschlagen. Morgen versuchen wir es erneut.",
-  "fr": "La mise à jour a échoué. Nouvel essai demain.",
-  "es": "La actualización falló. Volveremos a intentarlo mañana.",
-  "pt-BR": "A atualização falhou. Tentaremos novamente amanhã.",
-  "pt-PT": "A atualização falhou. Tentaremos novamente amanhã.",
-  "it": "Aggiornamento non riuscito. Riproveremo domani.",
-  "nl": "De update is mislukt. Morgen proberen we het opnieuw.",
-  "sv": "Uppdateringen misslyckades. Vi försöker igen i morgon.",
-  "da": "Opdateringen mislykkedes. Vi prøver igen i morgen.",
-  "nb": "Oppdateringen mislyktes. Vi prøver igjen i morgen.",
-  "fi": "Päivitys epäonnistui. Yritämme uudelleen huomenna.",
-  "cs": "Aktualizace se nezdařila. Zkusíme to znovu zítra.",
-  "sk": "Aktualizácia zlyhala. Skúsime to znova zajtra.",
-  "uk": "Оновлення не вдалося. Спробуємо знову завтра.",
-  "ru": "Не удалось обновить. Попробуем снова завтра.",
-  "tr": "Güncelleme başarısız oldu. Yarın tekrar deneyeceğiz.",
-  "ro": "Actualizarea a eșuat. Vom încerca din nou mâine.",
-  "hu": "A frissítés sikertelen. Holnap újra megpróbáljuk.",
-  "el": "Η ενημέρωση απέτυχε. Θα προσπαθήσουμε ξανά αύριο.",
-  "ar": "تعذّر التحديث. سنحاول مجددًا غدًا.",
-  "hi": "अपडेट नहीं हो सका। कल फिर कोशिश करेंगे।",
-  "id": "Pembaruan gagal. Kami akan mencoba lagi besok.",
-  "vi": "Cập nhật thất bại. Sẽ thử lại vào ngày mai.",
-  "th": "อัปเดตไม่สำเร็จ จะลองอีกครั้งพรุ่งนี้",
-  "ja": "更新できませんでした。明日もう一度試します。",
-  "ko": "업데이트하지 못했습니다. 내일 다시 시도합니다.",
-  "zh-CN": "更新失败。明天会重试。",
-  "zh-TW": "更新失敗。明天會重試。"
+  "en": "Update failed. We’ll try again automatically.",
+  "pl": "Aktualizacja się nie udała. Spróbujemy ponownie automatycznie.",
+  "de": "Update fehlgeschlagen. Wir versuchen es automatisch erneut.",
+  "fr": "La mise à jour a échoué. Un nouvel essai sera effectué automatiquement.",
+  "es": "La actualización falló. Volveremos a intentarlo automáticamente.",
+  "pt-BR": "A atualização falhou. Tentaremos novamente automaticamente.",
+  "pt-PT": "A atualização falhou. Tentaremos novamente automaticamente.",
+  "it": "Aggiornamento non riuscito. Riproveremo automaticamente.",
+  "nl": "De update is mislukt. We proberen het automatisch opnieuw.",
+  "sv": "Uppdateringen misslyckades. Vi försöker igen automatiskt.",
+  "da": "Opdateringen mislykkedes. Vi prøver automatisk igen.",
+  "nb": "Oppdateringen mislyktes. Vi prøver igjen automatisk.",
+  "fi": "Päivitys epäonnistui. Yritämme uudelleen automaattisesti.",
+  "cs": "Aktualizace se nezdařila. Zkusíme to znovu automaticky.",
+  "sk": "Aktualizácia zlyhala. Skúsime to znova automaticky.",
+  "uk": "Оновлення не вдалося. Спробуємо знову автоматично.",
+  "ru": "Не удалось обновить. Попробуем снова автоматически.",
+  "tr": "Güncelleme başarısız oldu. Otomatik olarak tekrar deneyeceğiz.",
+  "ro": "Actualizarea a eșuat. Vom încerca din nou automat.",
+  "hu": "A frissítés sikertelen. Automatikusan újra megpróbáljuk.",
+  "el": "Η ενημέρωση απέτυχε. Θα προσπαθήσουμε ξανά αυτόματα.",
+  "ar": "تعذّر التحديث. سنحاول مجددًا تلقائيًا.",
+  "hi": "अपडेट नहीं हो सका। अपने आप फिर कोशिश करेंगे।",
+  "id": "Pembaruan gagal. Kami akan mencoba lagi secara otomatis.",
+  "vi": "Cập nhật thất bại. Sẽ tự động thử lại.",
+  "th": "อัปเดตไม่สำเร็จ จะลองอีกครั้งโดยอัตโนมัติ",
+  "ja": "更新できませんでした。自動的に再試行します。",
+  "ko": "업데이트하지 못했습니다. 자동으로 다시 시도합니다.",
+  "zh-CN": "更新失败。会自动重试。",
+  "zh-TW": "更新失敗。會自動重試。"
 };
 Object.keys(updateErrors).forEach(function(code) { catalogs[code].updateFailed = updateErrors[code]; });
 

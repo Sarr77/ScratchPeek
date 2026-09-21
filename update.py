@@ -4,6 +4,7 @@
 Started by the widget, with no persistent service. The worker survives a shell
 reload. GitHub identifies the release; Omarchy independently authorizes its SHA.
 """
+import argparse
 import ctypes
 import fcntl
 import hashlib
@@ -22,7 +23,7 @@ PLUGIN_ID = "sarr.scratchpeek"
 REPOSITORY = "https://github.com/Sarr77/ScratchPeek"
 RELEASE_URL = "https://api.github.com/repos/Sarr77/ScratchPeek/releases/latest"
 CATALOG_URL = "https://plugins.omarchy.org/catalog.json"
-DAY = 86400
+CHECK_INTERVAL = 6 * 60 * 60
 
 
 class UnverifiedUpdate(ValueError):
@@ -164,7 +165,7 @@ class Updater:
         return read_json(RELEASE_URL, 256 * 1024)
 
     def approval(self):
-        # Only requested for a newer immutable release, not on every daily check.
+        # Only requested for a newer immutable release, not on every check.
         return approved_commit(read_json(CATALOG_URL, 32 * 1024 * 1024))
 
     def validate(self, directory):
@@ -265,7 +266,7 @@ class Updater:
             exchange(stage, self.plugin)
         return "updated"
 
-    def run(self, now=None):
+    def run(self, now=None, startup=False):
         if not self.enabled():
             return "disabled"
         self.state.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -278,11 +279,14 @@ class Updater:
             now = int(time.time()) if now is None else now
             try:
                 previous = json.loads(self.result.read_text())
-                if now < previous["nextCheck"] <= now + DAY:
+                # Bring an older daily deadline forward without repeating a recent check.
+                next_check = min(previous["nextCheck"], previous["lastCheck"] + CHECK_INTERVAL)
+                startup_due = startup and time.localtime(previous["lastCheck"])[:3] != time.localtime(now)[:3]
+                if not startup_due and now < next_check <= now + CHECK_INTERVAL:
                     return "not-due"
-            except (OSError, ValueError, KeyError, TypeError):
+            except (OSError, ValueError, KeyError, TypeError, OverflowError):
                 pass
-            result = {"lastCheck": now, "nextCheck": now + DAY, "status": "checking"}
+            result = {"lastCheck": now, "nextCheck": now + CHECK_INTERVAL, "status": "checking"}
             atomic_json(self.result, result)
             try:
                 result["status"] = self.install(self.latest()) if self.eligible() else "local-changes"
@@ -301,10 +305,13 @@ class Updater:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--startup", action="store_true", help="Also check on the first start of a new local day")
+    options = parser.parse_args()
     home = Path.home()
     state = os.environ.get("XDG_STATE_HOME") or str(home / ".local/state")
     try:
-        print(Updater(home, state).run())
+        print(Updater(home, state).run(startup=options.startup))
     except (OSError, ValueError):
         # An unwritable state directory must not start an unrecorded update.
         raise SystemExit(1)

@@ -6,15 +6,24 @@ default Enter leave it on. The choice is saved between sessions.
 
 ## Schedule
 
-The first check is due about a minute after startup. Further checks are due
-every 24 hours while the widget is running. An open panel, a window transfer
+The widget checks about a minute after its first start of the day if no check
+has run that day, using the computer's local date. Further checks are due
+every 6 hours while the widget is running. An open panel, a window transfer
 or a show/hide operation postpones starting a check.
+
+Logging in normally starts the widget. Reloading the shell or enabling the
+widget also counts as a start, but does not cause an extra check if one has
+already run that day. Staying logged in past midnight keeps the 6-hour schedule.
 
 All monitors share one schedule. It is stored in
 `$XDG_STATE_HOME/scratchpeek/updates.json`, defaulting to
 `~/.local/state/scratchpeek/updates.json`. Restarting the shell does not reset
 it. A file lock prevents two workers from updating at the same time.
 There is no separate service running between checks.
+
+When upgrading from the daily schedule, the next regular check is due 6 hours
+after the last attempt. If that time has already passed, it runs at the next
+idle timer tick. Missed checks do not accumulate while the widget is stopped.
 
 ## Which versions can be installed
 
@@ -98,8 +107,8 @@ The latest result is stored in `updates.json`:
 | `failed` | A download, validation or installation step failed |
 
 Download, verification and exchange failures leave the installed version in
-place. Another check is due the next day. The directory exchange exposes one
-complete version at a time.
+place. Another check is due 6 hours after the last attempt, or at the first
+start of a new day. The directory exchange exposes one complete version at a time.
 
 These checks rely on GitHub and the official marketplace’s HTTPS responses
 at installation time. Later changes to marketplace approval do not uninstall
@@ -122,7 +131,7 @@ Automatic updates from 0.11.1 use the verified release instead.
 For a new release, follow [Publishing](PUBLISHING.md): the release commit must
 appear as verified in the catalog before its immutable GitHub release is
 published. A push alone does not trigger automatic installation. Eligible
-users receive the release on their next daily check while the widget runs.
+users receive the release on their next scheduled check while the widget runs.
 
 References: [GitHub releases API](https://docs.github.com/en/rest/releases/releases#get-the-latest-release),
 [immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases),

@@ -7,6 +7,8 @@
 - The panel and status command now read the version from the same manifest.
 - Fixed settings dropdowns reopening when clicked again.
 - Made the panel border thinner and the hover preview border clearer.
+- Check for automatic updates every 6 hours and on the first start of the day
+  if no check has run that day.
 
 ## 0.11.1
 

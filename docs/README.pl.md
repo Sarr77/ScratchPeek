@@ -11,6 +11,11 @@ osobno.
 
 ![Wskaźnik na pasku i lista okien ScratchPeek](../preview.png)
 
+[WindowPeek](https://plugins.omarchy.org/plugin.html?id=sarr.windowpeek) pokazuje
+okna z różnych workspace’ów i monitorów, w tym pojedyncze zakładki w grupach
+Hyprlanda. Pozwala je wyszukiwać i podglądać, przechodzić do nich oraz przenosić
+między workspace’ami lub do scratchpada.
+
 ## Instalacja
 
 ```sh
@@ -53,10 +58,11 @@ są zachowywane po restarcie, aktualizacji i ponownej instalacji.
 
 ## Aktualizacje
 
-Automatyczne aktualizacje są domyślnie włączone. Wtyczka sprawdza je raz dziennie,
-gdy działa. Od wersji 0.11.1 aktualizacja musi pochodzić z niezmiennego wydania
-GitHub, którego dokładny commit został zweryfikowany w katalogu Omarchy.
-Błąd pobierania lub weryfikacji pozostawia zainstalowaną wersję bez zmian.
+Automatyczne aktualizacje są domyślnie włączone. ScratchPeek sprawdza je co
+6 godzin podczas działania oraz po uruchomieniu, jeśli jeszcze ich tego dnia
+nie sprawdzał. Od wersji 0.11.1 aktualizacja musi pochodzić z niezmiennego wydania
+GitHub, którego dokładny commit został zweryfikowany w katalogu Omarchy. Błąd
+pobierania lub weryfikacji pozostawia zainstalowaną wersję bez zmian.
 
 Mały przełącznik obok **?** pozwala wyłączyć aktualizacje po potwierdzeniu.
 Kopie robocze podłączone linkiem, forki i lokalnie zmieniony kod nie są

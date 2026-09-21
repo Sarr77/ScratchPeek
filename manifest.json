@@ -40,7 +40,7 @@
       {
         "key": "autoUpdates",
         "type": "boolean",
-        "label": "Automatic daily updates to stable releases"
+        "label": "Check every 6 hours for stable releases"
       },
       {
         "key": "workspace",
