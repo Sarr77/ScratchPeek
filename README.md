@@ -11,11 +11,6 @@ are listed separately.
 
 ![ScratchPeek bar indicator and window list](preview.png)
 
-[WindowPeek](https://plugins.omarchy.org/plugin.html?id=sarr.windowpeek) lets you
-search, preview and switch to windows across workspaces and monitors, including
-individual tabs in Hyprland groups. You can also move windows between workspaces
-or into the scratchpad.
-
 ## Installation
 
 ```sh
@@ -94,6 +89,14 @@ Automatic updates contact GitHub and the Omarchy marketplace using Python 3
 and Git. Update times and results are stored locally alongside preferences.
 There is no telemetry. The plugin runs inside Omarchy’s shell with your user
 permissions and does not need administrator access.
+
+## See also
+
+If you like ScratchPeek, take a look at
+[WindowPeek](https://plugins.omarchy.org/plugin.html?id=sarr.windowpeek). It lets you
+search, preview and switch to windows across workspaces and monitors, including
+individual tabs in Hyprland groups. You can also move windows between workspaces
+or into the scratchpad.
 
 ## Help and development
 

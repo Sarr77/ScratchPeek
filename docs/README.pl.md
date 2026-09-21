@@ -11,11 +11,6 @@ osobno.
 
 ![Wskaźnik na pasku i lista okien ScratchPeek](../preview.png)
 
-[WindowPeek](https://plugins.omarchy.org/plugin.html?id=sarr.windowpeek) pokazuje
-okna z różnych workspace’ów i monitorów, w tym pojedyncze zakładki w grupach
-Hyprlanda. Pozwala je wyszukiwać i podglądać, przechodzić do nich oraz przenosić
-między workspace’ami lub do scratchpada.
-
 ## Instalacja
 
 ```sh
@@ -96,6 +91,14 @@ Automatyczne aktualizacje łączą się z GitHubem i katalogiem Omarchy przez
 Pythona 3 i Gita. Terminy i wyniki aktualizacji są zapisywane lokalnie obok
 preferencji. Nie ma telemetrii. Wtyczka działa wewnątrz powłoki Omarchy
 z uprawnieniami użytkownika, bez dostępu administratora.
+
+## Zobacz też
+
+Jeśli podoba Ci się ScratchPeek, sprawdź też
+[WindowPeek](https://plugins.omarchy.org/plugin.html?id=sarr.windowpeek). Pokazuje
+okna z różnych workspace’ów i monitorów, w tym pojedyncze zakładki w grupach
+Hyprlanda. Pozwala je wyszukiwać i podglądać, przechodzić do nich oraz przenosić
+między workspace’ami lub do scratchpada.
 
 ## Pomoc i rozwój
 
